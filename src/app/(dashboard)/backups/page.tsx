@@ -1,17 +1,37 @@
-export default function BackupsPage() {
+import Link from 'next/link'
+import { cookies } from 'next/headers'
+import { validateSession } from '@/lib/auth'
+import db from '@/lib/db'
+
+export default async function BackupsPage() {
+  const cookieStore = await cookies()
+  const token = cookieStore.get('gsws_session')?.value || ''
+  const user = validateSession(token)
+  const packages = user ? db.prepare('SELECT * FROM gsws_user_packages WHERE user_id = ? AND status = ?').all(user.id, 'active') as any[] : []
+
   return (
-    <div className="flex flex-col gap-6">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       <div>
-        <h1 className="text-[20px] font-semibold tracking-tight">Backups</h1>
-        <p className="text-[13px] mt-1" style={{ color: 'var(--g-gray-400)' }}>
-          Backups management — coming soon.
-        </p>
+        <h1 style={{ fontSize: '20px', fontWeight: 600, color: '#0a0a0a' }}>Backups</h1>
+        <p style={{ fontSize: '12px', color: '#9a9a9a', marginTop: '3px' }}>Manage backups for your hosting packages</p>
       </div>
-      <div className="gsws-card flex flex-col items-center py-16 gap-3 text-center"
-        style={{ border: '1px dashed var(--g-gray-200)' }}>
-        <p className="text-[13px]" style={{ color: 'var(--g-gray-400)' }}>
-          This section is being built. Check back soon.
-        </p>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+        {packages.map((pkg: any) => (
+          <Link key={pkg.id} href={`/packages/${pkg.twentyi_package_id}/backups`}
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', textDecoration: 'none' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <span style={{ fontSize: '16px' }}>💾</span>
+              <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', fontFamily: 'ui-monospace, monospace' }}>{pkg.domain_name}</p>
+            </div>
+            <span style={{ fontSize: '12px', color: '#1a6ef5', fontWeight: 500 }}>Manage backups →</span>
+          </Link>
+        ))}
+        {packages.length === 0 && (
+          <div className="gsws-card" style={{ textAlign: 'center', padding: '48px' }}>
+            <p style={{ fontSize: '32px', marginBottom: '12px' }}>💾</p>
+            <p style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a' }}>No hosting packages</p>
+          </div>
+        )}
       </div>
     </div>
   )

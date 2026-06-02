@@ -1,17 +1,19 @@
+import Link from 'next/link'
+
 export default function VpsPage() {
   return (
-    <div className="flex flex-col gap-6">
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       <div>
-        <h1 className="text-[20px] font-semibold tracking-tight">Vps</h1>
-        <p className="text-[13px] mt-1" style={{ color: 'var(--g-gray-400)' }}>
-          Vps management — coming soon.
-        </p>
+        <h1 style={{ fontSize: '20px', fontWeight: 600, color: '#0a0a0a' }}>Vps</h1>
+        <p style={{ fontSize: '12px', color: '#9a9a9a', marginTop: '3px' }}>Coming soon</p>
       </div>
-      <div className="gsws-card flex flex-col items-center py-16 gap-3 text-center"
-        style={{ border: '1px dashed var(--g-gray-200)' }}>
-        <p className="text-[13px]" style={{ color: 'var(--g-gray-400)' }}>
-          This section is being built. Check back soon.
-        </p>
+      <div className="gsws-card" style={{ textAlign: 'center', padding: '48px' }}>
+        <p style={{ fontSize: '32px', marginBottom: '12px' }}>🚧</p>
+        <p style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a', marginBottom: '6px' }}>Vps management</p>
+        <p style={{ fontSize: '13px', color: '#9a9a9a', marginBottom: '16px' }}>This section is coming soon. Contact support for assistance.</p>
+        <a href="mailto:support@geig.co.uk" style={{ height: '36px', padding: '0 20px', display: 'inline-flex', alignItems: 'center', background: '#1a6ef5', color: '#fff', borderRadius: '6px', fontSize: '13px', fontWeight: 600, textDecoration: 'none' }}>
+          Contact support
+        </a>
       </div>
     </div>
   )

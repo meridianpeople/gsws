@@ -26,10 +26,12 @@ export default async function PackageLayout({
     { label: 'Files', href: `/packages/${id}/files` },
     { label: 'DNS', href: `/packages/${id}/dns` },
     { label: 'SSL', href: `/packages/${id}/ssl` },
+    { label: 'CDN', href: `/packages/${id}/cdn` },
     { label: 'Databases', href: `/packages/${id}/databases` },
     { label: 'PHP', href: `/packages/${id}/php` },
     { label: 'Backups', href: `/packages/${id}/backups` },
     { label: 'Security', href: `/packages/${id}/security` },
+    { label: 'Applications', href: `/packages/${id}/applications` },
     ...(pkg?.package_type === 'wordpress' ? [{ label: 'WordPress', href: `/packages/${id}/wordpress` }] : []),
   ]
 

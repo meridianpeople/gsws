@@ -46,10 +46,12 @@ export default async function PackageDetailPage({ params }: { params: Promise<{ 
     { label: 'Files', href: `/packages/${id}/files` },
     { label: 'DNS', href: `/packages/${id}/dns` },
     { label: 'SSL', href: `/packages/${id}/ssl` },
+    { label: 'CDN', href: `/packages/${id}/cdn` },
     { label: 'Databases', href: `/packages/${id}/databases` },
     { label: 'PHP', href: `/packages/${id}/php` },
     { label: 'Backups', href: `/packages/${id}/backups` },
     { label: 'Security', href: `/packages/${id}/security` },
+    { label: 'Applications', href: `/packages/${id}/applications` },
     ...(pkg.package_type === 'wordpress' ? [{ label: 'WordPress', href: `/packages/${id}/wordpress` }] : []),
   ]
 
@@ -187,6 +189,7 @@ export default async function PackageDetailPage({ params }: { params: Promise<{ 
           { label: 'Backups', href: `/packages/${id}/backups`, icon: '💾' },
           { label: 'Security', href: `/packages/${id}/security`, icon: '🛡️' },
           { label: 'PHP settings', href: `/packages/${id}/php`, icon: '⚙️' },
+          { label: 'Applications', href: `/packages/${id}/applications`, icon: '📦' },
         ].map(a => (
           <Link key={a.href} href={a.href}
             style={{ display: 'flex', flexDirection: 'column', gap: '6px', padding: '14px', background: '#fff', border: '1px solid #ebebeb', borderRadius: '8px', textDecoration: 'none' }}>
