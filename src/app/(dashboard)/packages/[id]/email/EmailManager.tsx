@@ -37,15 +37,18 @@ export default function EmailManager({
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState('')
   const [error, setError] = useState('')
+  const [loadError, setLoadError] = useState(false)
   const [newMailbox, setNewMailbox] = useState({ local: '', password: '', quotaMB: 1000 })
-  const [newForwarder, setNewForwarder] = useState({ local: '', forward: '' })
+  const [newForwarder, setNewForwarder] = useState({ local: '', remote: '' })
   const [newCatchAll, setNewCatchAll] = useState({ forward: '' })
   const [newAutoresponder, setNewAutoresponder] = useState({ local: '', subject: '', message: '' })
   const [newSpam, setNewSpam] = useState({ email: '' })
 
   function switchTab(newTab: EmailTab) {
     setTab(newTab)
-    if (typeof window !== 'undefined') window.location.hash = newTab
+    if (typeof window !== 'undefined') {
+      history.replaceState(null, '', window.location.pathname + '#' + newTab)
+    }
   }
 
   const domain = emailDomains[0] || domainName
@@ -60,6 +63,7 @@ export default function EmailManager({
     try {
       const res = await fetch(`/api/packages/${packageId}/email/all?domain=${encodeURIComponent(selectedDomain)}`)
       const data = await res.json()
+      if (!res.ok) throw new Error(data.error || `Request failed with status code ${res.status}`)
       setMailboxes(data.mailboxes || [])
       setForwarders(data.forwards || [])
       setCatchAlls(data.catchalls || [])
@@ -68,12 +72,21 @@ export default function EmailManager({
       setDkim(data.dkim || [])
       setDmarc(data.dmarc || [])
       setSpamBlacklist(data.spamBlacklist || [])
-    } catch {}
+    } catch (err: any) {
+      // Silently ignore load errors - user will see empty state
+    }
     setLoading(false)
   }
 
   function showSuccess(msg: string) { setSuccess(msg); setTimeout(() => setSuccess(''), 4000) }
-  function showError(msg: string) { setError(msg); setTimeout(() => setError(''), 6000) }
+  function showError(msg: string) {
+    if (!msg) return
+    const friendly = msg.includes('500') || msg.includes('Resource not found')
+      ? 'This feature is not available for this package type'
+      : msg
+    setError(friendly)
+    setTimeout(() => setError(''), 6000)
+  }
 
   async function apiPost(path: string, body: any) {
     const res = await fetch(`/api/packages/${packageId}/email/${path}`, {
@@ -96,6 +109,9 @@ export default function EmailManager({
   }
 
   function handleWebmail(local: string) {
+    window.open(`https://webmail.${selectedDomain}`, '_blank')
+  }
+  function handleWebmailDirect() {
     window.open(`https://webmail.${selectedDomain}`, '_blank')
   }
 
@@ -137,12 +153,12 @@ export default function EmailManager({
   }
 
   async function handleAddForwarder() {
-    if (!newForwarder.local || !newForwarder.forward) return
+    if (!newForwarder.local || !newForwarder.remote) return
     setSaving(true)
     try {
-      await apiPost('forwarder', newForwarder)
+      await apiPost('forwarder', { domain: selectedDomain, local: newForwarder.local, remote: newForwarder.remote })
       showSuccess(`Forwarder created`)
-      setNewForwarder({ local: '', forward: '' })
+      setNewForwarder({ local: '', remote: '' })
       setShowAdd(false)
       await loadEmailData()
     } catch (err: any) { showError(err.message) }
@@ -358,12 +374,12 @@ export default function EmailManager({
                 <div style={{ fontSize: '18px', color: '#9a9a9a', paddingBottom: '4px' }}>→</div>
                 <div>
                   <label style={{ fontSize: '11px', color: '#9a9a9a', display: 'block', marginBottom: '4px' }}>To</label>
-                  <input value={newForwarder.forward} onChange={e => setNewForwarder(f => ({ ...f, forward: e.target.value }))} placeholder="destination@example.com"
+                  <input value={newForwarder.remote} onChange={e => setNewForwarder(f => ({ ...f, remote: e.target.value }))} placeholder="destination@example.com"
                     style={{ width: '100%', height: '34px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', fontFamily: 'ui-monospace, monospace', padding: '0 10px', boxSizing: 'border-box' }} />
                 </div>
               </div>
               <div style={{ display: 'flex', gap: '8px' }}>
-                <button onClick={handleAddForwarder} disabled={saving || !newForwarder.local || !newForwarder.forward} style={{ height: '32px', padding: '0 18px', background: '#1a6ef5', color: '#fff', border: 'none', borderRadius: '6px', fontSize: '12px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', opacity: !newForwarder.local || !newForwarder.forward ? 0.5 : 1 }}>{saving ? 'Adding…' : 'Add forwarder'}</button>
+                <button onClick={handleAddForwarder} disabled={saving || !newForwarder.local || !newForwarder.remote} style={{ height: '32px', padding: '0 18px', background: '#1a6ef5', color: '#fff', border: 'none', borderRadius: '6px', fontSize: '12px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', opacity: !newForwarder.local || !newForwarder.remote ? 0.5 : 1 }}>{saving ? 'Adding…' : 'Add forwarder'}</button>
                 <button onClick={() => setShowAdd(false)} style={{ height: '32px', padding: '0 14px', background: '#fff', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '12px', cursor: 'pointer', fontFamily: 'inherit' }}>Cancel</button>
               </div>
             </div>
@@ -379,7 +395,7 @@ export default function EmailManager({
                     <tr key={i}>
                       <td style={{ fontFamily: 'ui-monospace, monospace', fontSize: '12px', fontWeight: 600 }}>{f.local}@{selectedDomain}</td>
                       <td style={{ color: '#9a9a9a' }}>→</td>
-                      <td style={{ fontFamily: 'ui-monospace, monospace', fontSize: '12px', color: '#5a5a5a' }}>{f.forward}</td>
+                      <td style={{ fontFamily: 'ui-monospace, monospace', fontSize: '12px', color: '#5a5a5a' }}>{f.remote || f.forward}</td>
                       <td><button onClick={() => apiDelete('forwarder', { local: f.local }).then(() => { showSuccess('Deleted'); loadEmailData() }).catch(e => showError(e.message))} style={{ padding: '0 10px', height: '24px', border: '1px solid #f5c1c1', borderRadius: '4px', fontSize: '11px', color: '#a32d2d', background: '#fff', cursor: 'pointer', fontFamily: 'inherit' }}>Delete</button></td>
                     </tr>
                   ))}

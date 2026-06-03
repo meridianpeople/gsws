@@ -28,11 +28,15 @@ export default async function PackageLayout({
     { label: 'SSL', href: `/packages/${id}/ssl` },
     { label: 'CDN', href: `/packages/${id}/cdn` },
     { label: 'Databases', href: `/packages/${id}/databases` },
-    { label: 'PHP', href: `/packages/${id}/php` },
+    ...(pkg?.package_type !== 'windows' ? [{ label: 'PHP', href: `/packages/${id}/php` }] : []),
     { label: 'Backups', href: `/packages/${id}/backups` },
     { label: 'Security', href: `/packages/${id}/security` },
-    { label: 'Applications', href: `/packages/${id}/applications` },
+    ...(pkg?.package_type !== 'windows' ? [{ label: 'Applications', href: `/packages/${id}/applications` }] : []),
     ...(pkg?.package_type === 'wordpress' ? [{ label: 'WordPress', href: `/packages/${id}/wordpress` }] : []),
+    ...(pkg?.package_type === 'windows' ? [
+      { label: 'App Pool', href: `/packages/${id}/apppool` },
+      { label: 'Subdomains', href: `/packages/${id}/subdomains` },
+    ] : []),
   ]
 
   return (

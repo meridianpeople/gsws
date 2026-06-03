@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { validateSession } from '@/lib/auth'
+import { validateSession, requireWrite } from '@/lib/auth'
 import db from '@/lib/db'
 import client from '@/lib/api/client'
 
@@ -14,6 +14,8 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
   const { id } = await params
   const user = await checkOwnership(req, id)
   if (!user) return NextResponse.json({ error: 'Access denied' }, { status: 401 })
+  const writeCheck = requireWrite(user)
+  if (writeCheck) return NextResponse.json({ error: writeCheck.error }, { status: writeCheck.status })
   const domain = req.nextUrl.searchParams.get('domain') || ''
   try {
     const res = await client.get(`/package/${id}/email/${encodeURIComponent(domain)}/mailbox`)
@@ -30,10 +32,21 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   try {
     const { domain, local, password, quotaMB } = await req.json()
     if (!domain || !local || !password) return NextResponse.json({ error: 'Domain, username and password required' }, { status: 400 })
-    await client.post(`/package/${id}/email/${encodeURIComponent(domain)}/mailbox`, {
-      local, password, quotaMB: quotaMB || 1000, receive: true, send: true, enabled: true,
+    const res = await client.post(`/package/${id}/email/${encodeURIComponent(domain)}`, {
+      new: {
+        mailbox: {
+          local,
+          password,
+          quotaMB: quotaMB || 1000,
+          receive: true,
+          send: true,
+          enabled: true,
+        }
+      }
     })
-    return NextResponse.json({ success: true })
+    const created = res.data?.result?.result?.[0]
+    if (!created) return NextResponse.json({ error: 'Mailbox not created' }, { status: 500 })
+    return NextResponse.json({ success: true, id: created.generatedId || created.id })
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 })
   }

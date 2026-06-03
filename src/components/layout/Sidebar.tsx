@@ -1,4 +1,5 @@
 'use client'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -49,6 +50,7 @@ const nav: NavGroup[] = [
       { label: 'Databases', href: '/databases', icon: <Icon d="M12 2C8.13 2 5 3.34 5 5v14c0 1.66 3.13 3 7 3s7-1.34 7-3V5c0-1.66-3.13-3-7-3z M5 5c0 1.66 3.13 3 7 3s7-1.34 7-3 M5 12c0 1.66 3.13 3 7 3s7-1.34 7-3" /> },
       { label: 'Security', href: '/security', icon: <Icon d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /> },
       { label: 'Backups', href: '/backups', icon: <Icon d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" /> },
+      { label: 'Renewals', href: '/renewals', icon: <Icon d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4" /> },
     ],
   },
   {
@@ -62,6 +64,12 @@ const nav: NavGroup[] = [
 ]
 
 export default function Sidebar() {
+  const [isMember, setIsMember] = useState(false)
+  useEffect(() => {
+    fetch('/api/auth/me').then(r => r.json()).then(d => {
+      setIsMember(d?.user?.isMember === true)
+    }).catch(() => {})
+  }, [])
   const pathname = usePathname()
 
   const isActive = (href: string) => {
@@ -70,8 +78,7 @@ export default function Sidebar() {
   }
 
   return (
-    <aside className="fixed top-[52px] left-0 bottom-0 w-[232px] flex flex-col overflow-y-auto sidebar-scroll"
-      style={{ background: 'var(--g-sidebar-bg)', borderRight: '1px solid var(--g-sidebar-border)' }}>
+    <aside className="fixed left-0 bottom-0 w-[232px] flex flex-col overflow-y-auto sidebar-scroll" style={{ top: isMember ? '78px' : '52px', background: 'var(--g-sidebar-bg)', borderRight: '1px solid var(--g-sidebar-border)' }}>
 
       {/* Domain selector */}
       <div className="mx-3 mt-3 mb-2 rounded-lg px-3 py-2.5 cursor-pointer"

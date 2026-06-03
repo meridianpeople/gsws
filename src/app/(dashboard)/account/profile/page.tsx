@@ -179,6 +179,9 @@ export default function ProfilePage() {
       {/* Quick links */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
         {[
+          { label: 'Statement', desc: 'Full transaction history and balance', href: '/account/statement', icon: '📄' },
+          { label: 'Renewals', desc: 'Manage service renewals and auto-renew', href: '/renewals', icon: '🔄' },
+          { label: 'Team members', desc: 'Invite and manage sub-users', href: '/account/members', icon: '👥' },
           { label: 'Activity log', desc: 'View all account actions and sessions', href: '/account/activity', icon: '📋' },
           { label: 'Top up credit', desc: 'Add credit to your account', href: '/account/topup', icon: '💳' },
         ].map(l => (

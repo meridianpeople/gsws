@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { validateSession } from '@/lib/auth'
+import { validateSession, requireWrite } from '@/lib/auth'
 import db from '@/lib/db'
 import client from '@/lib/api/client'
 
@@ -27,6 +27,8 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
   const { id } = await params
   const user = await checkOwnership(req, id)
   if (!user) return NextResponse.json({ error: 'Access denied' }, { status: 401 })
+  const writeCheck = requireWrite(user)
+  if (writeCheck) return NextResponse.json({ error: writeCheck.error }, { status: writeCheck.status })
   try {
     const res = await client.get(`/package/${id}/dns`)
     const raw = res.data || {}

@@ -1,24 +1,35 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { validateSession } from '@/lib/auth'
+import { validateSession, requireWrite } from '@/lib/auth'
 import db from '@/lib/db'
 import client from '@/lib/api/client'
 
-export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
+async function check(req: NextRequest, id: string) {
   const token = req.cookies.get('gsws_session')?.value
   const user = token ? validateSession(token) : null
-  if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
-  if (!db.prepare('SELECT id FROM gsws_user_packages WHERE twentyi_package_id = ? AND user_id = ?').get(id, user.id))
-    return NextResponse.json({ error: 'Access denied' }, { status: 403 })
+  if (!user) return null
+  return db.prepare('SELECT id FROM gsws_user_packages WHERE twentyi_package_id = ? AND user_id = ?').get(id, user.id) ? user : null
+}
+
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  if (!await check(req, id)) return NextResponse.json({ error: 'Access denied' }, { status: 401 })
+  try {
+    const res = await client.get(`/package/${id}/web/forceSSL`)
+    return NextResponse.json({ enabled: res.data === true || res.data?.enabled === true })
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message }, { status: 500 })
+  }
+}
+
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  if (!await check(req, id)) return NextResponse.json({ error: 'Access denied' }, { status: 401 })
   try {
     const { enabled } = await req.json()
-    await client.post(`/package/${id}/web/forceSSL`, { enabled })
+    await client.post(`/package/${id}/web/forceSSL`, { value: enabled })
     return NextResponse.json({ success: true })
   } catch (err: any) {
-    // 409 means the state is already set - treat as success
-    if (err?.response?.status === 409) {
-      return NextResponse.json({ success: true, message: 'Already in desired state' })
-    }
+    if (err?.response?.status === 409) return NextResponse.json({ success: true })
     return NextResponse.json({ error: err.message }, { status: 500 })
   }
 }

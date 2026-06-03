@@ -1,11 +1,12 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 
 interface DomainResult {
   name: string
+  tld: string
   available: boolean
-  price?: string | null
+  price?: number | null
   premium?: boolean
 }
 
@@ -13,12 +14,25 @@ const POPULAR_TLDS = ['.co.uk', '.com', '.uk', '.net', '.org', '.io', '.co', '.s
 
 export default function DomainSearchPage() {
   const [query, setQuery] = useState('')
+  const [balance, setBalance] = useState<number | null>(null)
   const [searching, setSearching] = useState(false)
   const [results, setResults] = useState<DomainResult[]>([])
   const [searched, setSearched] = useState(false)
   const [registering, setRegistering] = useState<string | null>(null)
   const [registered, setRegistered] = useState<string | null>(null)
+  const [modalDomain, setModalDomain] = useState<DomainResult | null>(null)
+  const [agreedTerms, setAgreedTerms] = useState(false)
+  const [addPrivacy, setAddPrivacy] = useState(true)
+  const [differentEntity, setDifferentEntity] = useState(false)
+  const [entityName, setEntityName] = useState('')
+  const [entityEmail, setEntityEmail] = useState('')
   const [error, setError] = useState('')
+
+  useEffect(() => {
+    fetch('/api/credits').then(r => r.json()).then(d => {
+      if (typeof d.balance === 'number') setBalance(d.balance)
+    }).catch(() => {})
+  }, [])
 
   async function handleSearch(e?: React.FormEvent) {
     if (e) e.preventDefault()
@@ -28,7 +42,9 @@ export default function DomainSearchPage() {
     setResults([])
     setError('')
     try {
-      const base = query.trim().toLowerCase().split('.')[0]
+      // Strip TLD if user typed full domain like mysite.co.uk
+      const input = query.trim().toLowerCase()
+      const base = input.includes('.') ? input.split('.')[0] : input
       const res = await fetch(`/api/domains/search?q=${encodeURIComponent(base)}`)
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Search failed')
@@ -41,18 +57,34 @@ export default function DomainSearchPage() {
     }
   }
 
-  async function handleRegister(domain: string) {
-    setRegistering(domain)
+  function openModal(result: DomainResult) {
+    setModalDomain(result)
+    setAgreedTerms(false)
+    setAddPrivacy(true)
+    setDifferentEntity(false)
+    setEntityName('')
+    setEntityEmail('')
+  }
+
+  async function handleRegister() {
+    if (!modalDomain) return
+    setRegistering(modalDomain.name)
     setError('')
+    setModalDomain(null)
     try {
       const res = await fetch('/api/domains/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ domain }),
+        body: JSON.stringify({
+          domain: modalDomain.name,
+          privacyService: addPrivacy,
+          registrant: differentEntity ? { name: entityName, email: entityEmail } : null,
+        }),
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Registration failed')
-      setRegistered(domain)
+      setRegistered(modalDomain.name)
+      if (typeof data.newBalance === 'number') setBalance(data.newBalance)
     } catch (err: any) {
       setError(err.message)
     } finally {
@@ -78,6 +110,13 @@ export default function DomainSearchPage() {
           <p style={{ fontSize: '13px', color: '#9a9a9a', marginTop: '3px' }}>
             Search for an available domain. You need one before creating any hosting package.
           </p>
+          {balance !== null && (
+            <div style={{ marginTop: '8px', display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '5px 12px', borderRadius: '20px', background: balance > 0 ? '#eaf3de' : '#fcebeb', border: `1px solid ${balance > 0 ? '#c0dd97' : '#f5c1c1'}` }}>
+              <span style={{ fontSize: '12px', fontWeight: 600, color: balance > 0 ? '#3b6d11' : '#a32d2d' }}>
+                💳 Credit: £{balance.toFixed(2)}
+              </span>
+            </div>
+          )}
         </div>
         <Link href="/domains/transfer" className="gsws-btn">Transfer existing domain</Link>
       </div>
@@ -205,19 +244,21 @@ export default function DomainSearchPage() {
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                 <span style={{ fontSize: '13px', fontWeight: 500, color: '#5a5a5a' }}>
-                  {result.price || '—'}/yr
+                  {result.price ? `£${result.price.toFixed(2)}` : '—'}/yr
                 </span>
-                <span style={{ fontSize: '11px', color: '#3b6d11', fontWeight: 500 }}>Available</span>
+                <span style={{ fontSize: '11px', fontWeight: 500, color: balance !== null && (result.price || 0) > balance ? '#a32d2d' : '#3b6d11' }}>
+                  {balance !== null && (result.price || 0) > balance ? 'Low credit' : 'Available'}
+                </span>
                 <button
-                  onClick={() => handleRegister(result.name)}
-                  disabled={registering === result.name || !!registered}
+                  onClick={() => openModal(result)}
+                  disabled={registering === result.name || !!registered || (balance !== null && (result.price || 0) > balance)}
                   style={{
                     height: '34px', padding: '0 20px', background: '#1a6ef5', color: '#fff',
                     border: 'none', borderRadius: '6px', fontSize: '13px', fontWeight: 600,
                     cursor: registering === result.name ? 'wait' : 'pointer',
                     opacity: registering === result.name ? 0.7 : 1, fontFamily: 'inherit',
                   }}>
-                  {registering === result.name ? 'Registering…' : 'Register →'}
+                  {registering === result.name ? 'Registering…' : 'Register'}
                 </button>
               </div>
             </div>
@@ -270,6 +311,132 @@ export default function DomainSearchPage() {
               <p style={{ fontSize: '12px', color: '#9a9a9a' }}>{f.desc}</p>
             </div>
           ))}
+        </div>
+      )}
+      {/* Registration Modal */}
+      {modalDomain && (
+        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+          <div style={{ background: '#fff', borderRadius: '12px', width: '100%', maxWidth: '520px', padding: '28px', boxShadow: '0 20px 60px rgba(0,0,0,0.2)' }}>
+            {/* Header */}
+            <div style={{ marginBottom: '20px' }}>
+              <h2 style={{ fontSize: '17px', fontWeight: 700, color: '#0a0a0a', marginBottom: '4px' }}>Register domain</h2>
+              <p style={{ fontSize: '13px', fontFamily: 'ui-monospace, monospace', color: '#1a6ef5', fontWeight: 600 }}>{modalDomain.name}</p>
+            </div>
+
+            {/* Price summary */}
+            <div style={{ background: '#f7f7f7', borderRadius: '8px', padding: '14px 16px', marginBottom: '20px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+                <span style={{ fontSize: '13px', color: '#5a5a5a' }}>Domain registration (1 year)</span>
+                <span style={{ fontSize: '13px', fontWeight: 600 }}>£{modalDomain.price?.toFixed(2)}</span>
+              </div>
+              {addPrivacy && (
+                <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+                  <span style={{ fontSize: '13px', color: '#5a5a5a' }}>WHOIS privacy protection</span>
+                  <span style={{ fontSize: '13px', fontWeight: 600 }}>£5.00</span>
+                </div>
+              )}
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+                <span style={{ fontSize: '13px', color: '#5a5a5a' }}>Subtotal (ex. VAT)</span>
+                <span style={{ fontSize: '13px', fontWeight: 600 }}>£{((modalDomain.price || 0) + (addPrivacy ? 5 : 0)).toFixed(2)}</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
+                <span style={{ fontSize: '13px', color: '#5a5a5a' }}>VAT (20%)</span>
+                <span style={{ fontSize: '13px', fontWeight: 600 }}>£{(((modalDomain.price || 0) + (addPrivacy ? 5 : 0)) * 0.20).toFixed(2)}</span>
+              </div>
+              <div style={{ borderTop: '1px solid #d4d4d4', marginTop: '8px', paddingTop: '8px', display: 'flex', justifyContent: 'space-between' }}>
+                <span style={{ fontSize: '13px', fontWeight: 700 }}>Total charged from credit</span>
+                <span style={{ fontSize: '14px', fontWeight: 700, color: '#1a6ef5' }}>£{(((modalDomain.price || 0) + (addPrivacy ? 5 : 0)) * 1.20).toFixed(2)}</span>
+              </div>
+              <div style={{ marginTop: '6px', fontSize: '11px', color: '#9a9a9a' }}>
+                Your balance after: £{((balance || 0) - (((modalDomain.price || 0) + (addPrivacy ? 5 : 0)) * 1.20)).toFixed(2)}
+              </div>
+            </div>
+
+            {/* Privacy option */}
+            <div style={{ marginBottom: '14px', border: '1px solid #ebebeb', borderRadius: '8px', padding: '14px' }}>
+              <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', cursor: 'pointer' }}>
+                <input type="checkbox" checked={addPrivacy} onChange={e => setAddPrivacy(e.target.checked)}
+                  style={{ marginTop: '2px', flexShrink: 0 }} />
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a' }}>🔒 WHOIS Privacy Protection</p>
+                    <span style={{ fontSize: '12px', fontWeight: 700, color: '#1a6ef5' }}>£5.00/yr</span>
+                  </div>
+                  <p style={{ fontSize: '11px', color: '#5a5a5a', marginTop: '6px', lineHeight: '1.6' }}>
+                    Without privacy, your full name, address, phone and email are <strong>publicly searchable</strong> by anyone worldwide. With privacy enabled:
+                  </p>
+                  <ul style={{ margin: '6px 0 0 0', padding: '0 0 0 16px', fontSize: '11px', color: '#5a5a5a', lineHeight: '1.8' }}>
+                    <li>Your domain is registered under <strong>our trusted company</strong> — your identity stays private</li>
+                    <li>Protection from spam, cold calls and unsolicited marketing</li>
+                    <li>Shields against identity theft, phishing and domain hijacking</li>
+                    <li>Prevents doxxing, harassment and competitive intelligence gathering</li>
+                    <li>Legitimate contact emails are still forwarded to you</li>
+                    <li>GDPR-compliant privacy across all TLDs regardless of jurisdiction</li>
+                  </ul>
+                  <p style={{ fontSize: '10px', color: '#9a9a9a', marginTop: '6px' }}>
+                    89% of domain registrations now use privacy protection. Recommended for all registrants.
+                  </p>
+                </div>
+              </label>
+            </div>
+
+            {/* Different entity option */}
+            <div style={{ marginBottom: '14px' }}>
+              <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', cursor: 'pointer' }}>
+                <input type="checkbox" checked={differentEntity} onChange={e => setDifferentEntity(e.target.checked)}
+                  style={{ marginTop: '2px', flexShrink: 0 }} />
+                <div>
+                  <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a' }}>Register for a different legal entity</p>
+                  <p style={{ fontSize: '11px', color: '#9a9a9a', marginTop: '2px' }}>Register this domain on behalf of a company or individual other than yourself</p>
+                </div>
+              </label>
+            </div>
+
+            {differentEntity && (
+              <div style={{ background: '#f7f7f7', borderRadius: '8px', padding: '14px', marginBottom: '14px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <div>
+                  <label style={{ fontSize: '11px', fontWeight: 500, color: '#5a5a5a', display: 'block', marginBottom: '4px' }}>Legal entity / company name</label>
+                  <input value={entityName} onChange={e => setEntityName(e.target.value)} placeholder="Acme Ltd"
+                    style={{ width: '100%', height: '32px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', padding: '0 10px', fontFamily: 'inherit', boxSizing: 'border-box' }} />
+                </div>
+                <div>
+                  <label style={{ fontSize: '11px', fontWeight: 500, color: '#5a5a5a', display: 'block', marginBottom: '4px' }}>Registrant email address</label>
+                  <input value={entityEmail} onChange={e => setEntityEmail(e.target.value)} placeholder="admin@acme.com" type="email"
+                    style={{ width: '100%', height: '32px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', padding: '0 10px', fontFamily: 'inherit', boxSizing: 'border-box' }} />
+                </div>
+              </div>
+            )}
+
+            {/* Terms agreement */}
+            <div style={{ background: '#faeeda', border: '1px solid #f5d08a', borderRadius: '8px', padding: '14px', marginBottom: '20px' }}>
+              <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', cursor: 'pointer' }}>
+                <input type="checkbox" checked={agreedTerms} onChange={e => setAgreedTerms(e.target.checked)}
+                  style={{ marginTop: '2px', flexShrink: 0 }} />
+                <div>
+                  <p style={{ fontSize: '12px', fontWeight: 600, color: '#854f0b', marginBottom: '4px' }}>⚠️ I understand this is a binding contract</p>
+                  <p style={{ fontSize: '11px', color: '#854f0b', lineHeight: '1.5' }}>
+                    Domain registrations are <strong>non-refundable</strong> once provisioned. By registering this domain I agree to the{' '}
+                    <a href="/terms" target="_blank" style={{ color: '#854f0b', textDecoration: 'underline' }}>Terms of Service</a> and{' '}
+                    <a href="/terms#domains" target="_blank" style={{ color: '#854f0b', textDecoration: 'underline' }}>Domain Registration Policy</a>.
+                    £{modalDomain.price?.toFixed(2)} will be deducted from my credit balance immediately and is non-refundable.
+                  </p>
+                </div>
+              </label>
+            </div>
+
+            {/* Actions */}
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button onClick={handleRegister}
+                disabled={!agreedTerms || (differentEntity && (!entityName || !entityEmail))}
+                style={{ flex: 1, height: '40px', background: '#1a6ef5', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: 600, cursor: !agreedTerms ? 'not-allowed' : 'pointer', fontFamily: 'inherit', opacity: !agreedTerms ? 0.5 : 1 }}>
+                Confirm & Register {modalDomain.name}
+              </button>
+              <button onClick={() => setModalDomain(null)}
+                style={{ height: '40px', padding: '0 20px', background: '#fff', border: '1px solid #d4d4d4', borderRadius: '8px', fontSize: '13px', cursor: 'pointer', fontFamily: 'inherit', color: '#5a5a5a' }}>
+                Cancel
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

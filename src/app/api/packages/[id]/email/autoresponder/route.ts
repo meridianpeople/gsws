@@ -1,20 +1,48 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { validateSession } from '@/lib/auth'
+import { validateSession, requireWrite } from '@/lib/auth'
 import db from '@/lib/db'
 import client from '@/lib/api/client'
 
-export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
+async function check(req: NextRequest, id: string) {
   const token = req.cookies.get('gsws_session')?.value
   const user = token ? validateSession(token) : null
-  if (!user) return NextResponse.json({ error: 'Access denied' }, { status: 401 })
-  if (!db.prepare('SELECT id FROM gsws_user_packages WHERE twentyi_package_id = ? AND user_id = ?').get(id, user.id))
-    return NextResponse.json({ error: 'Access denied' }, { status: 403 })
+  if (!user) return null
+  return db.prepare('SELECT id FROM gsws_user_packages WHERE twentyi_package_id = ? AND user_id = ?').get(id, user.id) ? user : null
+}
+
+export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  if (!await check(req, id)) return NextResponse.json({ error: 'Access denied' }, { status: 401 })
+  const domain = req.nextUrl.searchParams.get('domain') || ''
+  try {
+    const res = await client.get(`/package/${id}/email/${encodeURIComponent(domain)}/responder`)
+    return NextResponse.json({ autoresponders: Array.isArray(res.data) ? res.data : [] })
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message }, { status: 500 })
+  }
+}
+
+export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  if (!await check(req, id)) return NextResponse.json({ error: 'Access denied' }, { status: 401 })
   try {
     const { domain, local, subject, message } = await req.json()
-    await client.post(`/package/${id}/email/${encodeURIComponent(domain)}/responder`, {
-      local, subject: subject || 'Auto reply', message, enabled: true,
+    if (!domain || !local || !message) return NextResponse.json({ error: 'Domain, local and message required' }, { status: 400 })
+    const res = await client.post(`/package/${id}/email/${encodeURIComponent(domain)}`, {
+      new: { responder: { local, subject: subject || 'Auto reply', message, enabled: true } }
     })
+    return NextResponse.json({ success: true, result: res.data?.result?.result?.[0] })
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message }, { status: 500 })
+  }
+}
+
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params
+  if (!await check(req, id)) return NextResponse.json({ error: 'Access denied' }, { status: 401 })
+  try {
+    const { domain, responderId } = await req.json()
+    await client.delete(`/package/${id}/email/${encodeURIComponent(domain)}/responder/${encodeURIComponent(responderId)}`)
     return NextResponse.json({ success: true })
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 })

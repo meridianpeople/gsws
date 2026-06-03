@@ -1,77 +1,95 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { validateSession } from '@/lib/auth'
+import { validateSession, requireWrite } from '@/lib/auth'
 import client from '@/lib/api/client'
 import db from '@/lib/db'
-
-const EMAIL_PACKAGE_TYPE = 48219
-const EMAIL_PACKAGE_LABEL = 'Unlimited Email Hosting'
 
 export async function POST(req: NextRequest) {
   const token = req.cookies.get('gsws_session')?.value
   const user = token ? validateSession(token) : null
   if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+  const writeCheck = requireWrite(user)
+  if (writeCheck) return NextResponse.json({ error: writeCheck.error }, { status: writeCheck.status })
 
   try {
-    const { domain } = await req.json()
+    const { domain, privacyService, registrant } = await req.json()
     if (!domain) return NextResponse.json({ error: 'Domain required' }, { status: 400 })
 
-    const existing = db.prepare('SELECT user_id FROM gsws_user_domains WHERE domain_name = ?').get(domain) as any
-    if (existing && existing.user_id !== user.id) {
-      return NextResponse.json({ error: 'Domain already registered' }, { status: 409 })
+    const VAT_RATE = 0.20
+    const PRIVACY_PRICE = 5.00
+
+    // Get TLD and price from catalogue
+    const tld = '.' + domain.split('.').slice(1).join('.')
+    const catalogue = db.prepare(`
+      SELECT sell_price, cost_price FROM gsws_service_catalogue 
+      WHERE service_key = ? AND active = 1
+    `).get(tld) as any
+
+    if (!catalogue) return NextResponse.json({ error: `TLD ${tld} not available` }, { status: 400 })
+
+    // Calculate total inc VAT
+    const subtotal = catalogue.sell_price + (privacyService ? PRIVACY_PRICE : 0)
+    const vat = Math.round(subtotal * VAT_RATE * 100) / 100
+    const total = Math.round((subtotal + vat) * 100) / 100
+
+    // Check user credit balance
+    const credits = db.prepare('SELECT balance FROM gsws_user_credits WHERE user_id = ?').get(user.id) as any
+    const balance = credits?.balance || 0
+
+    if (balance < total) {
+      return NextResponse.json({
+        error: `Insufficient credit. You need £${total.toFixed(2)} (inc. VAT) but have £${balance.toFixed(2)}.`,
+        required: total,
+        balance,
+      }, { status: 402 })
     }
 
-    // Step 1 — register domain
+    // Register domain with 20i
     await client.post('/reseller/*/addDomain', {
       name: domain,
-      privacyService: true,
+      privacyService: privacyService === true,
       years: 1,
+      ...(registrant ? { contact: { name: registrant.name, email: registrant.email } } : {}),
     })
 
-    // Step 2 — get 20i domain ID
-    let twentyiDomainId: number | null = null
+    // Deduct credits (VAT-inclusive)
+    const newBalance = Math.round((balance - total) * 100) / 100
+    db.prepare('INSERT OR REPLACE INTO gsws_user_credits (user_id, balance) VALUES (?, ?)').run(user.id, newBalance)
+
+    // Log transaction
+    db.prepare(`
+      INSERT INTO gsws_credit_transactions (user_id, amount, type, description, reference, balance_after)
+      VALUES (?, ?, 'domain_register', ?, ?, ?)
+    `).run(user.id, -total, `Domain registration: ${domain} (ex VAT £${subtotal.toFixed(2)} + VAT £${vat.toFixed(2)}${privacyService ? ' + privacy' : ''})`, domain, newBalance)
+
+    // Record domain ownership
+    let twentyiDomainId = null
     try {
       const domainList = await client.get('/domain')
-      const found = domainList.data.find((d: any) => d.name === domain)
+      const found = Array.isArray(domainList.data) 
+        ? domainList.data.find((d: any) => d.name === domain)
+        : null
       if (found) twentyiDomainId = found.id
     } catch {}
 
-    // Step 3 — auto-create email hosting package
-    let emailPackageId: string | null = null
-    try {
-      const pkgRes = await client.post('/reseller/*/addWeb', {
-        type: EMAIL_PACKAGE_TYPE,
-        domain_name: domain,
-        documentRoots: { [domain]: 'public_html' },
-      })
-      emailPackageId = pkgRes.data?.result?.id || pkgRes.data?.id || null
-    } catch (e) {
-      console.error('Email package creation failed:', e)
-    }
-
-    // Step 4 — record ownership in GSWS
     db.prepare(`
       INSERT OR REPLACE INTO gsws_user_domains (user_id, domain_name, twentyi_domain_id, twentyi_package_id)
       VALUES (?, ?, ?, ?)
-    `).run(user.id, domain, twentyiDomainId, emailPackageId)
-
-    // Step 5 — record email package in user packages
-    if (emailPackageId) {
-      db.prepare(`
-        INSERT OR REPLACE INTO gsws_user_packages (user_id, twentyi_package_id, domain_name, package_type, package_label)
-        VALUES (?, ?, ?, 'email', ?)
-      `).run(user.id, String(emailPackageId), domain, EMAIL_PACKAGE_LABEL)
-    }
+    `).run(user.id, domain, twentyiDomainId, null)
 
     // Audit log
     db.prepare(`
       INSERT INTO gsws_audit_log (user_id, action, resource_type, resource_name, detail)
       VALUES (?, 'domain_register', 'domain', ?, ?)
-    `).run(user.id, domain, `Registered ${domain} with auto email hosting`)
+    `).run(user.id, domain, `Registered ${domain} for £${catalogue.sell_price.toFixed(2)}`)
 
     return NextResponse.json({
       success: true,
       domain,
-      emailPackage: emailPackageId ? { id: emailPackageId, label: EMAIL_PACKAGE_LABEL } : null,
+      subtotal,
+      vat,
+      total,
+      privacyIncluded: privacyService === true,
+      newBalance,
     })
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 })

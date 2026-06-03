@@ -138,14 +138,44 @@ export function validateSession(token: string): SessionUser | null {
     WHERE s.token = ? AND s.expires_at > datetime('now')
   `).get(token) as any
   if (!session || !session.is_active) return null
+
+  // If this user is a member of another account, resolve the owner ID
+  // so all data queries (packages, domains, credits) use the owner's data
+  const membership = db.prepare(`
+    SELECT m.owner_user_id, m.role as member_role, o.email as owner_email, o.name as owner_name
+    FROM gsws_account_members m
+    JOIN gsws_users o ON o.id = m.owner_user_id
+    WHERE m.member_user_id = ? AND m.status = 'active'
+    LIMIT 1
+  `).get(session.uid) as any
+
+  if (membership) {
+    // Member user — resolve owner's ID for data access
+    const ownerCredits = db.prepare('SELECT balance FROM gsws_user_credits WHERE user_id = ?').get(membership.owner_user_id) as any
+    return {
+      id: membership.owner_user_id,          // data scoped to owner
+      actualUserId: session.uid,             // real logged-in user (for audit)
+      wp_user_id: session.wp_user_id,
+      email: session.email,
+      name: session.name,
+      role: session.role,
+      memberRole: membership.member_role,    // admin / billing / viewer
+      isMember: true,
+      ownerEmail: membership.owner_email,
+      credit_balance: ownerCredits?.balance ?? 0,
+    } as any
+  }
+
   return {
     id: session.uid,
+    actualUserId: session.uid,
     wp_user_id: session.wp_user_id,
     email: session.email,
     name: session.name,
     role: session.role,
+    isMember: false,
     credit_balance: session.credit_balance,
-  }
+  } as any
 }
 
 export function deleteSession(token: string): void {
@@ -154,4 +184,35 @@ export function deleteSession(token: string): void {
 
 export function cleanExpiredSessions(): void {
   db.prepare("DELETE FROM gsws_sessions WHERE expires_at < datetime('now')").run()
+}
+
+// Role permissions — what each member role can do
+export const ROLE_PERMISSIONS = {
+  admin:   { canRead: true,  canWrite: true,  canBilling: true,  canManageTeam: true  },
+  billing: { canRead: true,  canWrite: false, canBilling: true,  canManageTeam: false },
+  viewer:  { canRead: true,  canWrite: false, canBilling: false, canManageTeam: false },
+}
+
+export function checkPermission(
+  user: any,
+  permission: 'canRead' | 'canWrite' | 'canBilling' | 'canManageTeam'
+): boolean {
+  // Non-members (account owners) have full access
+  if (!user?.isMember) return true
+  const role = user.memberRole as keyof typeof ROLE_PERMISSIONS
+  return ROLE_PERMISSIONS[role]?.[permission] ?? false
+}
+
+export function requireWrite(user: any) {
+  if (!checkPermission(user, 'canWrite')) {
+    return { error: 'Your role does not have permission to make changes. Contact the account owner.', status: 403 }
+  }
+  return null
+}
+
+export function requireBilling(user: any) {
+  if (!checkPermission(user, 'canBilling')) {
+    return { error: 'Your role does not have permission to access billing. Contact the account owner.', status: 403 }
+  }
+  return null
 }
