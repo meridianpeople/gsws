@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
@@ -9,6 +9,13 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [idleMessage, setIdleMessage] = useState(false)
+
+  useEffect(() => {
+    if (window.location.search.includes('reason=idle')) {
+      setIdleMessage(true)
+    }
+  }, [])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -57,6 +64,11 @@ export default function LoginPage() {
         </div>
       )}
 
+      {idleMessage && (
+        <div style={{ padding: '12px 16px', borderRadius: '8px', background: '#faeeda', border: '1px solid #f5d08a', fontSize: '13px', color: '#854f0b', marginBottom: '16px' }}>
+          ⏱️ You were logged out due to 15 minutes of inactivity.
+        </div>
+      )}
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <div className="flex flex-col gap-1.5">
           <label className="text-[12px] font-medium text-[#888]">Email address</label>
