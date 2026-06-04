@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
       email: user.email,
       name: user.name,
       role: user.role,
-      credit_balance: user.creditBalance,
+      creditBalance: user.creditBalance,
       isMember: user.isMember || false,
       memberRole: user.memberRole || null,
       ownerEmail: user.ownerEmail || null,
