@@ -1,0 +1,46 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { getGswsSession } from '@/lib/session'
+import { getInstance, startInstance, stopInstance, restartInstance } from '@/lib/contabo'
+import db from '@/lib/db'
+
+export async function GET(req: NextRequest, { params }: { params: Promise<{ instanceId: string }> }) {
+  const user = await getGswsSession(req)
+  if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+
+  const { instanceId } = await params
+  const order = db.prepare('SELECT * FROM gsws_compute_orders WHERE provider_instance_id = ? AND user_id = ?').get(instanceId, user.id) as any
+  if (!order) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+
+  try {
+    const instance = await getInstance(instanceId)
+    return NextResponse.json({ instance, order })
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message }, { status: 500 })
+  }
+}
+
+export async function POST(req: NextRequest, { params }: { params: Promise<{ instanceId: string }> }) {
+  const user = await getGswsSession(req)
+  if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+
+  const { instanceId } = await params
+  const order = db.prepare('SELECT * FROM gsws_compute_orders WHERE provider_instance_id = ? AND user_id = ?').get(instanceId, user.id) as any
+  if (!order) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+
+  const { action } = await req.json()
+
+  try {
+    switch (action) {
+      case 'start':   await startInstance(instanceId); break
+      case 'stop':    await stopInstance(instanceId); break
+      case 'restart': await restartInstance(instanceId); break
+      default: return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
+    }
+    db.prepare(`INSERT INTO gsws_audit_log (user_id, action, resource_type, resource_name, detail) VALUES (?, ?, 'vps', ?, ?)`).run(
+      user.id, `vps_${action}`, instanceId, `VPS ${action} by user`
+    )
+    return NextResponse.json({ success: true, action })
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message }, { status: 500 })
+  }
+}
