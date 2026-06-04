@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 
-export default function WordPressManager({ packageId, domainName, wpVersion, wpSettings, plugins, themes, admins, staging, updatesAvailable }: {
+export default function WordPressManager({ packageId, domainName, wpVersion, wpSettings, plugins, themes, admins, staging, updatesAvailable, wizardRequired }: {
   packageId: string
   domainName: string
   wpVersion: any
@@ -9,6 +9,7 @@ export default function WordPressManager({ packageId, domainName, wpVersion, wpS
   plugins: any[]
   themes: any[]
   admins: any[]
+  wizardRequired: boolean
   staging: any[]
   updatesAvailable: any[]
 }) {
@@ -22,6 +23,10 @@ export default function WordPressManager({ packageId, domainName, wpVersion, wpS
   const [savingSettings, setSavingSettings] = useState(false)
   const [searchReplace, setSearchReplace] = useState({ search: '', replace: '' })
   const [searching, setSearching] = useState(false)
+  const [wizardStep, setWizardStep] = useState(wizardRequired)
+  const [wizardForm, setWizardForm] = useState({ blogname: '', adminEmail: '', adminPassword: '', adminUser: '' })
+  const [wizardSaving, setWizardSaving] = useState(false)
+  const [wizardError, setWizardError] = useState('')
 
   function switchTab(t: typeof tab) {
     setTab(t)
@@ -116,6 +121,78 @@ export default function WordPressManager({ packageId, domainName, wpVersion, wpS
   const pluginUpdates = pluginList.filter(p => p.update === 'available').length
   const themeUpdates = themeList.filter(t => t.update === 'available').length
   const activeTheme = themeList.find(t => t.status === 'active')
+
+  async function handleWizardSetup() {
+    setWizardSaving(true); setWizardError('')
+    try {
+      // Set site settings
+      const settingsRes = await fetch(`/api/packages/${packageId}/wordpress/settings`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'settings', blogname: wizardForm.blogname }),
+      })
+      if (!settingsRes.ok) throw new Error('Failed to set site name')
+
+      // Create admin user if provided
+      if (wizardForm.adminUser && wizardForm.adminEmail && wizardForm.adminPassword) {
+        await fetch(`/api/packages/${packageId}/wordpress/settings`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: 'admin',
+            username: wizardForm.adminUser,
+            email: wizardForm.adminEmail,
+            password: wizardForm.adminPassword,
+          }),
+        })
+      }
+      setWizardStep(false)
+    } catch (e: any) {
+      setWizardError(e.message)
+    } finally {
+      setWizardSaving(false)
+    }
+  }
+
+  if (wizardStep) {
+    return (
+      <div style={{ maxWidth: '520px' }}>
+        <div style={{ marginBottom: '24px' }}>
+          <h2 style={{ fontSize: '20px', fontWeight: 700, color: '#111', margin: 0 }}>Set up WordPress</h2>
+          <p style={{ fontSize: '13px', color: '#666', marginTop: '4px' }}>Complete the initial setup for your WordPress site</p>
+        </div>
+        <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '24px' }}>
+          {wizardError && <div style={{ padding: '12px', background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: '8px', color: '#991b1b', fontSize: '13px', marginBottom: '16px' }}>{wizardError}</div>}
+          <div style={{ display: 'grid', gap: '16px' }}>
+            <div>
+              <label style={{ fontSize: '12px', fontWeight: 600, color: '#444', display: 'block', marginBottom: '6px' }}>Site name</label>
+              <input value={wizardForm.blogname} onChange={e => setWizardForm(f => ({ ...f, blogname: e.target.value }))}
+                placeholder="My WordPress Site"
+                style={{ width: '100%', height: '38px', padding: '0 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '14px', boxSizing: 'border-box' }} />
+            </div>
+            <div style={{ borderTop: '1px solid #f3f4f6', paddingTop: '16px' }}>
+              <p style={{ fontSize: '12px', fontWeight: 600, color: '#444', margin: '0 0 12px' }}>WordPress admin account</p>
+              <div style={{ display: 'grid', gap: '10px' }}>
+                <input value={wizardForm.adminUser} onChange={e => setWizardForm(f => ({ ...f, adminUser: e.target.value }))}
+                  placeholder="Username"
+                  style={{ width: '100%', height: '38px', padding: '0 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '14px', boxSizing: 'border-box' }} />
+                <input value={wizardForm.adminEmail} onChange={e => setWizardForm(f => ({ ...f, adminEmail: e.target.value }))}
+                  placeholder="Admin email" type="email"
+                  style={{ width: '100%', height: '38px', padding: '0 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '14px', boxSizing: 'border-box' }} />
+                <input value={wizardForm.adminPassword} onChange={e => setWizardForm(f => ({ ...f, adminPassword: e.target.value }))}
+                  placeholder="Admin password" type="password"
+                  style={{ width: '100%', height: '38px', padding: '0 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '14px', boxSizing: 'border-box' }} />
+              </div>
+            </div>
+            <button onClick={handleWizardSetup} disabled={wizardSaving || !wizardForm.blogname}
+              style={{ width: '100%', height: '44px', background: wizardSaving ? '#ccc' : '#1a6ef5', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: 700, cursor: wizardSaving ? 'not-allowed' : 'pointer' }}>
+              {wizardSaving ? 'Setting up...' : 'Complete setup'}
+            </button>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>

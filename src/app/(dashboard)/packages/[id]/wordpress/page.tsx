@@ -86,6 +86,7 @@ export default async function PackageWordPressPage({ params }: { params: Promise
         admins={admins}
         staging={staging}
         updatesAvailable={updatesAvailable}
+        wizardRequired={wpVersion.wizardRequired || false}
       />
     </div>
   )
