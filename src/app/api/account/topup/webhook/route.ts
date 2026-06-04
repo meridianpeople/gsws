@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import db from '@/lib/db'
 import crypto from 'crypto'
 
-const HMAC_SECRET = 'gsws2026TopupHMAC!GeiG'
+const HMAC_SECRET = process.env.TOPUP_HMAC_SECRET || 'gsws2026TopupHMAC!GeiG'
 
 export async function POST(req: NextRequest) {
   try {
@@ -39,9 +39,16 @@ export async function POST(req: NextRequest) {
 
     // Credit the account
     db.prepare(`
-      INSERT INTO gsws_user_credits (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance + ?, updated_at = datetime('now')
-      WHERE id = ?
-    `).run(amount, user.id)
+      INSERT INTO gsws_user_credits (user_id, balance) VALUES (?, ?)
+      ON CONFLICT(user_id) DO UPDATE SET balance = balance + ?, updated_at = datetime('now')
+    `).run(user.id, amount, amount)
+
+    const newBalance = (db.prepare('SELECT balance FROM gsws_user_credits WHERE user_id = ?').get(user.id) as any)?.balance || amount
+
+    db.prepare(`
+      INSERT INTO gsws_credit_transactions (user_id, amount, type, description, reference, balance_after)
+      VALUES (?, ?, 'topup', 'WooCommerce order', ?, ?)
+    `).run(user.id, amount, \`WC-\${order_id}\`, newBalance)
 
     // Record in topup history
     db.prepare(`

@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { rateLimit, getRateLimitKey } from '@/lib/rate-limit'
 import { authenticateWithWordPress, upsertGswsUser, createSession } from '@/lib/auth'
 import { findStackCPUser } from '@/lib/stackcp'
 import db from '@/lib/db'
@@ -25,6 +26,10 @@ function getClientIP(req: NextRequest): string {
 }
 
 export async function POST(req: NextRequest) {
+  const rl = rateLimit(getRateLimitKey(req, 'wp-login'), 10, 15 * 60 * 1000)
+  if (!rl.allowed) {
+    return NextResponse.json({ error: 'Too many login attempts. Please try again later.' }, { status: 429 })
+  }
   const ip = getClientIP(req)
   const userAgent = req.headers.get('user-agent') || 'unknown'
 
