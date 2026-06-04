@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import db from '@/lib/db'
 import bcrypt from 'bcryptjs'
+import db from '@/lib/db'
 
 export async function POST(req: NextRequest) {
   const { token, password } = await req.json()
@@ -14,11 +15,34 @@ export async function POST(req: NextRequest) {
 
   if (!user) return NextResponse.json({ error: 'Invalid or expired reset link' }, { status: 400 })
 
+  // Check against last 5 passwords
+  const history = db.prepare(`
+    SELECT password_hash FROM gsws_password_history
+    WHERE user_id = ? ORDER BY created_at DESC LIMIT 5
+  `).all(user.id) as any[]
+
+  for (const prev of history) {
+    const matches = await bcrypt.compare(password, prev.password_hash)
+    if (matches) {
+      return NextResponse.json({ error: 'You cannot reuse a recent password. Please choose a different password.' }, { status: 400 })
+    }
+  }
+
   const passwordHash = await bcrypt.hash(password, 12)
 
   db.prepare(`
     UPDATE gsws_users SET password_hash = ?, reset_token = NULL, reset_token_expires = NULL WHERE id = ?
   `).run(passwordHash, user.id)
+
+  // Save to history
+  db.prepare(`INSERT INTO gsws_password_history (user_id, password_hash) VALUES (?, ?)`).run(user.id, passwordHash)
+
+  // Keep only last 10 in history
+  db.prepare(`
+    DELETE FROM gsws_password_history WHERE user_id = ? AND id NOT IN (
+      SELECT id FROM gsws_password_history WHERE user_id = ? ORDER BY created_at DESC LIMIT 10
+    )
+  `).run(user.id, user.id)
 
   // Update BA account credential
   try { db.prepare(`UPDATE account SET password = ? WHERE accountId = ?`).run(passwordHash, user.email) } catch {}
