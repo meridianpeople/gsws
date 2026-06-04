@@ -4,7 +4,7 @@ import { findStackCPUser } from '@/lib/stackcp'
 import db from '@/lib/db'
 
 const TALIUSAPI_URL = process.env.TALIUSAPI_URL || 'https://taliusapi.geig.co.uk'
-const GSWS_BRIDGE_SECRET = process.env.GSWS_BRIDGE_SECRET || 'gsws2026BridgeKey!'
+const GSWS_BRIDGE_SECRET = process.env.GSWS_BRIDGE_SECRET || ''
 
 async function getWpUserRoles(wpUserId: number): Promise<string[]> {
   try {

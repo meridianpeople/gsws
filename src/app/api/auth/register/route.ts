@@ -3,6 +3,7 @@ import db from '@/lib/db'
 import bcrypt from 'bcryptjs'
 import crypto from 'crypto'
 import nodemailer from 'nodemailer'
+import { rateLimit, getRateLimitKey } from '@/lib/rate-limit'
 
 const APP_URL = process.env.GSWS_URL || 'https://sws.geig.co.uk'
 
@@ -19,6 +20,11 @@ function getMailer() {
 }
 
 export async function POST(req: NextRequest) {
+  // Rate limit: 5 registrations per hour per IP
+  const rl = rateLimit(getRateLimitKey(req, 'register'), 5, 60 * 60 * 1000)
+  if (!rl.allowed) {
+    return NextResponse.json({ error: 'Too many registration attempts. Please try again later.' }, { status: 429 })
+  }
   try {
     const { email, password, name, couponCode } = await req.json()
 

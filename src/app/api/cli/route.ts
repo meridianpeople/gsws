@@ -178,6 +178,7 @@ async function handleCommand(cmd: string, args: string[], user: any, role: strin
       const target = db.prepare('SELECT * FROM gsws_users WHERE email = ? AND is_active = 1').get(targetEmail) as any
       if (!target) return `${c('31', `User not found: ${targetEmail}`)}\n`
       if (target.id === user.actualUserId) return `${c('31', 'Cannot impersonate yourself')}\n`
+      if (['support', 'super_admin'].includes(target.role)) return `${c('31', 'Cannot impersonate privileged users')}\n`
 
       const token = crypto.randomBytes(32).toString('hex')
       const expiresAt = new Date(Date.now() + 60 * 60 * 1000).toISOString()

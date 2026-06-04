@@ -19,6 +19,7 @@ export async function POST(req: NextRequest) {
   const target = db.prepare('SELECT * FROM gsws_users WHERE email = ? AND is_active = 1').get(email) as any
   if (!target) return NextResponse.json({ error: 'User not found' }, { status: 404 })
   if (target.id === session.actualUserId) return NextResponse.json({ error: 'Cannot impersonate yourself' }, { status: 400 })
+  if (['support', 'super_admin'].includes(target.role)) return NextResponse.json({ error: 'Cannot impersonate privileged users' }, { status: 403 })
 
   // Generate impersonation token (1 hour)
   const token = crypto.randomBytes(32).toString('hex')

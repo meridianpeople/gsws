@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { rateLimit, getRateLimitKey } from '@/lib/rate-limit'
 import { auth } from '@/lib/better-auth'
 import db from '@/lib/db'
 import { upsertGswsUser, authenticateWithWordPress } from '@/lib/auth'
@@ -53,6 +54,14 @@ async function ensureBaUser(email: string, name: string, gswsUserId: number, wpU
 }
 
 export async function POST(req: NextRequest) {
+  // Rate limit: 10 attempts per 15 minutes per IP
+  const rl = rateLimit(getRateLimitKey(req, 'login'), 10, 15 * 60 * 1000)
+  if (!rl.allowed) {
+    return NextResponse.json({ error: 'Too many login attempts. Please try again later.' }, {
+      status: 429,
+      headers: { 'Retry-After': String(Math.ceil((rl.resetAt - Date.now()) / 1000)) }
+    })
+  }
   const ip = getClientIP(req)
   const ua = req.headers.get('user-agent') || 'unknown'
 
