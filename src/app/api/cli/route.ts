@@ -272,6 +272,114 @@ async function handleCommand(cmd: string, args: string[], user: any, role: strin
       return `${c('31', `Unknown: customer ${sub}`)}\n`
     }
 
+    case 'compute': {
+      if (!user.isSupport && user.role !== 'super_admin') return c('31', 'Access denied') + '\n'
+      const sub = args[0]
+      const arg1 = args[1]
+      const arg2 = args.slice(2).join(' ')
+
+      if (!sub || sub === 'list') {
+        let orders: any[]
+        if (arg1) {
+          const cu = db.prepare('SELECT id FROM gsws_users WHERE email = ?').get(arg1) as any
+          if (!cu) return c('31', 'User not found: ' + arg1) + '\n'
+          orders = db.prepare('SELECT o.*, u.email as user_email FROM gsws_compute_orders o JOIN gsws_users u ON u.id = o.user_id WHERE o.user_id = ? ORDER BY o.created_at DESC LIMIT 20').all(cu.id) as any[]
+        } else {
+          orders = db.prepare('SELECT o.*, u.email as user_email FROM gsws_compute_orders o JOIN gsws_users u ON u.id = o.user_id ORDER BY o.created_at DESC LIMIT 20').all() as any[]
+        }
+        if (!orders.length) return c('33', 'No compute orders found') + '\n'
+        const lines = [c('36', 'Compute Orders (' + orders.length + ')')]
+        for (const o of orders) {
+          const statusCol = o.status === 'active' ? '32' : o.status === 'pending' ? '33' : '31'
+          const instancePart = o.provider_instance_id ? ' | ID:' + o.provider_instance_id : ' | ' + c('33', 'no instance')
+          lines.push('  #' + o.id + ' [' + c(statusCol, o.status) + '] ' + c('33', o.resource_type.toUpperCase()) + ' ' + o.service_key + ' | ' + o.user_email + ' | ' + o.billing_period + ' | £' + (o.price_inc_vat?.toFixed(2) || '?') + instancePart)
+        }
+        return lines.join('\n') + '\n'
+      }
+
+      if (sub === 'show') {
+        if (!arg1) return c('31', 'Usage: compute show <order_id>') + '\n'
+        const o = db.prepare('SELECT o.*, u.email as user_email FROM gsws_compute_orders o JOIN gsws_users u ON u.id = o.user_id WHERE o.id = ?').get(arg1) as any
+        if (!o) return c('31', 'Order #' + arg1 + ' not found') + '\n'
+        const pd = o.provider_data ? JSON.parse(o.provider_data) : null
+        return [
+          c('36', 'Compute Order #' + o.id),
+          '  Customer:   ' + o.user_email,
+          '  Type:       ' + o.resource_type.toUpperCase() + ' — ' + o.service_key,
+          '  Status:     ' + o.status,
+          '  Period:     ' + o.billing_period,
+          '  Price:      £' + (o.price_inc_vat?.toFixed(2) || '?') + ' inc VAT',
+          '  Instance:   ' + (o.provider_instance_id || 'not set'),
+          '  IP:         ' + (pd?.ipConfig?.v4?.ip || 'not available'),
+          '  Created:    ' + o.created_at,
+          '  Expires:    ' + (o.expires_at || 'N/A'),
+          '  Notes:      ' + (o.notes || 'none'),
+        ].join('\n') + '\n'
+      }
+
+      if (sub === 'update') {
+        if (!arg1 || !arg2) return c('31', 'Usage: compute update <order_id> <instance_id>') + '\n'
+        const o = db.prepare('SELECT * FROM gsws_compute_orders WHERE id = ?').get(arg1) as any
+        if (!o) return c('31', 'Order #' + arg1 + ' not found') + '\n'
+        db.prepare("UPDATE gsws_compute_orders SET provider_instance_id = ?, status = 'active', updated_at = datetime('now') WHERE id = ?").run(arg2, arg1)
+        db.prepare('INSERT INTO gsws_audit_log (user_id, action, resource_type, resource_name, detail) VALUES (?, ?, ?, ?, ?)').run(user.actualUserId, 'compute_update', 'compute', arg1, 'Instance ID set to ' + arg2 + ' by support')
+        return c('32', '✓ Order #' + arg1 + ' updated — instance ID: ' + arg2) + '\n'
+      }
+
+      if (sub === 'status') {
+        if (!arg1 || !arg2) return c('31', 'Usage: compute status <order_id> <status>') + '\n'
+        const validStatuses = ['pending', 'active', 'suspended', 'cancelled', 'expired']
+        if (!validStatuses.includes(arg2)) return c('31', 'Invalid status. Use: ' + validStatuses.join(', ')) + '\n'
+        db.prepare("UPDATE gsws_compute_orders SET status = ?, updated_at = datetime('now') WHERE id = ?").run(arg2, arg1)
+        db.prepare('INSERT INTO gsws_audit_log (user_id, action, resource_type, resource_name, detail) VALUES (?, ?, ?, ?, ?)').run(user.actualUserId, 'compute_status', 'compute', arg1, 'Status changed to ' + arg2 + ' by support')
+        return c('32', '✓ Order #' + arg1 + ' status: ' + arg2) + '\n'
+      }
+
+      if (sub === 'notes') {
+        if (!arg1 || !arg2) return c('31', 'Usage: compute notes <order_id> <notes>') + '\n'
+        db.prepare("UPDATE gsws_compute_orders SET notes = ?, updated_at = datetime('now') WHERE id = ?").run(arg2, arg1)
+        return c('32', '✓ Notes updated for order #' + arg1) + '\n'
+      }
+
+      if (sub === 'sync') {
+        if (!arg1) return c('31', 'Usage: compute sync <order_id>') + '\n'
+        const o = db.prepare('SELECT * FROM gsws_compute_orders WHERE id = ?').get(arg1) as any
+        if (!o) return c('31', 'Order #' + arg1 + ' not found') + '\n'
+        if (!o.provider_instance_id) return c('31', 'No instance ID — use: compute update <order_id> <instance_id>') + '\n'
+        try {
+          const contabo = await import('@/lib/contabo')
+          const instance = await contabo.getInstance(o.provider_instance_id)
+          if (instance) {
+            const newStatus = instance.status === 'running' ? 'active' : instance.status
+            db.prepare("UPDATE gsws_compute_orders SET provider_data = ?, status = ?, updated_at = datetime('now') WHERE id = ?").run(JSON.stringify(instance), newStatus, arg1)
+            return c('32', '✓ Order #' + arg1 + ' synced — status: ' + newStatus + ', IP: ' + (instance.ipConfig?.v4?.ip || 'pending')) + '\n'
+          }
+          return c('33', 'Instance not found on Contabo') + '\n'
+        } catch (err: any) {
+          return c('31', 'Sync failed: ' + err.message) + '\n'
+        }
+      }
+
+      if (sub === 'cancel') {
+        if (!arg1) return c('31', 'Usage: compute cancel <order_id>') + '\n'
+        const o = db.prepare('SELECT * FROM gsws_compute_orders WHERE id = ?').get(arg1) as any
+        if (!o) return c('31', 'Order #' + arg1 + ' not found') + '\n'
+        if (o.provider_instance_id) {
+          try {
+            const contabo = await import('@/lib/contabo')
+            await contabo.cancelInstance(o.provider_instance_id)
+          } catch (err: any) {
+            return c('31', 'Contabo cancel failed: ' + err.message) + '\n'
+          }
+        }
+        db.prepare("UPDATE gsws_compute_orders SET status = 'cancelled', updated_at = datetime('now') WHERE id = ?").run(arg1)
+        db.prepare('INSERT INTO gsws_audit_log (user_id, action, resource_type, resource_name, detail) VALUES (?, ?, ?, ?, ?)').run(user.actualUserId, 'compute_cancel', 'compute', arg1, 'Order cancelled by support')
+        return c('32', '✓ Order #' + arg1 + ' cancelled') + '\n'
+      }
+
+      return c('31', 'Unknown: compute ' + sub) + '\n'
+    }
+
     case 'audit': {
       if (!isSupport) return `${c('31', 'Permission denied')}\n`
       const email = args.find(a => a.includes('@'))
