@@ -29,6 +29,7 @@ export default async function PackageLayout({
     { label: 'Databases', href: `/packages/${id}/databases` },
     ...(pkg?.package_type !== 'windows' ? [{ label: 'PHP', href: `/packages/${id}/php` }] : []),
     { label: 'Backups', href: `/packages/${id}/backups` },
+    { label: 'Managed', href: `/packages/${id}/managed` },
     { label: 'Security', href: `/packages/${id}/security` },
     ...(pkg?.package_type !== 'windows' ? [{ label: 'Applications', href: `/packages/${id}/applications` }] : []),
     ...(pkg?.package_type === 'wordpress' ? [{ label: 'WordPress', href: `/packages/${id}/wordpress` }] : []),

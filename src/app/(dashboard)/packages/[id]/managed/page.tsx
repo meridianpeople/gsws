@@ -21,9 +21,11 @@ export default function ManagedPage() {
   const [success, setSuccess] = useState('')
 
   useEffect(() => {
-    fetch(`/api/packages/${packageId}/web/info`)
-      .then(r => r.json()).then(d => setPackageName(d.domain || packageId))
-      .catch(() => setPackageName(packageId))
+    fetch(`/api/packages/list`)
+      .then(r => r.json()).then(d => {
+        const pkg = d.packages?.find((p: any) => p.id == packageId)
+        setPackageName(pkg?.name || packageId)
+      }).catch(() => setPackageName(packageId))
     fetch(`/api/managed?resource_type=hosting&resource_id=${packageId}`)
       .then(r => r.json()).then(d => { setManaged(d.service); setLoading(false) })
       .catch(() => setLoading(false))
