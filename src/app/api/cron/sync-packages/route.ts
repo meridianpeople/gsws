@@ -32,7 +32,7 @@ export async function GET(req: NextRequest) {
 
         if (pkg.status !== liveStatus || pkg.domain_name !== liveName || pkg.package_label !== liveLabel) {
           db.prepare(`
-            UPDATE gsws_user_packages SET status = ?, domain_name = ?, package_label = ?, updated_at = datetime('now')
+            UPDATE gsws_user_packages SET status = ?, domain_name = ?, package_label = ?
             WHERE twentyi_package_id = ?
           `).run(liveStatus, liveName, liveLabel, pkg.twentyi_package_id)
           updated++
