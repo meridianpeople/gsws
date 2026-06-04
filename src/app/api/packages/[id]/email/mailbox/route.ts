@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getGswsSession } from '@/lib/session'
 import { checkManagedLock } from '@/lib/managed'
+import { chargeEmailAddon } from '@/lib/email-billing'
 import { requireWrite } from '@/lib/auth'
 import db from '@/lib/db'
 import client from '@/lib/api/client'
@@ -49,7 +50,15 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
     })
     const created = res.data?.result?.result?.[0]
     if (!created) return NextResponse.json({ error: 'Mailbox not created' }, { status: 500 })
-    return NextResponse.json({ success: true, id: created.generatedId || created.id })
+
+    // Charge for extra mailboxes beyond free allowance
+    const billing = chargeEmailAddon(user.id, id, domain, local, 'mailbox')
+
+    return NextResponse.json({
+      success: true,
+      id: created.generatedId || created.id,
+      billing: { charged: billing.charged, amount: billing.amount, reason: billing.reason }
+    })
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 })
   }
