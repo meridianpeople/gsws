@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
   const user = await getGswsSession(req)
   if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
 
-  const { service_key, image_key, region, period, display_name } = await req.json()
+  const { service_key, image_key, region, period, display_name, default_user, add_backup, add_private_networking } = await req.json()
   if (!service_key) return NextResponse.json({ error: 'Missing service_key' }, { status: 400 })
 
   // Get pricing
@@ -56,12 +56,18 @@ export async function POST(req: NextRequest) {
   let provisionError: string | null = null
 
   try {
+    const addOns: Record<string, any> = {}
+    if (add_private_networking) addOns.privateNetworking = {}
+    if (add_backup) addOns.backup = {}
+
     const result = await createInstance({
       productId: config.productId || 'V92',
       region: region || config.region || 'EU',
       imageId: IMAGES[image_key || 'ubuntu-24.04'] || IMAGES['ubuntu-24.04'],
-      displayName: display_name || `${user.email}-${service_key}`,
+      displayName: display_name || `gsws-${service_key}-${user.id}`,
       period: months,
+      defaultUser: default_user || 'admin',
+      ...(Object.keys(addOns).length > 0 && { addOns }),
     })
     contaboInstance = result.data?.[0] || result
   } catch (err: any) {

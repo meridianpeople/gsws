@@ -72,6 +72,9 @@ export async function createInstance(options: {
   rootPassword?: number
   sshKeys?: number[]
   userData?: string
+  defaultUser?: string
+  addOns?: Record<string, any>
+  license?: string
 }) {
   return await contaboFetch('/v1/compute/instances', {
     method: 'POST',
