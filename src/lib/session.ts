@@ -132,23 +132,35 @@ export async function getGswsSession(req?: NextRequest): Promise<GswsSession | n
         }
       }
     }
-    // Layer 1: Better Auth session
-    const baSession = await auth.api.getSession({
-      headers: req ? req.headers : await headers(),
-    }).catch(() => null)
-
-    if (baSession?.session && baSession?.user) {
-      const baUser = baSession.user as any
-      let gswsUser: any = null
-
-      if (baUser.gswsUserId) {
-        gswsUser = db.prepare('SELECT * FROM gsws_users WHERE id = ? AND is_active = 1').get(baUser.gswsUserId)
-      }
-      if (!gswsUser) {
-        gswsUser = db.prepare('SELECT * FROM gsws_users WHERE email = ? AND is_active = 1').get(baUser.email)
-      }
-      if (gswsUser) {
-        return buildSession(gswsUser, baSession.session.id, baSession.user.id)
+    // Layer 1: Direct DB session lookup via cookie token
+    let cookieHeader: string | null = null
+    if (req) {
+      cookieHeader = req.headers.get('cookie')
+    } else {
+      const h = await headers()
+      cookieHeader = h.get('cookie')
+    }
+    if (cookieHeader) {
+      const secureCookie = cookieHeader.match(/__Secure-gsws_ba\.session_token=([^;]+)/)
+      const normalCookie = cookieHeader.match(/gsws_ba\.session_token=([^;]+)/)
+      const tokenMatch = secureCookie || normalCookie
+      if (tokenMatch) {
+        const rawToken = decodeURIComponent(tokenMatch[1].trim())
+        const tokenId = rawToken.split('.')[0]
+        if (tokenId) {
+          const dbSession = db.prepare(`
+            SELECT s.token, s.id, s.userId, s.expiresAt, u.email
+            FROM session s
+            JOIN "user" u ON u.id = s.userId
+            WHERE s.token = ? AND s.expiresAt > datetime('now')
+          `).get(tokenId) as any
+          if (dbSession) {
+            const gswsUser = db.prepare('SELECT * FROM gsws_users WHERE email = ? AND is_active = 1').get(dbSession.email) as any
+            if (gswsUser) {
+              return buildSession(gswsUser, dbSession.id, dbSession.userId)
+            }
+          }
+        }
       }
     }
 

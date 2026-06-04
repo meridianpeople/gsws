@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
     db.prepare(`
       INSERT INTO gsws_credit_transactions (user_id, amount, type, description, reference, balance_after)
       VALUES (?, ?, 'topup', 'WooCommerce order', ?, ?)
-    `).run(user.id, amount, \`WC-\${order_id}\`, newBalance)
+    `).run(user.id, amount, 'WC-' + order_id, newBalance)
 
     // Record in topup history
     db.prepare(`

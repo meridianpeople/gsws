@@ -22,7 +22,13 @@ export const auth = betterAuth({
 
   advanced: {
     cookiePrefix: 'gsws_ba',
-    useSecureCookies: process.env.NODE_ENV === 'production',
+    useSecureCookies: true,
+    crossSubDomainCookies: { enabled: false },
+    defaultCookieAttributes: {
+      sameSite: 'lax',
+      secure: true,
+      httpOnly: true,
+    },
   },
 
   emailAndPassword: {

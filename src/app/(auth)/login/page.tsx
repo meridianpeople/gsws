@@ -34,6 +34,8 @@ export default function LoginPage() {
       })
       const data = await res.json()
       const redirectTo = data.redirectTo || '/dashboard'
+      window.location.href = redirectTo
+      return
       if (!res.ok) {
         setError(data.error || 'Login failed')
         return
@@ -46,7 +48,7 @@ export default function LoginPage() {
           body: JSON.stringify({ email: email.toLowerCase().trim(), password }),
         })
       }
-      router.push('/dashboard')
+      window.location.href = '/dashboard'
     } catch {
       setError('Network error — please try again')
     } finally {

@@ -5,4 +5,18 @@
 <hr><center>nginx</center>
 </body>
 </html>
+{"error":"Unauthorized"}{"error":"Unauthorized"}{"error":"Unauthorized"}{"error":"Unauthorized"}<html>
+<head><title>502 Bad Gateway</title></head>
+<body>
+<center><h1>502 Bad Gateway</h1></center>
+<hr><center>nginx</center>
+</body>
+</html>
+{"error":"Unauthorized"}{"error":"Unauthorized"}{"error":"Unauthorized"}{"error":"Unauthorized"}<html>
+<head><title>502 Bad Gateway</title></head>
+<body>
+<center><h1>502 Bad Gateway</h1></center>
+<hr><center>nginx</center>
+</body>
+</html>
 {"error":"Unauthorized"}
