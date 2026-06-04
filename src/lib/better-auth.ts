@@ -10,7 +10,7 @@ const kyselyDb = new Kysely({ dialect: new SqliteDialect({ database: sqlite }) }
 
 export const auth = betterAuth({
   secret: process.env.BETTER_AUTH_SECRET!,
-  baseURL: process.env.BETTER_AUTH_URL || process.env.GSWS_URL || 'https://sws.geig.co.uk',
+  baseURL: process.env.BETTER_AUTH_URL || 'https://sws.geig.co.uk',
 
   database: kyselyAdapter(kyselyDb, { type: 'sqlite' }),
 
@@ -24,11 +24,7 @@ export const auth = betterAuth({
     cookiePrefix: 'gsws_ba',
     useSecureCookies: true,
     crossSubDomainCookies: { enabled: false },
-    defaultCookieAttributes: {
-      sameSite: 'lax',
-      secure: true,
-      httpOnly: true,
-    },
+    defaultCookieAttributes: { sameSite: 'lax', secure: true, httpOnly: true },
   },
 
   emailAndPassword: {
@@ -44,6 +40,17 @@ export const auth = betterAuth({
         const bcrypt = await import('bcryptjs')
         return bcrypt.compare(password, hash)
       },
+    },
+  },
+
+  socialProviders: {
+    github: {
+      clientId: process.env.GITHUB_CLIENT_ID!,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
+    },
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID!,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     },
   },
 

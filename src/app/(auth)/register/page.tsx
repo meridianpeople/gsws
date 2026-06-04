@@ -34,9 +34,18 @@ export default function RegisterPage() {
     setOauthLoading(provider)
     setError('')
     try {
-      const { createAuthClient } = await import('better-auth/client')
-      const client = createAuthClient({ baseURL: window.location.origin })
-      await client.signIn.social({ provider, callbackURL: '/dashboard' })
+      const res = await fetch(`/api/auth/sign-in/social`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ provider, callbackURL: '/dashboard' }),
+      })
+      const data = await res.json()
+      if (data?.url) {
+        window.location.href = data.url
+      } else {
+        setError('Could not get OAuth URL. Please try again.')
+        setOauthLoading(null)
+      }
     } catch {
       setError('Failed to connect with ' + provider + '. Please try again.')
       setOauthLoading(null)
