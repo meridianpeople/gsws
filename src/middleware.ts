@@ -39,7 +39,7 @@ export function middleware(req: NextRequest) {
 
   // Layer 2 — require a session cookie to exist
   // Full cryptographic validation happens in getGswsSession() per route
-  const baSession = req.cookies.get('gsws_ba.session_token')?.value
+  const baSession = req.cookies.get('__Secure-gsws_ba.session_token')?.value || req.cookies.get('gsws_ba.session_token')?.value
   const legacySession = req.cookies.get('gsws_session')?.value
 
   if (!baSession && !legacySession) {

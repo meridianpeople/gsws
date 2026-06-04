@@ -1,12 +1,11 @@
 import Link from 'next/link'
 import { cookies } from 'next/headers'
-import { validateSession } from '@/lib/auth'
+import { getGswsSession } from '@/lib/session'
 import db from '@/lib/db'
 
 export default async function DashboardPage() {
   const cookieStore = await cookies()
-  const token = cookieStore.get('gsws_session')?.value || ''
-  const user = validateSession(token)
+  const user = await getGswsSession()
 
   const packages = user ? db.prepare(`
     SELECT twentyi_package_id as id, domain_name as name, package_type as type,
@@ -45,7 +44,7 @@ export default async function DashboardPage() {
         {[
           { label: 'Active packages', value: packages.length, sub: 'Hosting packages' },
           { label: 'Domains', value: domains.length, sub: 'Registered' },
-          { label: 'Account credit', value: `£${Number(user?.credit_balance || 0).toFixed(2)}`, sub: 'Available balance' },
+          { label: 'Account credit', value: `£${Number(user?.creditBalance || 0).toFixed(2)}`, sub: 'Available balance' },
           { label: 'WordPress sites', value: wpCount, sub: 'Managed WP' },
         ].map(m => (
           <div key={m.label} style={{ background: '#ebebeb', borderRadius: '8px', padding: '16px' }}>
@@ -115,7 +114,7 @@ export default async function DashboardPage() {
         {[
           { label: 'Register domain', desc: 'Find & register a new domain', href: '/domains/search', icon: 'M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2zM2 12h20' },
           { label: 'Add hosting', desc: 'Create a hosting package', href: '/packages/new', icon: 'M22 12H2M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z' },
-          { label: 'Top up credit', desc: `Balance: £${Number(user?.credit_balance || 0).toFixed(2)}`, href: '/account/topup', icon: 'M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' },
+          { label: 'Top up credit', desc: `Balance: £${Number(user?.creditBalance || 0).toFixed(2)}`, href: '/account/topup', icon: 'M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6' },
         ].map(ql => (
           <Link key={ql.href} href={ql.href}
             style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '16px 20px', background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', textDecoration: 'none', color: 'inherit', transition: 'border-color 0.15s' }}>

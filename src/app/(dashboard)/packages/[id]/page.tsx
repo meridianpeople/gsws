@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import { cookies } from 'next/headers'
-import { validateSession } from '@/lib/auth'
+import { getGswsSession } from '@/lib/session'
 import db from '@/lib/db'
 import client from '@/lib/api/client'
 import PackageTabs from './PackageTabs'
@@ -17,8 +17,7 @@ async function getPackageData(packageId: string) {
 export default async function PackageDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const cookieStore = await cookies()
-  const token = cookieStore.get('gsws_session')?.value || ''
-  const user = validateSession(token)
+  const user = await getGswsSession()
 
   const pkg = user ? db.prepare(`
     SELECT * FROM gsws_user_packages WHERE twentyi_package_id = ? AND user_id = ?

@@ -22,6 +22,8 @@ export default function LoginPage() {
     setLoading(true)
     setError('')
     try {
+      // Try GSWS-native login first (invited sub-users with bcrypt password)
+      // then fall back to WordPress auth
       const res = await fetch('/api/auth/gsws-login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -31,6 +33,14 @@ export default function LoginPage() {
       if (!res.ok) {
         setError(data.error || 'Login failed')
         return
+      }
+      // For native users, also call BA sign-in to get properly signed cookies
+      if (data.authProvider === 'gsws_native' || data.nativeUser) {
+        await fetch('/api/auth/sign-in/email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: email.toLowerCase().trim(), password }),
+        })
       }
       router.push('/dashboard')
     } catch {

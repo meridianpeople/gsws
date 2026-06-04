@@ -38,37 +38,18 @@ async function ensureBaUser(email: string, name: string, gswsUserId: number, wpU
       .run(gswsUserId, wpUserId, 'wordpress', existing.id)
     return existing.id
   }
-  // Create BA user with random password (WP users authenticate via WP, not BA password)
   const baId = crypto.randomUUID()
-  const randomPwd = crypto.randomBytes(32).toString('hex')
   const bcrypt = await import('bcryptjs')
-  const hash = await bcrypt.hash(randomPwd, 12)
+  const hash = await bcrypt.hash(crypto.randomBytes(32).toString('hex'), 12)
   db.prepare(`
     INSERT INTO "user" (id, name, email, emailVerified, authProvider, wpUserId, gswsUserId, isActive, createdAt, updatedAt)
     VALUES (?, ?, ?, 1, 'wordpress', ?, ?, 1, datetime('now'), datetime('now'))
   `).run(baId, name, email, wpUserId, gswsUserId)
   db.prepare(`
-    INSERT INTO "account" (id, account_id, provider_id, user_id, password, created_at, updated_at)
+    INSERT INTO "account" (id, accountId, providerId, userId, password, createdAt, updatedAt)
     VALUES (?, ?, 'credential', ?, ?, datetime('now'), datetime('now'))
   `).run(crypto.randomUUID(), email, baId, hash)
   return baId
-}
-
-async function createBaSession(baUserId: string, req: NextRequest): Promise<string | null> {
-  try {
-    const ctx = await (auth as any).$context
-    // Use the internal adapter with correct signature for this BA version
-    const token = crypto.randomBytes(32).toString('hex')
-    const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString()
-    db.prepare(`
-      INSERT INTO "session" (id, userId, token, expiresAt, createdAt, updatedAt)
-      VALUES (?, ?, ?, ?, datetime('now'), datetime('now'))
-    `).run(crypto.randomUUID(), baUserId, token, expiresAt)
-    return token
-  } catch (e: any) {
-    console.error('[createBaSession]', e.message)
-    return null
-  }
 }
 
 export async function POST(req: NextRequest) {
@@ -82,7 +63,7 @@ export async function POST(req: NextRequest) {
     }
     const normalizedEmail = email.toLowerCase().trim()
 
-    // --- Path 1: GSWS-native user (invited sub-user with bcrypt password) ---
+    // --- Path 1: GSWS-native user (bcrypt password in Better Auth account table) ---
     const nativeUser = db.prepare(`
       SELECT u.id as ba_id, u.gswsUserId as gsws_user_id, u.isActive as is_active, a.password as hash
       FROM "user" u
@@ -99,20 +80,30 @@ export async function POST(req: NextRequest) {
       if (!valid) {
         return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 })
       }
+
+      // Use Better Auth signInEmail to get a properly signed session
+      const signInRes = await auth.api.signInEmail({
+        body: { email: normalizedEmail, password },
+        headers: req.headers,
+        asResponse: true,
+      })
+
+      if (!signInRes.ok) {
+        return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 })
+      }
+
       const gswsUser = db.prepare('SELECT * FROM gsws_users WHERE id = ?').get(nativeUser.gsws_user_id) as any
       const credits = db.prepare('SELECT balance FROM gsws_user_credits WHERE user_id = ?').get(gswsUser?.id) as any
-      const sessionToken = await createBaSession(nativeUser.ba_id, req)
       auditLog(gswsUser?.id, `GSWS-native login from ${ip}`, ip, ua)
+
       const response = NextResponse.json({
-        success: true, isNewUser: false,
-        user: { id: gswsUser?.id, email: normalizedEmail, name: gswsUser?.name, role: gswsUser?.role, credit_balance: credits?.balance ?? 0 },
+        success: true, isNewUser: false, authProvider: 'gsws_native',
+        user: { id: gswsUser?.id, email: normalizedEmail, name: gswsUser?.name, role: gswsUser?.role, creditBalance: credits?.balance ?? 0 },
       })
-      if (sessionToken) {
-        response.cookies.set('gsws_ba.session_token', sessionToken, {
-          httpOnly: true, secure: process.env.NODE_ENV === 'production',
-          sameSite: 'lax', maxAge: 60 * 60 * 24 * 7, path: '/',
-        })
-      }
+      // Forward BA session cookies
+      signInRes.headers.forEach((value: string, key: string) => {
+        if (key.toLowerCase() === 'set-cookie') response.headers.append('set-cookie', value)
+      })
       return response
     }
 
@@ -143,25 +134,38 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Your account has been suspended.' }, { status: 403 })
     }
 
+    // Ensure BA user exists — set a known temp password for session creation
+    const tempPassword = `wp_${wpUserId}_${process.env.BETTER_AUTH_SECRET!.substring(0, 16)}`
     const baUserId = await ensureBaUser(wpAuth.user_email, wpAuth.user_display_name, gswsUser.id, wpUserId)
+
     if (!baUserId) {
       return NextResponse.json({ error: 'Failed to create auth session' }, { status: 500 })
     }
 
-    const sessionToken = await createBaSession(baUserId, req)
+    // Update the BA account password to tempPassword so signInEmail works
+    const bcrypt = await import('bcryptjs')
+    const tempHash = await bcrypt.hash(tempPassword, 12)
+    db.prepare(`UPDATE "account" SET password = ? WHERE userId = ? AND providerId = 'credential'`).run(tempHash, baUserId)
+
+    // Use Better Auth signInEmail with temp password
+    const signInRes = await auth.api.signInEmail({
+      body: { email: wpAuth.user_email, password: tempPassword },
+      headers: req.headers,
+      asResponse: true,
+    })
+
     const credits = db.prepare('SELECT balance FROM gsws_user_credits WHERE user_id = ?').get(gswsUser.id) as any
     auditLog(gswsUser.id, `WordPress login from ${ip}${isNewUser ? ' · New' : ''}${creditGranted ? ' · £100 credit' : ''}`, ip, ua)
 
     const response = NextResponse.json({
       success: true, isNewUser, creditGranted,
       welcomeCredit: creditGranted ? 100.00 : null,
-      user: { id: gswsUser.id, email: gswsUser.email, name: gswsUser.name, role: gswsUser.role, credit_balance: credits?.balance ?? gswsUser.credit_balance },
+      user: { id: gswsUser.id, email: gswsUser.email, name: gswsUser.name, role: gswsUser.role, creditBalance: credits?.balance ?? 0 },
     })
 
-    if (sessionToken) {
-      response.cookies.set('gsws_ba.session_token', sessionToken, {
-        httpOnly: true, secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax', maxAge: 60 * 60 * 24 * 7, path: '/',
+    if (signInRes?.ok) {
+      signInRes.headers.forEach((value: string, key: string) => {
+        if (key.toLowerCase() === 'set-cookie') response.headers.append('set-cookie', value)
       })
     }
 

@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { validateSession } from '@/lib/auth'
+import { getGswsSession } from '@/lib/session'
 import db from '@/lib/db'
 
 export async function GET(req: NextRequest) {
   const token = req.cookies.get('gsws_session')?.value
-  if (!token || !validateSession(token)) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+  if (!token || !await getGswsSession()) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
 
   const tld = req.nextUrl.searchParams.get('tld')
   const type = req.nextUrl.searchParams.get('type') || 'domain'

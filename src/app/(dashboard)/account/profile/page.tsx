@@ -133,7 +133,7 @@ export default function ProfilePage() {
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
         {[
-          { label: 'Account credit', value: `£${Number(user?.credit_balance || 0).toFixed(2)}`, sub: 'Available balance', href: '/account/topup', cta: 'Top up' },
+          { label: 'Account credit', value: `£${Number(user?.creditBalance || 0).toFixed(2)}`, sub: 'Available balance', href: '/account/topup', cta: 'Top up' },
           { label: 'Domains', value: stats.domainCount, sub: 'Registered domains', href: '/domains', cta: 'Manage' },
           { label: 'Packages', value: stats.packageCount, sub: 'Hosting packages', href: '/packages', cta: 'Manage' },
         ].map(s => (

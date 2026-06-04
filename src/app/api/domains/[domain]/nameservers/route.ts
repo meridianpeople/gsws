@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { validateSession } from '@/lib/auth'
+import { getGswsSession } from '@/lib/session'
 import db from '@/lib/db'
 import client from '@/lib/api/client'
 
 async function checkOwnership(req: NextRequest, domain: string) {
-  const token = req.cookies.get('gsws_session')?.value
-  const user = token ? validateSession(token) : null
+  const user = await getGswsSession(req)
   if (!user) return null
   const owned = db.prepare('SELECT * FROM gsws_user_domains WHERE user_id = ? AND domain_name = ?').get(user.id, domain)
   return owned ? user : null

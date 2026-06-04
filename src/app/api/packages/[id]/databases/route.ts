@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { validateSession } from '@/lib/auth'
+import { getGswsSession } from '@/lib/session'
 import db from '@/lib/db'
 import client from '@/lib/api/client'
 import crypto from 'crypto'
@@ -18,8 +18,7 @@ function encryptPassword(password: string): string {
 }
 
 async function checkOwnership(req: NextRequest, id: string) {
-  const token = req.cookies.get('gsws_session')?.value
-  const user = token ? validateSession(token) : null
+  const user = await getGswsSession(req)
   if (!user) return null
   return db.prepare('SELECT * FROM gsws_user_packages WHERE twentyi_package_id = ? AND user_id = ?').get(id, user.id) ? user : null
 }

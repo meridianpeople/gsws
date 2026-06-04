@@ -8,7 +8,7 @@ interface SessionUser {
   email: string
   name: string
   role: string
-  credit_balance: number
+  creditBalance: number
 }
 
 interface Notification {
@@ -161,7 +161,7 @@ export default function Topbar() {
               <line x1="12" y1="1" x2="12" y2="23"/>
               <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
             </svg>
-            £{Number(user.credit_balance).toFixed(2)}
+            £{Number(user.creditBalance).toFixed(2)}
           </Link>
         )}
 
@@ -266,7 +266,7 @@ export default function Topbar() {
                 { label: 'Statement', href: '/account/statement', icon: '📄' },
                 { label: 'Renewals', href: '/renewals', icon: '🔄' },
                 { label: 'Team members', href: '/account/members', icon: '👥' },
-                { label: `Credit · £${Number(user?.credit_balance || 0).toFixed(2)}`, href: '/account/topup', icon: '💳', highlight: true },
+                { label: `Credit · £${Number(user?.creditBalance || 0).toFixed(2)}`, href: '/account/topup', icon: '💳', highlight: true },
               ].map(item => (
                 <Link key={item.href} href={item.href} onClick={() => setOpen(false)}
                   style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '9px 14px', fontSize: '12px', textDecoration: 'none', color: item.highlight ? '#5599ff' : '#aaa', transition: 'background 0.1s' }}

@@ -1,12 +1,11 @@
 import Link from 'next/link'
 import { cookies } from 'next/headers'
-import { validateSession } from '@/lib/auth'
+import { getGswsSession } from '@/lib/session'
 import db from '@/lib/db'
 
 export default async function WordPressPage() {
   const cookieStore = await cookies()
-  const token = cookieStore.get('gsws_session')?.value || ''
-  const user = validateSession(token)
+  const user = await getGswsSession()
   const wpPackages = user ? db.prepare("SELECT * FROM gsws_user_packages WHERE user_id = ? AND package_type = 'wordpress'").all(user.id) as any[] : []
 
   return (

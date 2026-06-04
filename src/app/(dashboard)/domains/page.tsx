@@ -1,12 +1,11 @@
 import Link from 'next/link'
 import { cookies } from 'next/headers'
-import { validateSession } from '@/lib/auth'
+import { getGswsSession } from '@/lib/session'
 import db from '@/lib/db'
 
 export default async function DomainsPage() {
   const cookieStore = await cookies()
-  const token = cookieStore.get('gsws_session')?.value || ''
-  const user = validateSession(token)
+  const user = await getGswsSession()
 
   const domains = user ? db.prepare(`
     SELECT domain_name as name, twentyi_package_id, registered_at

@@ -101,13 +101,13 @@ export default function TopupPage() {
           <div>
             <p style={{ fontSize: '12px', color: '#6699cc', marginBottom: '2px' }}>Current balance</p>
             <p style={{ fontSize: '24px', fontWeight: 700, color: '#fff', letterSpacing: '-0.5px', lineHeight: 1 }}>
-              £{Number(user.credit_balance).toFixed(2)}
+              £{Number(user.creditBalance).toFixed(2)}
             </p>
           </div>
           <div style={{ marginLeft: 'auto', textAlign: 'right' }}>
             <p style={{ fontSize: '11px', color: '#6699cc', marginBottom: '2px' }}>After top-up</p>
             <p style={{ fontSize: '20px', fontWeight: 700, color: '#5599ff', lineHeight: 1 }}>
-              £{(Number(user.credit_balance) + selected).toFixed(2)}
+              £{(Number(user.creditBalance) + selected).toFixed(2)}
             </p>
           </div>
         </div>

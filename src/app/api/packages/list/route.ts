@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { validateSession } from '@/lib/auth'
+import { getGswsSession } from '@/lib/session'
 import db from '@/lib/db'
 
 export async function GET(req: NextRequest) {
-  const token = req.cookies.get('gsws_session')?.value
-  const user = token ? validateSession(token) : null
+  const user = await getGswsSession(req)
   if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
 
   const packages = db.prepare(`

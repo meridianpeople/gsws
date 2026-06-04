@@ -1,12 +1,11 @@
 import Link from 'next/link'
 import { cookies } from 'next/headers'
-import { validateSession } from '@/lib/auth'
+import { getGswsSession } from '@/lib/session'
 import db from '@/lib/db'
 
 export default async function PackagesPage() {
   const cookieStore = await cookies()
-  const token = cookieStore.get('gsws_session')?.value || ''
-  const user = validateSession(token)
+  const user = await getGswsSession()
 
   const packages = user ? db.prepare(`
     SELECT twentyi_package_id as id, domain_name as name, package_type as type,

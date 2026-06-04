@@ -100,7 +100,7 @@ export async function POST(req: NextRequest) {
         email: gswsUser.email,
         name: gswsUser.name,
         role: gswsUser.role,
-        credit_balance: gswsUser.credit_balance,
+        creditBalance: gswsUser.creditBalance ?? 0,
       },
     })
 

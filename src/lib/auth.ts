@@ -15,7 +15,7 @@ export interface GswsUser {
   last_name: string
   avatar_url: string
   role: string
-  credit_balance: number
+  creditBalance: number
   is_active: number
   stackcp_user_id: string | null
 }
@@ -26,7 +26,7 @@ export interface SessionUser {
   email: string
   name: string
   role: string
-  credit_balance: number
+  creditBalance: number
 }
 
 export async function authenticateWithWordPress(
@@ -162,7 +162,7 @@ export function validateSession(token: string): SessionUser | null {
       memberRole: membership.member_role,    // admin / billing / viewer
       isMember: true,
       ownerEmail: membership.owner_email,
-      credit_balance: ownerCredits?.balance ?? 0,
+      creditBalance: ownerCredits?.balance ?? 0,
     } as any
   }
 
@@ -174,7 +174,7 @@ export function validateSession(token: string): SessionUser | null {
     name: session.name,
     role: session.role,
     isMember: false,
-    credit_balance: session.credit_balance,
+    creditBalance: session.credit_balance,
   } as any
 }
 
