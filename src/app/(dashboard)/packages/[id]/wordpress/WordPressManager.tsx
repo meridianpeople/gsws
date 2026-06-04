@@ -474,6 +474,16 @@ export default function WordPressManager({ packageId, domainName, wpVersion, wpS
                     </div>
                     <div style={{ display: 'flex', gap: '6px' }}>
                       {s.url && <a href={s.url} target="_blank" style={{ height: '28px', padding: '0 12px', display: 'inline-flex', alignItems: 'center', background: '#1a6ef5', color: '#fff', borderRadius: '6px', fontSize: '11px', fontWeight: 600, textDecoration: 'none' }}>Visit ↗</a>}
+                      <button onClick={async () => {
+                        if (!confirm('Push staging to live? This will overwrite your live site.')) return
+                        try {
+                          await post('staging', { type: 'staging' })
+                          setSuccess('Pushing staging to live. This may take a few minutes.')
+                          setTimeout(() => setSuccess(''), 8000)
+                        } catch (err: any) { setError(err.message) }
+                      }} style={{ height: '28px', padding: '0 12px', background: '#166534', color: '#fff', border: 'none', borderRadius: '6px', fontSize: '11px', fontWeight: 600, cursor: 'pointer' }}>
+                        Push to live ↑
+                      </button>
                     </div>
                   </div>
                 ))}
@@ -485,12 +495,12 @@ export default function WordPressManager({ packageId, domainName, wpVersion, wpS
                 </div>
                 <button onClick={async () => {
                   try {
-                    await post('staging', { action: 'create' })
-                    setSuccess('Staging site creation started. This may take a few minutes.')
-                    setTimeout(() => setSuccess(''), 5000)
+                    await post('staging', { type: 'live' })
+                    setSuccess('Staging site creation started — cloning live to staging. This may take a few minutes.')
+                    setTimeout(() => setSuccess(''), 8000)
                   } catch (err: any) { setError(err.message) }
                 }} style={{ height: '34px', padding: '0 20px', background: '#1a6ef5', color: '#fff', border: 'none', borderRadius: '6px', fontSize: '13px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
-                  Create staging site
+                  Clone live → staging
                 </button>
               </div>
             )}
