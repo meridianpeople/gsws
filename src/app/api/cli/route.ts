@@ -3,8 +3,21 @@ import { getGswsSession } from '@/lib/session'
 import db from '@/lib/db'
 import client from '@/lib/api/client'
 import crypto from 'crypto'
+import nodemailer from 'nodemailer'
 
 const VERSION = '1.0.0'
+
+function getMailer() {
+  return nodemailer.createTransport({
+    host: process.env.MAIL_HOST || 'smtp.stackmail.com',
+    port: 465,
+    secure: true,
+    auth: {
+      user: process.env.MAIL_USER || 'hello@sws.geig.co.uk',
+      pass: process.env.MAIL_PASS || '',
+    },
+  })
+}
 const e = '\x1b'
 const c = (code: string, text: string) => `${e}[${code}m${text}${e}[0m`
 
@@ -173,6 +186,35 @@ async function handleCommand(cmd: string, args: string[], user: any, role: strin
       db.prepare('INSERT INTO gsws_audit_log (user_id, action, resource_type, resource_name, detail) VALUES (?, ?, ?, ?, ?)').run(user.actualUserId, 'impersonate_start', 'support', targetEmail, `Impersonation started via web CLI`)
       db.prepare('INSERT INTO gsws_notifications (user_id, type, title, message) VALUES (?, ?, ?, ?)').run(target.id, 'system', 'Support access', `A support agent accessed your account. If unexpected, contact us.`)
 
+      // Email Ovie
+      try {
+        const mailer = getMailer()
+        const agentUser = db.prepare('SELECT email FROM gsws_users WHERE id = ?').get(user.actualUserId) as any
+        await mailer.sendMail({
+          from: '"GSWS Security" <hello@sws.geig.co.uk>',
+          to: 'ovie@meridianpeople.co.uk',
+          subject: `[GSWS] Support impersonation started — ${targetEmail}`,
+          html: `
+            <div style="font-family:sans-serif;max-width:480px;margin:0 auto;padding:24px">
+              <div style="background:#dc2626;padding:16px 20px;border-radius:8px 8px 0 0">
+                <h2 style="color:#fff;margin:0;font-size:16px">⚠️ Support Impersonation Started</h2>
+              </div>
+              <div style="border:1px solid #e5e7eb;border-top:none;padding:20px;border-radius:0 0 8px 8px">
+                <table style="width:100%;font-size:13px">
+                  <tr><td style="color:#666;padding:4px 0;width:120px">Support agent</td><td><strong>${agentUser?.email}</strong></td></tr>
+                  <tr><td style="color:#666;padding:4px 0">Target account</td><td><strong>${targetEmail}</strong></td></tr>
+                  <tr><td style="color:#666;padding:4px 0">Time</td><td>${new Date().toLocaleString('en-GB')}</td></tr>
+                  <tr><td style="color:#666;padding:4px 0">Expires</td><td>${new Date(expiresAt).toLocaleString('en-GB')}</td></tr>
+                </table>
+                <p style="font-size:12px;color:#999;margin-top:16px">This is an automated security alert. All actions during this session are logged.</p>
+              </div>
+            </div>
+          `,
+        })
+      } catch (mailErr) {
+        console.error('[impersonate] email failed:', mailErr)
+      }
+
       return [
         '',
         c('33', `⚠️  Impersonation session created`),
@@ -278,6 +320,27 @@ async function handleCommand(cmd: string, args: string[], user: any, role: strin
         support: (db.prepare("SELECT COUNT(*) as n FROM gsws_support_requests WHERE status = 'open'").get() as any).n,
       }
       return `\n  ${c('1', 'Platform Stats')}\n  Users: ${s.users}  Packages: ${s.packages}  Managed: ${s.managed}\n  Total credits: ${c('32', `£${s.credits.toFixed(2)}`)}  Open support: ${s.support}\n\n`
+    }
+
+    case 'sessions': {
+      if (!isSupport) return `${c('31', 'Permission denied')}\n`
+      const sessions = db.prepare(`
+        SELECT i.*, su.email as support_email, tu.email as target_email
+        FROM gsws_impersonation i
+        JOIN gsws_users su ON su.id = i.support_user_id
+        JOIN gsws_users tu ON tu.id = i.target_user_id
+        WHERE i.status = 'active' AND i.expires_at > datetime('now')
+        ORDER BY i.created_at DESC
+      `).all() as any[]
+      if (!sessions.length) return `${c('33', 'No active impersonation sessions')}\n`
+      const lines = ['', c('1', 'Active impersonation sessions:'), '']
+      for (const s of sessions) {
+        const expiresIn = Math.round((new Date(s.expires_at).getTime() - Date.now()) / 60000)
+        lines.push(`  ${c('33', `[${s.id}]`)} ${c('1', s.support_email)} → ${c('36', s.target_email)}`)
+        lines.push(`        Started: ${s.created_at}  Expires in: ${expiresIn}m`)
+      }
+      lines.push('')
+      return lines.join('\n')
     }
 
     default:
