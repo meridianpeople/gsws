@@ -132,7 +132,7 @@ export default function LoginPage() {
 
       <p className="mt-6 text-center text-[12px] text-[#555]">
         No account?{' '}
-        <a href="https://geig.co.uk/register" style={{ color: '#1a6ef5' }}>
+        <a href="/register" style={{ color: '#1a6ef5' }}>
           Create one at geig.co.uk
         </a>
       </p>
