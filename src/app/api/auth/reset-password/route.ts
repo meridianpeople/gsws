@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
 
   const user = db.prepare(`
     SELECT * FROM gsws_users
-    WHERE reset_token = ? AND reset_token_expires > datetime('now') AND auth_provider = 'gsws_native'
+    WHERE reset_token = ? AND reset_token_expires > datetime('now') AND password_hash IS NOT NULL
   `).get(token) as any
 
   if (!user) return NextResponse.json({ error: 'Invalid or expired reset link' }, { status: 400 })

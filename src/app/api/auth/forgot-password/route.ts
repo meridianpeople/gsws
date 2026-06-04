@@ -10,7 +10,7 @@ export async function POST(req: NextRequest) {
   if (!email) return NextResponse.json({ error: 'Email required' }, { status: 400 })
 
   // Always return success to prevent email enumeration
-  const user = db.prepare('SELECT * FROM gsws_users WHERE email = ? AND auth_provider = ?').get(email.toLowerCase(), 'gsws_native') as any
+  const user = db.prepare('SELECT * FROM gsws_users WHERE email = ? AND password_hash IS NOT NULL').get(email.toLowerCase()) as any
 
   if (user) {
     const token = crypto.randomBytes(32).toString('hex')
