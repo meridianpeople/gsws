@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getGswsSession } from '@/lib/session'
+import { checkManagedLock } from '@/lib/managed'
 import db from '@/lib/db'
 import client from '@/lib/api/client'
 import crypto from 'crypto'
@@ -26,7 +27,8 @@ async function checkOwnership(req: NextRequest, id: string) {
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const user = await checkOwnership(req, id)
-  if (!user) return NextResponse.json({ error: 'Access denied' }, { status: 401 })
+  if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+  if ((user as any).__managedError) return NextResponse.json({ error: (user as any).__managedError }, { status: (user as any).__managedStatus })
 
   try {
     const { name, password: customPassword } = await req.json()
@@ -79,7 +81,8 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const user = await checkOwnership(req, id)
-  if (!user) return NextResponse.json({ error: 'Access denied' }, { status: 401 })
+  if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+  if ((user as any).__managedError) return NextResponse.json({ error: (user as any).__managedError }, { status: (user as any).__managedStatus })
 
   try {
     const { dbId, dbName } = await req.json()
@@ -100,7 +103,8 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const user = await checkOwnership(req, id)
-  if (!user) return NextResponse.json({ error: 'Access denied' }, { status: 401 })
+  if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+  if ((user as any).__managedError) return NextResponse.json({ error: (user as any).__managedError }, { status: (user as any).__managedStatus })
   try {
     const res = await client.get(`/package/${id}/web/mysqlDatabases`)
     return NextResponse.json({ databases: res.data || [] })
@@ -112,7 +116,8 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const user = await checkOwnership(req, id)
-  if (!user) return NextResponse.json({ error: 'Access denied' }, { status: 401 })
+  if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+  if ((user as any).__managedError) return NextResponse.json({ error: (user as any).__managedError }, { status: (user as any).__managedStatus })
   try {
     const { userId, password } = await req.json()
     if (!userId || !password) return NextResponse.json({ error: 'User ID and password required' }, { status: 400 })

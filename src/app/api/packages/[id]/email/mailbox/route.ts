@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getGswsSession } from '@/lib/session'
+import { checkManagedLock } from '@/lib/managed'
 import { requireWrite } from '@/lib/auth'
 import db from '@/lib/db'
 import client from '@/lib/api/client'
@@ -13,7 +14,8 @@ async function checkOwnership(req: NextRequest, id: string) {
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const user = await checkOwnership(req, id)
-  if (!user) return NextResponse.json({ error: 'Access denied' }, { status: 401 })
+  if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+  if ((user as any).__managedError) return NextResponse.json({ error: (user as any).__managedError }, { status: (user as any).__managedStatus })
   const writeCheck = requireWrite(user)
   if (writeCheck) return NextResponse.json({ error: writeCheck.error }, { status: writeCheck.status })
   const domain = req.nextUrl.searchParams.get('domain') || ''
@@ -28,7 +30,8 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const user = await checkOwnership(req, id)
-  if (!user) return NextResponse.json({ error: 'Access denied' }, { status: 401 })
+  if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+  if ((user as any).__managedError) return NextResponse.json({ error: (user as any).__managedError }, { status: (user as any).__managedStatus })
   try {
     const { domain, local, password, quotaMB } = await req.json()
     if (!domain || !local || !password) return NextResponse.json({ error: 'Domain, username and password required' }, { status: 400 })
@@ -55,7 +58,8 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const user = await checkOwnership(req, id)
-  if (!user) return NextResponse.json({ error: 'Access denied' }, { status: 401 })
+  if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+  if ((user as any).__managedError) return NextResponse.json({ error: (user as any).__managedError }, { status: (user as any).__managedStatus })
   try {
     const { domain, local } = await req.json()
     await client.delete(`/package/${id}/email/${encodeURIComponent(domain)}/mailbox/${encodeURIComponent(local)}`)

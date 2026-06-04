@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getGswsSession } from '@/lib/session'
+import { checkManagedLock } from '@/lib/managed'
 import { requireWrite } from '@/lib/auth'
 import db from '@/lib/db'
 import client from '@/lib/api/client'
@@ -8,7 +9,10 @@ async function checkOwnership(req: NextRequest, id: string) {
   const user = await getGswsSession(req)
   if (!user) return null
   const pkg = db.prepare('SELECT * FROM gsws_user_packages WHERE twentyi_package_id = ? AND user_id = ?').get(id, user.id)
-  return pkg ? user : null
+  if (!pkg) return null
+  const mLock = checkManagedLock(user.id, 'hosting', id)
+  if (mLock) return { __managedError: mLock.error, __managedStatus: mLock.status }
+  return user
 }
 
 function normalise(r: any, domain: string): any {
@@ -26,7 +30,8 @@ function normalise(r: any, domain: string): any {
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const user = await checkOwnership(req, id)
-  if (!user) return NextResponse.json({ error: 'Access denied' }, { status: 401 })
+  if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+  if ((user as any).__managedError) return NextResponse.json({ error: (user as any).__managedError }, { status: (user as any).__managedStatus })
   const writeCheck = requireWrite(user)
   if (writeCheck) return NextResponse.json({ error: writeCheck.error }, { status: writeCheck.status })
   try {
@@ -44,7 +49,8 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 export async function POST(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const user = await checkOwnership(req, id)
-  if (!user) return NextResponse.json({ error: 'Access denied' }, { status: 401 })
+  if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+  if ((user as any).__managedError) return NextResponse.json({ error: (user as any).__managedError }, { status: (user as any).__managedStatus })
   try {
     const { type, host, data, ttl, priority } = await req.json()
     if (!type || !host || !data) return NextResponse.json({ error: 'Type, host and value required' }, { status: 400 })
@@ -64,7 +70,8 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params
   const user = await checkOwnership(req, id)
-  if (!user) return NextResponse.json({ error: 'Access denied' }, { status: 401 })
+  if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+  if ((user as any).__managedError) return NextResponse.json({ error: (user as any).__managedError }, { status: (user as any).__managedStatus })
   try {
     const { id: recordId } = await req.json()
     if (!recordId) return NextResponse.json({ error: 'Record ID required' }, { status: 400 })
