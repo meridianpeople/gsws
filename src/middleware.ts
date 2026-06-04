@@ -25,6 +25,10 @@ const PUBLIC_PATHS = [
   '/api/auth/verify-email',
   '/verify-email',
   '/register',
+  '/forgot-password',
+  '/reset-password',
+  '/api/auth/forgot-password',
+  '/api/auth/reset-password',
 ]
 
 export function middleware(req: NextRequest) {
