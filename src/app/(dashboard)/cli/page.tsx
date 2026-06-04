@@ -26,6 +26,14 @@ export default function CLIPage() {
     setLines(prev => [...prev, text])
   }
 
+  function makeLinksClickable(html: string): string {
+    // Make /support/session?token=... clickable
+    return html.replace(
+      /(\/support\/session\?token=[a-f0-9]+)/g,
+      '<a href="$1" target="_blank" style="color:#22d3ee;text-decoration:underline;cursor:pointer">$1</a>'
+    )
+  }
+
   function ansiToHtml(text: string): string {
     return text
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -127,7 +135,7 @@ export default function CLIPage() {
       >
         {/* Output lines */}
         {lines.map((line, i) => (
-          <div key={i} dangerouslySetInnerHTML={{ __html: ansiToHtml(line) }} style={{ color: '#e5e5e5', minHeight: '1px' }} />
+          <div key={i} dangerouslySetInnerHTML={{ __html: makeLinksClickable(ansiToHtml(line)) }} style={{ color: '#e5e5e5', minHeight: '1px' }} />
         ))}
 
         {/* Input line */}
