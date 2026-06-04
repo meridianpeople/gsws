@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getGswsSession } from '@/lib/session'
-import { getInstance, startInstance, stopInstance, restartInstance } from '@/lib/contabo'
+import { getInstance, startInstance, stopInstance, restartInstance, cancelInstance, contaboFetch } from '@/lib/contabo'
 import db from '@/lib/db'
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ instanceId: string }> }) {
@@ -40,6 +40,45 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ ins
       user.id, `vps_${action}`, instanceId, `VPS ${action} by user`
     )
     return NextResponse.json({ success: true, action })
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message }, { status: 500 })
+  }
+}
+
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ instanceId: string }> }) {
+  const user = await getGswsSession(req)
+  if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+
+  const { instanceId } = await params
+  const order = db.prepare('SELECT * FROM gsws_compute_orders WHERE provider_instance_id = ? AND user_id = ?').get(instanceId, user.id) as any
+  if (!order) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+
+  try {
+    await cancelInstance(instanceId)
+    db.prepare(`UPDATE gsws_compute_orders SET status = 'cancelled', updated_at = datetime('now') WHERE id = ?`).run(order.id)
+    db.prepare(`INSERT INTO gsws_audit_log (user_id, action, resource_type, resource_name, detail) VALUES (?, 'vps_cancel', 'vps', ?, ?)`).run(
+      user.id, instanceId, 'VPS cancelled by user')
+    return NextResponse.json({ success: true })
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message }, { status: 500 })
+  }
+}
+
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ instanceId: string }> }) {
+  const user = await getGswsSession(req)
+  if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+
+  const { instanceId } = await params
+  const order = db.prepare('SELECT * FROM gsws_compute_orders WHERE provider_instance_id = ? AND user_id = ?').get(instanceId, user.id) as any
+  if (!order) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+
+  const { displayName } = await req.json()
+  try {
+    await contaboFetch(`/v1/compute/instances/${instanceId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ displayName }),
+    })
+    return NextResponse.json({ success: true })
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 })
   }

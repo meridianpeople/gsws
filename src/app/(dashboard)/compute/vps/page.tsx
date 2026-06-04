@@ -139,14 +139,58 @@ export default function VPSPage() {
                 <span style={{ fontSize: '11px', fontWeight: 700, padding: '3px 8px', borderRadius: '4px', background: o.status === 'active' ? '#dcfce7' : o.status === 'pending' ? '#fef9c3' : '#f3f4f6', color: o.status === 'active' ? '#166534' : o.status === 'pending' ? '#92400e' : '#666' }}>
                   {o.status}
                 </span>
-                {o.provider_instance_id && (
-                  <div style={{ display: 'flex', gap: '4px' }}>
-                    <button onClick={async () => { await fetch(`/api/compute/vps/${o.provider_instance_id}`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({action:'restart'}) }); loadOrders() }}
-                      style={{ padding: '5px 8px', background: '#f3f4f6', border: '1px solid #e5e7eb', borderRadius: '5px', fontSize: '11px', cursor: 'pointer' }}>↺</button>
-                    <button onClick={async () => { await fetch(`/api/compute/vps/${o.provider_instance_id}`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify({action:'stop'}) }); loadOrders() }}
-                      style={{ padding: '5px 8px', background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: '5px', fontSize: '11px', cursor: 'pointer', color: '#991b1b' }}>■</button>
+              <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
+                  {o.provider_instance_id && (
+                    <>
+                      <button onClick={() => handleAction(o.provider_instance_id, 'restart')}
+                        style={{ padding: '5px 8px', background: '#f3f4f6', border: '1px solid #e5e7eb', borderRadius: '5px', fontSize: '11px', cursor: 'pointer' }}>↺ Restart</button>
+                      <button onClick={() => handleAction(o.provider_instance_id, 'stop')}
+                        style={{ padding: '5px 8px', background: '#fef9c3', border: '1px solid #fde68a', borderRadius: '5px', fontSize: '11px', cursor: 'pointer', color: '#92400e' }}>■ Stop</button>
+                      <button onClick={() => handleAction(o.provider_instance_id, 'start')}
+                        style={{ padding: '5px 8px', background: '#f0fdf4', border: '1px solid #86efac', borderRadius: '5px', fontSize: '11px', cursor: 'pointer', color: '#166534' }}>▶ Start</button>
+                      <button onClick={() => { setShowSnapshots(showSnapshots === o.provider_instance_id ? null : o.provider_instance_id); loadSnapshots(o.provider_instance_id) }}
+                        style={{ padding: '5px 8px', background: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '5px', fontSize: '11px', cursor: 'pointer', color: '#1d4ed8' }}>📸 Snapshots</button>
+                      <button onClick={() => activateRescue(o.provider_instance_id)}
+                        style={{ padding: '5px 8px', background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: '5px', fontSize: '11px', cursor: 'pointer', color: '#991b1b' }}>🆘 Rescue</button>
+                    </>
+                  )}
+                  <button onClick={() => cancelVPS(o.provider_instance_id || '')}
+                    style={{ padding: '5px 8px', background: '#f3f4f6', border: '1px solid #e5e7eb', borderRadius: '5px', fontSize: '11px', cursor: 'pointer' }}>✕ Cancel</button>
+                </div>
+              </div>
+
+              {/* Snapshots panel */}
+              {showSnapshots === o.provider_instance_id && (
+                <div style={{ marginTop: '12px', padding: '12px', background: '#f9fafb', borderRadius: '8px' }}>
+                  <div style={{ fontSize: '12px', fontWeight: 700, marginBottom: '10px' }}>Snapshots</div>
+                  <div style={{ display: 'flex', gap: '8px', marginBottom: '10px' }}>
+                    <input value={snapshotName} onChange={e => setSnapshotName(e.target.value)} placeholder="Snapshot name"
+                      style={{ flex: 1, padding: '7px 10px', border: '1px solid #e5e7eb', borderRadius: '6px', fontSize: '12px' }} />
+                    <button onClick={() => createSnapshot(o.provider_instance_id)}
+                      style={{ padding: '7px 14px', background: '#1a6ef5', color: '#fff', border: 'none', borderRadius: '6px', fontSize: '12px', cursor: 'pointer', fontWeight: 600 }}>
+                      + Create
+                    </button>
                   </div>
-                )}
+                  {(snapshots[o.provider_instance_id] || []).length === 0 ? (
+                    <div style={{ fontSize: '12px', color: '#9a9a9a' }}>No snapshots yet</div>
+                  ) : (
+                    (snapshots[o.provider_instance_id] || []).map((snap: any) => (
+                      <div key={snap.snapshotId} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f3f4f6' }}>
+                        <div>
+                          <div style={{ fontSize: '12px', fontWeight: 600 }}>{snap.name}</div>
+                          <div style={{ fontSize: '11px', color: '#666' }}>{snap.createdDate ? new Date(snap.createdDate).toLocaleDateString('en-GB') : ''}</div>
+                        </div>
+                        <div style={{ display: 'flex', gap: '6px' }}>
+                          <button onClick={() => rollbackSnapshot(o.provider_instance_id, snap.snapshotId)}
+                            style={{ padding: '4px 8px', background: '#fef9c3', border: '1px solid #fde68a', borderRadius: '4px', fontSize: '11px', cursor: 'pointer' }}>↩ Rollback</button>
+                          <button onClick={() => deleteSnapshot(o.provider_instance_id, snap.snapshotId)}
+                            style={{ padding: '4px 8px', background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: '4px', fontSize: '11px', cursor: 'pointer', color: '#991b1b' }}>✕</button>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
+              )}
               </div>
             )
           })}

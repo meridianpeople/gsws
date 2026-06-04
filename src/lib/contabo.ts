@@ -8,7 +8,7 @@ const API_URL = 'https://api.contabo.com'
 
 let cachedToken: { token: string; expiresAt: number } | null = null
 
-async function getToken(): Promise<string> {
+export async function getToken(): Promise<string> {
   if (cachedToken && Date.now() < cachedToken.expiresAt - 30000) {
     return cachedToken.token
   }
@@ -34,7 +34,7 @@ async function getToken(): Promise<string> {
   return cachedToken.token
 }
 
-async function contaboFetch(path: string, options: RequestInit = {}) {
+export async function contaboFetch(path: string, options: RequestInit = {}) {
   const token = await getToken()
   const res = await fetch(`${API_URL}${path}`, {
     ...options,

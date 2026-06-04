@@ -51,8 +51,43 @@ export default function GPUComputePage() {
   const [ordering, setOrdering] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+  const [orders, setOrders] = useState<any[]>([])
+
+  useEffect(() => { loadOrders() }, [])
+
+  async function loadOrders() {
+    try {
+      const res = await fetch('/api/compute/gpu')
+      const data = await res.json()
+      setOrders(data.orders || [])
+    } catch {}
+  }
+
+  async function handleInstanceAction(orderId: number, action: string) {
+    try {
+      const res = await fetch('/api/compute/gpu/' + orderId, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action }),
+      })
+      const data = await res.json()
+      if (data.success) loadOrders()
+      else setError(data.error)
+    } catch {}
+  }
+
+  async function handleCancelOrder(orderId: number) {
+    if (!confirm('Cancel this GPU order? This will destroy the instance.')) return
+    try {
+      const res = await fetch('/api/compute/gpu/' + orderId, { method: 'DELETE' })
+      const data = await res.json()
+      if (data.success) { loadOrders(); setSuccess('Order cancelled') }
+      else setError(data.error)
+    } catch {}
+  }
 
   useEffect(() => { loadOffers(); setSelectedOffer(null) }, [selectedTier])
+
 
   async function loadOffers() {
     setLoadingOffers(true)
@@ -107,6 +142,50 @@ export default function GPUComputePage() {
 
       {error && <div style={{ padding: '12px 16px', background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: '8px', color: '#991b1b', fontSize: '13px', marginBottom: '16px' }}>{error}</div>}
       {success && <div style={{ padding: '12px 16px', background: '#f0fdf4', border: '1px solid #86efac', borderRadius: '8px', color: '#166534', fontSize: '13px', marginBottom: '16px' }}>{success}</div>}
+
+      {/* Active GPU Orders */}
+      {orders.length > 0 && (
+        <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', marginBottom: '16px' }}>
+          <h3 style={{ fontSize: '13px', fontWeight: 700, color: '#111', margin: '0 0 14px' }}>Your GPU Instances</h3>
+          {orders.map(o => (
+            <div key={o.id} style={{ padding: '14px', border: '1px solid #f3f4f6', borderRadius: '8px', marginBottom: '8px', display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr auto', gap: '12px', alignItems: 'center' }}>
+              <div>
+                <div style={{ fontSize: '13px', fontWeight: 700 }}>#{o.id} — {o.tier} {o.billing_period}</div>
+                <div style={{ fontSize: '11px', color: '#666', marginTop: '2px' }}>
+                  {o.notes?.replace('template:', 'Template: ') || ''} · {new Date(o.created_at).toLocaleDateString('en-GB')}
+                </div>
+              </div>
+              <div style={{ fontSize: '12px' }}>
+                {o.provider_instance_id
+                  ? <div style={{ fontFamily: 'monospace', color: '#111' }}>#{o.provider_instance_id}</div>
+                  : <div style={{ color: '#f59e0b' }}>⚠️ Pending</div>
+                }
+              </div>
+              <div style={{ fontSize: '12px' }}>
+                <div style={{ fontWeight: 600 }}>£{o.price_inc_vat?.toFixed(2)}</div>
+                <div style={{ color: '#666', fontSize: '11px' }}>Expires: {o.expires_at ? new Date(o.expires_at).toLocaleDateString('en-GB') : 'N/A'}</div>
+              </div>
+              <span style={{ fontSize: '11px', fontWeight: 700, padding: '3px 8px', borderRadius: '4px',
+                background: o.status === 'active' ? '#dcfce7' : o.status === 'pending' ? '#fef9c3' : '#f3f4f6',
+                color: o.status === 'active' ? '#166534' : o.status === 'pending' ? '#92400e' : '#666' }}>
+                {o.status}
+              </span>
+              <div style={{ display: 'flex', gap: '4px' }}>
+                {o.provider_instance_id && (
+                  <>
+                    <button onClick={() => handleInstanceAction(o.id, 'start')}
+                      style={{ padding: '5px 8px', background: '#f0fdf4', border: '1px solid #86efac', borderRadius: '5px', fontSize: '11px', cursor: 'pointer', color: '#166534' }}>▶</button>
+                    <button onClick={() => handleInstanceAction(o.id, 'stop')}
+                      style={{ padding: '5px 8px', background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: '5px', fontSize: '11px', cursor: 'pointer', color: '#991b1b' }}>■</button>
+                  </>
+                )}
+                <button onClick={() => handleCancelOrder(o.id)}
+                  style={{ padding: '5px 8px', background: '#f3f4f6', border: '1px solid #e5e7eb', borderRadius: '5px', fontSize: '11px', cursor: 'pointer' }}>✕</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
 
       {/* Step 1: GPU Class */}
       <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', marginBottom: '16px' }}>
