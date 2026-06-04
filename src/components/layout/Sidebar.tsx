@@ -68,10 +68,6 @@ const nav: NavGroup[] = [
       { label: 'API Credentials', href: '/account/api', icon: <Icon d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /> },
     ],
   },
-      { label: 'Managed VPS', href: '/managed-vps', icon: <Icon d="M20 3H4a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V4a1 1 0 0 0-1-1z M20 11H4a1 1 0 0 0-1 1v4a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-4a1 1 0 0 0-1-1z" /> },
-      { label: 'Cloud Servers', href: '/cloud-servers', icon: <Icon d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" /> },
-    ],
-  },
 ]
 
 export default function Sidebar() {
