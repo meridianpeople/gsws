@@ -18,6 +18,7 @@ const PUBLIC_PATHS = [
   '/forgot-password',
   '/invite',
   '/api/auth',
+  '/api/cron',
 ]
 
 export function middleware(req: NextRequest) {
