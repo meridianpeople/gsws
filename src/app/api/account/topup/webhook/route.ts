@@ -39,7 +39,7 @@ export async function POST(req: NextRequest) {
 
     // Credit the account
     db.prepare(`
-      UPDATE gsws_users SET credit_balance = credit_balance + ?, updated_at = datetime('now')
+      INSERT INTO gsws_user_credits (user_id, balance) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET balance = balance + ?, updated_at = datetime('now')
       WHERE id = ?
     `).run(amount, user.id)
 

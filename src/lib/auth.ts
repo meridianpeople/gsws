@@ -4,7 +4,7 @@ import crypto from 'crypto'
 const TALIUSAPI_URL = process.env.TALIUSAPI_URL || 'https://taliusapi.geig.co.uk'
 const SESSION_DAYS = 7
 const FIRST_LOGIN_CREDIT = 100.00
-const ELIGIBLE_ROLES = ['geig_hardware_customer', 'administrator']
+const ELIGIBLE_ROLES = ['geig_hardware_customer'] // Only verified notebook purchasers
 
 export interface GswsUser {
   id: number
@@ -97,12 +97,24 @@ export function upsertGswsUser(wpData: {
 
   db.prepare(`
     INSERT INTO gsws_users (wp_user_id, email, name, first_name, last_name, avatar_url, role, credit_balance)
-    VALUES (?, ?, ?, ?, '', '', 'user', ?)
-  `).run(wpData.user_id, wpData.email, wpData.display_name, wpData.nicename, creditAmount)
+    VALUES (?, ?, ?, ?, '', '', 'user', 0)
+  `).run(wpData.user_id, wpData.email, wpData.display_name, wpData.nicename)
 
   const newUser = db.prepare('SELECT * FROM gsws_users WHERE wp_user_id = ?').get(wpData.user_id) as GswsUser
 
   if (isEligible && creditAmount > 0) {
+    // Credit gsws_user_credits — single source of truth
+    db.prepare(`
+      INSERT INTO gsws_user_credits (user_id, balance) VALUES (?, ?)
+      ON CONFLICT(user_id) DO UPDATE SET balance = balance + ?, updated_at = datetime('now')
+    `).run(newUser.id, creditAmount, creditAmount)
+
+    // Log transaction
+    db.prepare(`
+      INSERT INTO gsws_credit_transactions (user_id, amount, type, description, reference, balance_after)
+      VALUES (?, ?, 'welcome_credit', 'GeiG notebook purchase welcome credit', 'WELCOME_CREDIT', ?)
+    `).run(newUser.id, creditAmount, creditAmount)
+
     db.prepare(`
       INSERT INTO gsws_topup_history (user_id, amount, currency, reference, status)
       VALUES (?, ?, 'GBP', 'WELCOME_CREDIT', 'completed')

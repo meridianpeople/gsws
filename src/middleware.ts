@@ -20,6 +20,7 @@ const PUBLIC_PATHS = [
   '/api/auth',
   '/api/cron',
   '/api/account/topup/stripe-webhook',
+  '/api/admin/approve',
 ]
 
 export function middleware(req: NextRequest) {
