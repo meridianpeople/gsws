@@ -42,3 +42,29 @@ export async function PATCH(req: NextRequest) {
     .run(auto_renew ? 1 : 0, id, user.id)
   return NextResponse.json({ success: true })
 }
+
+export async function POST(req: NextRequest) {
+  const user = await getGswsSession(req)
+  if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+
+  const { domain, years } = await req.json()
+  if (!domain) return NextResponse.json({ error: 'Domain required' }, { status: 400 })
+
+  // Verify ownership
+  const domainRecord = db.prepare(`
+    SELECT d.*, p.twentyi_package_id FROM gsws_user_domains d
+    JOIN gsws_user_packages p ON p.id = d.package_id
+    WHERE d.domain_name = ? AND p.user_id = ?
+  `).get(domain, user.id) as any
+  if (!domainRecord) return NextResponse.json({ error: 'Domain not found' }, { status: 404 })
+
+  try {
+    const { renewDomain } = await import('@/lib/api/domains')
+    const result = await renewDomain({ name: domain, years: years || 1 })
+    db.prepare(`INSERT INTO gsws_audit_log (user_id, action, resource_type, resource_name, detail) VALUES (?, 'domain_renew', 'domain', ?, ?)`).run(
+      user.id, domain, `Domain renewed for ${years || 1} year(s)`)
+    return NextResponse.json({ success: true, result })
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message }, { status: 500 })
+  }
+}

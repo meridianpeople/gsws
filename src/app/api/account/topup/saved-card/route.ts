@@ -28,3 +28,19 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ card: null })
   }
 }
+
+export async function DELETE(req: NextRequest) {
+  const user = await getGswsSession(req)
+  if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+
+  const { paymentMethodId } = await req.json()
+  if (!paymentMethodId) return NextResponse.json({ error: 'paymentMethodId required' }, { status: 400 })
+
+  try {
+    const stripe = new (await import('stripe')).default(process.env.STRIPE_SECRET_KEY!)
+    await stripe.paymentMethods.detach(paymentMethodId)
+    return NextResponse.json({ success: true })
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message }, { status: 500 })
+  }
+}

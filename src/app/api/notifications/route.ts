@@ -43,3 +43,17 @@ export async function DELETE(req: NextRequest) {
   db.prepare('DELETE FROM gsws_notifications WHERE id = ? AND user_id = ?').run(id, user.id)
   return NextResponse.json({ success: true })
 }
+
+export async function POST(req: NextRequest) {
+  const user = await getGswsSession(req)
+  if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+
+  const { action } = await req.json()
+
+  if (action === 'mark_all_read') {
+    db.prepare(`UPDATE gsws_notifications SET read = 1, updated_at = datetime('now') WHERE user_id = ?`).run(user.id)
+    return NextResponse.json({ success: true })
+  }
+
+  return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
+}
