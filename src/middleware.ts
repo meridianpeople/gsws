@@ -21,6 +21,10 @@ const PUBLIC_PATHS = [
   '/api/cron',
   '/api/account/topup/stripe-webhook',
   '/api/admin/approve',
+  '/api/auth/register',
+  '/api/auth/verify-email',
+  '/verify-email',
+  '/register',
 ]
 
 export function middleware(req: NextRequest) {

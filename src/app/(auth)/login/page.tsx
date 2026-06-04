@@ -9,9 +9,12 @@ export default function LoginPage() {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const [verified, setVerified] = useState(false)
   const [idleMessage, setIdleMessage] = useState(false)
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('verified') === '1') setVerified(true)
     if (window.location.search.includes('reason=idle')) {
       setIdleMessage(true)
     }
