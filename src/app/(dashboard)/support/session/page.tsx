@@ -1,26 +1,23 @@
 'use client'
+import { Suspense } from 'react'
 import { useEffect, useState } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
 
-export default function SupportSessionPage() {
+function SupportSessionContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const token = searchParams.get('token')
   const [status, setStatus] = useState<'loading' | 'active' | 'error'>('loading')
   const [targetEmail, setTargetEmail] = useState('')
-  const [expiresAt, setExpiresAt] = useState('')
 
   useEffect(() => {
     if (!token) { setStatus('error'); return }
-    // Validate token and get session info
     fetch(`/api/support/session?token=${token}`)
       .then(r => r.json())
       .then(d => {
         if (d.valid) {
           setTargetEmail(d.targetEmail)
-          setExpiresAt(d.expiresAt)
           setStatus('active')
-          // Set impersonation cookie and redirect to dashboard
           document.cookie = `gsws_impersonate=${token}; path=/; max-age=3600`
           setTimeout(() => router.push('/dashboard'), 1500)
         } else {
@@ -56,5 +53,13 @@ export default function SupportSessionPage() {
         <p style={{ fontSize: '12px', color: '#999' }}>Redirecting to dashboard...</p>
       </div>
     </div>
+  )
+}
+
+export default function SupportSessionPage() {
+  return (
+    <Suspense fallback={<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60vh' }}><p style={{ color: '#666' }}>Loading...</p></div>}>
+      <SupportSessionContent />
+    </Suspense>
   )
 }
