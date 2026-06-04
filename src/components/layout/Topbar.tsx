@@ -114,10 +114,25 @@ export default function Topbar() {
 
   const isMember = (user as any)?.isMember
   const memberRole = (user as any)?.memberRole
+  const isImpersonating = (user as any)?.isImpersonating
+  const impersonatingEmail = (user as any)?.impersonatingEmail
+  const impersonationToken = (user as any)?.impersonationToken
   const ownerEmail = (user as any)?.ownerEmail
 
   return (
     <div>
+    {isImpersonating && (
+      <div style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 100, height: '26px', background: '#dc2626', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', fontSize: '12px', color: '#fff' }}>
+        <span>⚠️ Support session — viewing as <strong>{impersonatingEmail}</strong></span>
+        <button onClick={async () => {
+          await fetch('/api/support/impersonate', { method: 'DELETE', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ token: impersonationToken }) })
+          document.cookie = 'gsws_impersonate=; path=/; max-age=0'
+          window.location.href = '/cli'
+        }} style={{ padding: '2px 10px', background: '#fff', color: '#dc2626', border: 'none', borderRadius: '4px', fontSize: '11px', fontWeight: 700, cursor: 'pointer' }}>
+          End session
+        </button>
+      </div>
+    )}
     {isMember && (
       <div style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 60, height: '26px', background: '#0a1628', borderBottom: '1px solid #1a3060', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
         <span style={{ fontSize: '11px', color: '#aaa' }}>
@@ -126,7 +141,7 @@ export default function Topbar() {
         </span>
       </div>
     )}
-    <header style={{ position: 'fixed', top: isMember ? '26px' : 0, left: 0, right: 0, zIndex: 50, height: '52px',
+    <header style={{ position: 'fixed', top: isImpersonating ? '26px' : isMember ? '26px' : 0, left: 0, right: 0, zIndex: 50, height: '52px',
       display: 'flex', alignItems: 'center',
       background: 'var(--g-topbar-bg)', borderBottom: '1px solid var(--g-topbar-border)',
     }}>

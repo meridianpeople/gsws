@@ -28,6 +28,10 @@ export interface GswsSession {
   ownerEmail: string | null
   mfaEnabled: boolean
   mfaVerified: boolean
+  isSupport: boolean
+  isImpersonating: boolean
+  impersonatingEmail: string | null
+  impersonationToken: string | null
 }
 
 function buildSession(gswsUser: any, baSessionId: string, baUserId: string): GswsSession | null {
@@ -71,11 +75,63 @@ function buildSession(gswsUser: any, baSessionId: string, baUserId: string): Gsw
     ownerEmail: membership?.owner_email ?? null,
     mfaEnabled: !!mfaRecord,
     mfaVerified: false,
+    isSupport: false,
+    isImpersonating: false,
+    impersonatingEmail: null,
+    impersonationToken: null,
   }
 }
 
 export async function getGswsSession(req?: NextRequest): Promise<GswsSession | null> {
   try {
+    // Check for impersonation cookie
+    let impToken: string | undefined
+    if (req) {
+      impToken = req.cookies.get('gsws_impersonate')?.value
+    } else {
+      const h = await headers()
+      const cookie = h.get('cookie') || ''
+      const match = cookie.match(/gsws_impersonate=([^;]+)/)
+      impToken = match?.[1]
+    }
+
+    if (impToken) {
+      const imp = db.prepare(`
+        SELECT i.*, tu.email as target_email, tu.id as target_id,
+               su.email as support_email, su.role as support_role
+        FROM gsws_impersonation i
+        JOIN gsws_users tu ON tu.id = i.target_user_id
+        JOIN gsws_users su ON su.id = i.support_user_id
+        WHERE i.token = ? AND i.status = 'active' AND i.expires_at > datetime('now')
+      `).get(impToken) as any
+
+      if (imp && ['support', 'super_admin'].includes(imp.support_role)) {
+        const targetUser = db.prepare('SELECT * FROM gsws_users WHERE id = ? AND is_active = 1').get(imp.target_id) as any
+        if (targetUser) {
+          const credits = db.prepare('SELECT balance FROM gsws_user_credits WHERE user_id = ?').get(targetUser.id) as any
+          return {
+            baSessionId: 'impersonate',
+            baUserId: 'impersonate',
+            id: targetUser.id,
+            actualUserId: imp.support_user_id,
+            email: targetUser.email,
+            name: targetUser.name,
+            role: targetUser.role,
+            authProvider: 'gsws_native',
+            creditBalance: credits?.balance ?? 0,
+            isMember: false,
+            memberRole: null,
+            ownerEmail: null,
+            mfaEnabled: false,
+            mfaVerified: false,
+            isSupport: true,
+            isImpersonating: true,
+            impersonatingEmail: targetUser.email,
+            impersonationToken: impToken,
+          }
+        }
+      }
+    }
     // Layer 1: Better Auth session
     const baSession = await auth.api.getSession({
       headers: req ? req.headers : await headers(),

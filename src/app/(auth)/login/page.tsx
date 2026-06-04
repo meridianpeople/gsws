@@ -30,6 +30,7 @@ export default function LoginPage() {
         body: JSON.stringify({ email, password }),
       })
       const data = await res.json()
+      const redirectTo = data.redirectTo || '/dashboard'
       if (!res.ok) {
         setError(data.error || 'Login failed')
         return

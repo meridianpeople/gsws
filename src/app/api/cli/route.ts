@@ -2,15 +2,15 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getGswsSession } from '@/lib/session'
 import db from '@/lib/db'
 import client from '@/lib/api/client'
+import crypto from 'crypto'
 
 const VERSION = '1.0.0'
+const e = '\x1b'
+const c = (code: string, text: string) => `${e}[${code}m${text}${e}[0m`
 
 function auditLog(userId: number, command: string, ip: string) {
   try {
-    db.prepare(`
-      INSERT INTO gsws_audit_log (user_id, action, resource_type, resource_name, detail, ip_address)
-      VALUES (?, 'cli_command', 'cli', 'web_cli', ?, ?)
-    `).run(userId, command.substring(0, 200), ip)
+    db.prepare(`INSERT INTO gsws_audit_log (user_id, action, resource_type, resource_name, detail, ip_address) VALUES (?, 'cli_command', 'cli', 'web_cli', ?, ?)`).run(userId, command.substring(0, 200), ip)
   } catch {}
 }
 
@@ -18,142 +18,110 @@ function getIP(req: NextRequest) {
   return req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown'
 }
 
-// Command handlers
-async function handleCommand(cmd: string, args: string[], user: any, isSuperAdmin: boolean): Promise<string> {
-  
+async function handleCommand(cmd: string, args: string[], user: any, role: string): Promise<string> {
+  const isSuperAdmin = role === 'super_admin'
+  const isSupport = role === 'support' || isSuperAdmin
+
   switch (cmd) {
 
     case 'help': {
-      const base = `
-\x1b[1;36mGSWS Web CLI v${VERSION}\x1b[0m
-\x1b[90m${'─'.repeat(50)}\x1b[0m
-
-\x1b[1mAccount:\x1b[0m
-  balance                          Show credit balance
-  notifications                    Show recent notifications
-  statement [--limit=N]            Show credit transactions
-
-\x1b[1mPackages:\x1b[0m
-  packages                         List your packages
-  package <id> info                Package details
-  package <id> dns                 List DNS records
-  package <id> email               List mailboxes
-  package <id> ssl                 SSL status
-  package <id> php                 PHP version
-
-\x1b[1mDomains:\x1b[0m
-  domains                          List your domains
-
-\x1b[1mSystem:\x1b[0m
-  help                             Show this help
-  clear                            Clear terminal
-  whoami                           Show current user
-  version                          Show CLI version`
-
-      const admin = `
-
-\x1b[1;33mAdmin commands:\x1b[0m
-  customer lookup <email>          Find customer
-  customer packages <email>        Customer packages
-  customer balance <email>         Customer balance
-  customer notify <email> <msg>    Send notification
-  audit [email] [--limit=N]        Audit log
-  stats                            Platform stats
-  support list [--status=X]        Support requests
-  support update <id> <status>     Update request`
-
-      return base + (isSuperAdmin ? admin : '') + '\n'
+      const lines = [
+        '',
+        c('1;36', `GSWS Web CLI v${VERSION}`),
+        c('90', '─'.repeat(50)),
+        '',
+        c('1', 'Account:'),
+        '  balance                          Show credit balance',
+        '  notifications                    Show recent notifications',
+        '  statement [--limit=N]            Show credit transactions',
+        '',
+        c('1', 'Packages:'),
+        '  packages                         List your packages',
+        '  package <id> info                Package details',
+        '  package <id> dns                 List DNS records',
+        '  package <id> email               List mailboxes',
+        '  package <id> ssl                 SSL status',
+        '  package <id> php                 PHP version',
+        '',
+        c('1', 'Domains:'),
+        '  domains                          List your domains',
+        '',
+        c('1', 'System:'),
+        '  whoami                           Show current user',
+        '  version                          Show CLI version',
+        '  clear                            Clear terminal',
+        '  help                             Show this help',
+      ]
+      if (isSupport) {
+        lines.push('', c('1;33', 'Support commands:'))
+        lines.push('  customer lookup <email>          Find customer')
+        lines.push('  customer packages <email>        Customer packages')
+        lines.push('  customer balance <email>         Customer balance')
+        lines.push('  customer notify <email> <msg>    Send notification')
+        lines.push('  impersonate <email>              Start impersonation session')
+        lines.push('  audit [email] [--limit=N]        Audit log')
+        lines.push('  support list [--status=X]        Support requests')
+        lines.push('  support update <id> <status>     Update request status')
+      }
+      if (isSuperAdmin) {
+        lines.push('', c('1;31', 'Admin commands:'))
+        lines.push('  stats                            Platform stats')
+      }
+      lines.push('')
+      return lines.join('\n')
     }
 
-    case 'whoami': {
-      return `\x1b[1m${user.email}\x1b[0m (${user.role})${user.isMember ? ` — viewing \x1b[33m${user.ownerEmail}\x1b[0m as ${user.memberRole}` : ''}\n`
-    }
+    case 'whoami':
+      return `${c('1', user.email)} (${user.role})${user.isMember ? ` — viewing ${c('33', user.ownerEmail)} as ${user.memberRole}` : ''}\n`
 
-    case 'version': return `GSWS Web CLI v${VERSION}\n`
+    case 'version':
+      return `GSWS Web CLI v${VERSION}\n`
 
     case 'balance': {
       const credits = db.prepare('SELECT balance FROM gsws_user_credits WHERE user_id = ?').get(user.id) as any
-      return `\x1b[1;32m£${(credits?.balance || 0).toFixed(2)}\x1b[0m available credit\n`
+      return `${c('1;32', `£${(credits?.balance || 0).toFixed(2)}`)} available credit\n`
     }
 
     case 'packages': {
-      const pkgs = db.prepare(`
-        SELECT twentyi_package_id as id, domain_name, package_label, status
-        FROM gsws_user_packages WHERE user_id = ? AND status != 'deleted'
-        ORDER BY created_at DESC
-      `).all(user.id) as any[]
-      if (!pkgs.length) return '\x1b[33mNo packages found\x1b[0m\n'
-      let out = '\n'
-      for (const p of pkgs) {
-        const status = p.status === 'active' ? '\x1b[32m●\x1b[0m' : '\x1b[31m●\x1b[0m'
-        out += `  ${status} \x1b[1m${p.domain_name}\x1b[0m \x1b[90m(${p.id})\x1b[0m — ${p.package_label}\n`
-      }
-      return out + '\n'
+      const pkgs = db.prepare(`SELECT twentyi_package_id as id, domain_name, package_label, status FROM gsws_user_packages WHERE user_id = ? AND status != 'deleted' ORDER BY created_at DESC`).all(user.id) as any[]
+      if (!pkgs.length) return `${c('33', 'No packages found')}\n`
+      return '\n' + pkgs.map(p => `  ${p.status === 'active' ? c('32', '●') : c('31', '●')} ${c('1', p.domain_name)} ${c('90', `(${p.id})`)} — ${p.package_label}`).join('\n') + '\n\n'
     }
 
     case 'domains': {
-      const domains = db.prepare(`
-        SELECT domain_name, status, expires_at FROM gsws_user_domains WHERE user_id = ?
-        ORDER BY created_at DESC
-      `).all(user.id) as any[]
-      if (!domains.length) return '\x1b[33mNo domains found\x1b[0m\n'
-      let out = '\n'
-      for (const d of domains) {
-        out += `  \x1b[1m${d.domain_name}\x1b[0m — ${d.status} ${d.expires_at ? `(expires ${d.expires_at})` : ''}\n`
-      }
-      return out + '\n'
+      const domains = db.prepare(`SELECT domain_name, status, expires_at FROM gsws_user_domains WHERE user_id = ? ORDER BY created_at DESC`).all(user.id) as any[]
+      if (!domains.length) return `${c('33', 'No domains found')}\n`
+      return '\n' + domains.map(d => `  ${c('1', d.domain_name)} — ${d.status}${d.expires_at ? ` (expires ${d.expires_at})` : ''}`).join('\n') + '\n\n'
     }
 
     case 'notifications': {
-      const notifs = db.prepare(`
-        SELECT * FROM gsws_notifications WHERE user_id = ? ORDER BY created_at DESC LIMIT 5
-      `).all(user.id) as any[]
-      if (!notifs.length) return '\x1b[33mNo notifications\x1b[0m\n'
-      let out = '\n'
-      for (const n of notifs) {
-        const read = n.is_read ? '\x1b[90m' : '\x1b[1m'
-        out += `  ${read}${n.title}\x1b[0m\n  \x1b[90m${n.message}\x1b[0m\n  \x1b[90m${n.created_at}\x1b[0m\n\n`
-      }
-      return out
+      const notifs = db.prepare(`SELECT * FROM gsws_notifications WHERE user_id = ? ORDER BY created_at DESC LIMIT 5`).all(user.id) as any[]
+      if (!notifs.length) return `${c('33', 'No notifications')}\n`
+      return '\n' + notifs.map(n => `  ${n.is_read ? c('90', n.title) : c('1', n.title)}\n  ${c('90', n.message)}\n  ${c('90', n.created_at)}`).join('\n\n') + '\n\n'
     }
 
     case 'statement': {
       const limit = parseInt(args.find(a => a.startsWith('--limit='))?.split('=')[1] || '10')
-      const txns = db.prepare(`
-        SELECT * FROM gsws_credit_transactions WHERE user_id = ? ORDER BY created_at DESC LIMIT ?
-      `).all(user.id, limit) as any[]
-      if (!txns.length) return '\x1b[33mNo transactions\x1b[0m\n'
-      let out = '\n'
-      for (const t of txns) {
-        const sign = t.amount > 0 ? '\x1b[32m+' : '\x1b[31m'
-        out += `  ${sign}£${Math.abs(t.amount).toFixed(2)}\x1b[0m  ${t.type.padEnd(15)} ${(t.description || '').substring(0, 40)}\n`
-      }
-      return out + '\n'
+      const txns = db.prepare(`SELECT * FROM gsws_credit_transactions WHERE user_id = ? ORDER BY created_at DESC LIMIT ?`).all(user.id, limit) as any[]
+      if (!txns.length) return `${c('33', 'No transactions')}\n`
+      return '\n' + txns.map(t => `  ${t.amount > 0 ? c('32', `+£${t.amount.toFixed(2)}`) : c('31', `-£${Math.abs(t.amount).toFixed(2)}`)}  ${t.type.padEnd(15)} ${(t.description || '').substring(0, 40)}`).join('\n') + '\n\n'
     }
 
     case 'package': {
-      const pkgId = args[0]
-      const sub = args[1]
-      if (!pkgId || !sub) return '\x1b[31mUsage: package <id> <info|dns|email|ssl|php>\x1b[0m\n'
-
+      const pkgId = args[0]; const sub = args[1]
+      if (!pkgId || !sub) return `${c('31', 'Usage: package <id> <info|dns|email|ssl|php>')}\n`
       const pkg = db.prepare('SELECT * FROM gsws_user_packages WHERE twentyi_package_id = ? AND user_id = ?').get(pkgId, user.id) as any
-      if (!pkg) return `\x1b[31mPackage ${pkgId} not found or access denied\x1b[0m\n`
+      if (!pkg) return `${c('31', `Package ${pkgId} not found or access denied`)}\n`
 
-      if (sub === 'info') {
-        return `\n  \x1b[1m${pkg.domain_name}\x1b[0m\n  ID: ${pkg.twentyi_package_id}\n  Type: ${pkg.package_label}\n  Status: ${pkg.status}\n\n`
-      }
+      if (sub === 'info') return `\n  ${c('1', pkg.domain_name)}\n  ID: ${pkg.twentyi_package_id}\n  Type: ${pkg.package_label}\n  Status: ${pkg.status}\n\n`
 
       if (sub === 'dns') {
         try {
           const res = await client.get(`/package/${pkgId}/dns`) as any
           const records = res?.data || []
-          if (!records.length) return '\x1b[33mNo DNS records\x1b[0m\n'
-          let out = '\n'
-          for (const r of records) {
-            out += `  \x1b[1m${(r.type || '').padEnd(6)}\x1b[0m ${(r.host || '@').padEnd(20)} ${r.target || r.ip || r.txt || ''}\n`
-          }
-          return out + '\n'
-        } catch (e: any) { return `\x1b[31mError: ${e.message}\x1b[0m\n` }
+          if (!records.length) return `${c('33', 'No DNS records')}\n`
+          return '\n' + records.map((r: any) => `  ${c('1', (r.type || '').padEnd(6))} ${(r.host || '@').padEnd(20)} ${r.target || r.ip || r.txt || ''}`).join('\n') + '\n\n'
+        } catch (ex: any) { return `${c('31', `Error: ${ex.message}`)}\n` }
       }
 
       if (sub === 'email') {
@@ -161,119 +129,125 @@ async function handleCommand(cmd: string, args: string[], user: any, isSuperAdmi
           const emailRes = await client.get(`/package/${pkgId}/email`) as any
           const domains = emailRes?.data || emailRes || {}
           let out = '\n'
-          for (const [domain, mailboxes] of Object.entries(domains as any)) {
-            out += `  \x1b[1m${domain}\x1b[0m\n`
-            const enc = encodeURIComponent(domain)
+          for (const [domain] of Object.entries(domains as any)) {
+            out += `  ${c('1', domain as string)}\n`
+            const enc = encodeURIComponent(domain as string)
             const mbRes = await client.get(`/package/${pkgId}/email/${enc}/mailbox`) as any
             const mbs = mbRes?.data?.mailbox || []
-            for (const mb of mbs) {
-              out += `    \x1b[90m${mb.local}@${domain}\x1b[0m  ${mb.quotaMB}MB quota\n`
-            }
+            for (const mb of mbs) out += `    ${c('90', `${mb.local}@${domain}`)}  ${mb.quotaMB}MB quota\n`
           }
           return out + '\n'
-        } catch (e: any) { return `\x1b[31mError: ${e.message}\x1b[0m\n` }
+        } catch (ex: any) { return `${c('31', `Error: ${ex.message}`)}\n` }
       }
 
       if (sub === 'ssl') {
         try {
           const res = await client.get(`/package/${pkgId}/web/ssl`) as any
           const ssl = res?.data
-          return `\n  SSL: \x1b[${ssl?.enabled ? '32mEnabled' : '31mDisabled'}\x1b[0m\n  Force HTTPS: ${ssl?.forceSSL ? '\x1b[32mYes' : '\x1b[31mNo'}\x1b[0m\n\n`
-        } catch (e: any) { return `\x1b[31mError: ${e.message}\x1b[0m\n` }
+          return `\n  SSL: ${ssl?.enabled ? c('32', 'Enabled') : c('31', 'Disabled')}\n  Force HTTPS: ${ssl?.forceSSL ? c('32', 'Yes') : c('31', 'No')}\n\n`
+        } catch (ex: any) { return `${c('31', `Error: ${ex.message}`)}\n` }
       }
 
       if (sub === 'php') {
         try {
           const res = await client.get(`/package/${pkgId}/web/php`) as any
-          return `\n  PHP Version: \x1b[1m${res?.data?.version || 'unknown'}\x1b[0m\n\n`
-        } catch (e: any) { return `\x1b[31mError: ${e.message}\x1b[0m\n` }
+          return `\n  PHP Version: ${c('1', res?.data?.version || 'unknown')}\n\n`
+        } catch (ex: any) { return `${c('31', `Error: ${ex.message}`)}\n` }
       }
 
-      return `\x1b[31mUnknown subcommand: ${sub}\x1b[0m\n`
+      return `${c('31', `Unknown subcommand: ${sub}`)}\n`
     }
 
-    // SUPER ADMIN COMMANDS
+    case 'impersonate': {
+      if (!isSupport) return `${c('31', 'Permission denied')}\n`
+      const targetEmail = args[0]
+      if (!targetEmail) return `${c('31', 'Usage: impersonate <email>')}\n`
+      const target = db.prepare('SELECT * FROM gsws_users WHERE email = ? AND is_active = 1').get(targetEmail) as any
+      if (!target) return `${c('31', `User not found: ${targetEmail}`)}\n`
+      if (target.id === user.actualUserId) return `${c('31', 'Cannot impersonate yourself')}\n`
+
+      const token = crypto.randomBytes(32).toString('hex')
+      const expiresAt = new Date(Date.now() + 60 * 60 * 1000).toISOString()
+
+      db.prepare('INSERT INTO gsws_impersonation (support_user_id, target_user_id, token, expires_at) VALUES (?, ?, ?, ?)').run(user.actualUserId, target.id, token, expiresAt)
+      db.prepare('INSERT INTO gsws_audit_log (user_id, action, resource_type, resource_name, detail) VALUES (?, ?, ?, ?, ?)').run(user.actualUserId, 'impersonate_start', 'support', targetEmail, `Impersonation started via web CLI`)
+      db.prepare('INSERT INTO gsws_notifications (user_id, type, title, message) VALUES (?, ?, ?, ?)').run(target.id, 'system', 'Support access', `A support agent accessed your account. If unexpected, contact us.`)
+
+      return [
+        '',
+        c('33', `⚠️  Impersonation session created`),
+        `  Target:  ${c('1', targetEmail)}`,
+        `  Expires: ${new Date(expiresAt).toLocaleString('en-GB')}`,
+        '',
+        `  ${c('1;36', 'Click or open this URL to start session:')}`,
+        `  /support/session?token=${token}`,
+        '',
+        c('90', '  All actions will be logged under your support account.'),
+        '',
+      ].join('\n')
+    }
+
     case 'customer': {
-      if (!isSuperAdmin) return '\x1b[31mPermission denied\x1b[0m\n'
-      const sub = args[0]
-      const email = args[1]
+      if (!isSupport) return `${c('31', 'Permission denied')}\n`
+      const sub = args[0]; const email = args[1]
 
       if (sub === 'lookup') {
-        if (!email) return '\x1b[31mUsage: customer lookup <email>\x1b[0m\n'
+        if (!email) return `${c('31', 'Usage: customer lookup <email>')}\n`
         const u = db.prepare('SELECT * FROM gsws_users WHERE email = ?').get(email) as any
-        if (!u) return `\x1b[31mUser not found: ${email}\x1b[0m\n`
+        if (!u) return `${c('31', `User not found: ${email}`)}\n`
         const credits = db.prepare('SELECT balance FROM gsws_user_credits WHERE user_id = ?').get(u.id) as any
-        const pkgs = (db.prepare('SELECT COUNT(*) as n FROM gsws_user_packages WHERE user_id = ? AND status = ?').get(u.id, 'active') as any).n
-        return `\n  \x1b[1m${u.email}\x1b[0m\n  ID: ${u.id}\n  Role: ${u.role}\n  Active: ${u.is_active ? 'Yes' : 'No'}\n  Balance: \x1b[32m£${(credits?.balance || 0).toFixed(2)}\x1b[0m\n  Packages: ${pkgs}\n  Joined: ${u.created_at}\n\n`
+        const pkgs = (db.prepare("SELECT COUNT(*) as n FROM gsws_user_packages WHERE user_id = ? AND status = 'active'").get(u.id) as any).n
+        return `\n  ${c('1', u.email)}\n  ID: ${u.id}  Role: ${u.role}  Active: ${u.is_active ? 'Yes' : 'No'}\n  Balance: ${c('32', `£${(credits?.balance || 0).toFixed(2)}`)}  Packages: ${pkgs}\n  Joined: ${u.created_at}\n\n`
       }
 
       if (sub === 'packages') {
-        if (!email) return '\x1b[31mUsage: customer packages <email>\x1b[0m\n'
+        if (!email) return `${c('31', 'Usage: customer packages <email>')}\n`
         const u = db.prepare('SELECT id FROM gsws_users WHERE email = ?').get(email) as any
-        if (!u) return `\x1b[31mUser not found: ${email}\x1b[0m\n`
-        const pkgs = db.prepare('SELECT * FROM gsws_user_packages WHERE user_id = ? AND status != ?').all(u.id, 'deleted') as any[]
-        if (!pkgs.length) return '\x1b[33mNo packages\x1b[0m\n'
-        let out = '\n'
-        for (const p of pkgs) {
-          out += `  \x1b[1m${p.domain_name}\x1b[0m \x1b[90m(${p.twentyi_package_id})\x1b[0m — ${p.package_label} — ${p.status}\n`
-        }
-        return out + '\n'
+        if (!u) return `${c('31', `User not found: ${email}`)}\n`
+        const pkgs = db.prepare("SELECT * FROM gsws_user_packages WHERE user_id = ? AND status != 'deleted'").all(u.id) as any[]
+        if (!pkgs.length) return `${c('33', 'No packages')}\n`
+        return '\n' + pkgs.map(p => `  ${c('1', p.domain_name)} ${c('90', `(${p.twentyi_package_id})`)} — ${p.package_label} — ${p.status}`).join('\n') + '\n\n'
       }
 
       if (sub === 'balance') {
-        if (!email) return '\x1b[31mUsage: customer balance <email>\x1b[0m\n'
+        if (!email) return `${c('31', 'Usage: customer balance <email>')}\n`
         const u = db.prepare('SELECT id FROM gsws_users WHERE email = ?').get(email) as any
-        if (!u) return `\x1b[31mUser not found: ${email}\x1b[0m\n`
+        if (!u) return `${c('31', `User not found: ${email}`)}\n`
         const credits = db.prepare('SELECT balance FROM gsws_user_credits WHERE user_id = ?').get(u.id) as any
-        return `  ${email}: \x1b[1;32m£${(credits?.balance || 0).toFixed(2)}\x1b[0m\n`
+        return `  ${email}: ${c('1;32', `£${(credits?.balance || 0).toFixed(2)}`)}\n`
       }
 
       if (sub === 'notify') {
-        if (!email || !args[2]) return '\x1b[31mUsage: customer notify <email> <message>\x1b[0m\n'
+        if (!email || !args[2]) return `${c('31', 'Usage: customer notify <email> <message>')}\n`
         const u = db.prepare('SELECT id FROM gsws_users WHERE email = ?').get(email) as any
-        if (!u) return `\x1b[31mUser not found: ${email}\x1b[0m\n`
+        if (!u) return `${c('31', `User not found: ${email}`)}\n`
         const message = args.slice(2).join(' ')
         db.prepare('INSERT INTO gsws_notifications (user_id, type, title, message) VALUES (?, ?, ?, ?)').run(u.id, 'system', 'Message from support', message)
-        return `\x1b[32m✓ Notification sent to ${email}\x1b[0m\n`
+        return `${c('32', `✓ Notification sent to ${email}`)}\n`
       }
 
-      return `\x1b[31mUnknown: customer ${sub}\x1b[0m\n`
-    }
-
-    case 'stats': {
-      if (!isSuperAdmin) return '\x1b[31mPermission denied\x1b[0m\n'
-      const s = {
-        users: (db.prepare('SELECT COUNT(*) as n FROM gsws_users WHERE is_active = 1').get() as any).n,
-        packages: (db.prepare("SELECT COUNT(*) as n FROM gsws_user_packages WHERE status = 'active'").get() as any).n,
-        managed: (db.prepare("SELECT COUNT(*) as n FROM gsws_managed_services WHERE status = 'active'").get() as any).n,
-        credits: (db.prepare('SELECT COALESCE(SUM(balance),0) as n FROM gsws_user_credits').get() as any).n,
-        support: (db.prepare("SELECT COUNT(*) as n FROM gsws_support_requests WHERE status = 'open'").get() as any).n,
-      }
-      return `\n  \x1b[1mPlatform Stats\x1b[0m\n  Users: ${s.users}  Packages: ${s.packages}  Managed: ${s.managed}\n  Total credits: \x1b[32m£${s.credits.toFixed(2)}\x1b[0m  Open support: ${s.support}\n\n`
+      return `${c('31', `Unknown: customer ${sub}`)}\n`
     }
 
     case 'audit': {
-      if (!isSuperAdmin) return '\x1b[31mPermission denied\x1b[0m\n'
+      if (!isSupport) return `${c('31', 'Permission denied')}\n`
       const email = args.find(a => a.includes('@'))
       const limit = parseInt(args.find(a => a.startsWith('--limit='))?.split('=')[1] || '10')
       let query = 'SELECT a.*, u.email FROM gsws_audit_log a JOIN gsws_users u ON u.id = a.user_id WHERE 1=1'
       const params: any[] = []
       if (email) {
         const u = db.prepare('SELECT id FROM gsws_users WHERE email = ?').get(email) as any
-        if (!u) return `\x1b[31mUser not found: ${email}\x1b[0m\n`
+        if (!u) return `${c('31', `User not found: ${email}`)}\n`
         query += ' AND a.user_id = ?'; params.push(u.id)
       }
       query += ` ORDER BY a.created_at DESC LIMIT ${limit}`
       const logs = db.prepare(query).all(...params) as any[]
-      let out = '\n'
-      for (const l of logs) {
-        out += `  \x1b[90m${l.created_at}\x1b[0m  \x1b[33m${l.email.split('@')[0]}\x1b[0m  \x1b[1m${l.action}\x1b[0m  ${(l.detail || '').substring(0, 50)}\n`
-      }
-      return out + '\n'
+      if (!logs.length) return `${c('33', 'No audit entries')}\n`
+      return '\n' + logs.map((l: any) => `  ${c('90', l.created_at)}  ${c('33', l.email.split('@')[0])}  ${c('1', l.action)}  ${(l.detail || '').substring(0, 50)}`).join('\n') + '\n\n'
     }
 
     case 'support': {
-      if (!isSuperAdmin) return '\x1b[31mPermission denied\x1b[0m\n'
+      if (!isSupport) return `${c('31', 'Permission denied')}\n`
       const sub = args[0]
       if (sub === 'list') {
         const status = args.find(a => a.startsWith('--status='))?.split('=')[1]
@@ -282,25 +256,32 @@ async function handleCommand(cmd: string, args: string[], user: any, isSuperAdmi
         if (status) { query += ' AND s.status = ?'; params.push(status) }
         query += ' ORDER BY s.created_at DESC LIMIT 20'
         const reqs = db.prepare(query).all(...params) as any[]
-        if (!reqs.length) return '\x1b[33mNo support requests\x1b[0m\n'
-        let out = '\n'
-        for (const r of reqs) {
-          const col = r.status === 'open' ? '\x1b[31m' : r.status === 'in_progress' ? '\x1b[33m' : '\x1b[32m'
-          out += `  [${r.id}] ${col}${r.status}\x1b[0m  ${r.email}  ${r.subject.substring(0, 40)}\n`
-        }
-        return out + '\n'
+        if (!reqs.length) return `${c('33', 'No support requests')}\n`
+        return '\n' + reqs.map((r: any) => `  [${r.id}] ${r.status === 'open' ? c('31', r.status) : r.status === 'in_progress' ? c('33', r.status) : c('32', r.status)}  ${r.email}  ${r.subject.substring(0, 40)}`).join('\n') + '\n\n'
       }
       if (sub === 'update') {
         const id = args[1]; const status = args[2]
-        if (!id || !status) return '\x1b[31mUsage: support update <id> <status>\x1b[0m\n'
+        if (!id || !status) return `${c('31', 'Usage: support update <id> <status>')}\n`
         db.prepare("UPDATE gsws_support_requests SET status = ?, updated_at = datetime('now') WHERE id = ?").run(status, id)
-        return `\x1b[32m✓ Request #${id} → ${status}\x1b[0m\n`
+        return `${c('32', `✓ Request #${id} → ${status}`)}\n`
       }
-      return `\x1b[31mUnknown: support ${sub}\x1b[0m\n`
+      return `${c('31', `Unknown: support ${sub}`)}\n`
+    }
+
+    case 'stats': {
+      if (!isSuperAdmin) return `${c('31', 'Permission denied')}\n`
+      const s = {
+        users: (db.prepare('SELECT COUNT(*) as n FROM gsws_users WHERE is_active = 1').get() as any).n,
+        packages: (db.prepare("SELECT COUNT(*) as n FROM gsws_user_packages WHERE status = 'active'").get() as any).n,
+        managed: (db.prepare("SELECT COUNT(*) as n FROM gsws_managed_services WHERE status = 'active'").get() as any).n,
+        credits: (db.prepare('SELECT COALESCE(SUM(balance),0) as n FROM gsws_user_credits').get() as any).n,
+        support: (db.prepare("SELECT COUNT(*) as n FROM gsws_support_requests WHERE status = 'open'").get() as any).n,
+      }
+      return `\n  ${c('1', 'Platform Stats')}\n  Users: ${s.users}  Packages: ${s.packages}  Managed: ${s.managed}\n  Total credits: ${c('32', `£${s.credits.toFixed(2)}`)}  Open support: ${s.support}\n\n`
     }
 
     default:
-      return `\x1b[31mCommand not found: ${cmd}\x1b[0m. Type \x1b[1mhelp\x1b[0m for available commands.\n`
+      return `${c('31', `Command not found: ${cmd}`)}. Type ${c('1', 'help')} for available commands.\n`
   }
 }
 
@@ -309,11 +290,8 @@ export async function POST(req: NextRequest) {
   if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
 
   // Block managed accounts
-  const managed = db.prepare(`
-    SELECT id FROM gsws_managed_services
-    WHERE user_id = ? AND status IN ('active', 'cancelling')
-    LIMIT 1
-  `).get(user.id)
+  const managed = db.prepare(`SELECT id FROM gsws_managed_services WHERE user_id = ? AND status IN ('active', 'cancelling') LIMIT 1`).get(user.id)
+  if (managed) return NextResponse.json({ output: `${'\x1b'}[31mCLI not available for managed accounts. Contact support.\n` })
 
   const { command } = await req.json()
   if (!command?.trim()) return NextResponse.json({ output: '' })
@@ -322,18 +300,17 @@ export async function POST(req: NextRequest) {
   const cmd = parts[0].toLowerCase()
   const args = parts.slice(1)
 
-  const isSuperAdmin = db.prepare('SELECT role FROM gsws_users WHERE id = ?').get(user.actualUserId) as any
-  const superAdmin = isSuperAdmin?.role === 'super_admin'
+  const roleRow = db.prepare('SELECT role FROM gsws_users WHERE id = ?').get(user.actualUserId) as any
+  const role = roleRow?.role || 'user'
 
-  // Audit every command
   auditLog(user.actualUserId, command, getIP(req))
 
-  if (cmd === 'clear') return NextResponse.json({ output: '\x1b[2J\x1b[H' })
+  if (cmd === 'clear') return NextResponse.json({ output: '\x1b[2J\x1b[H', clear: true })
 
   try {
-    const output = await handleCommand(cmd, args, user, superAdmin)
+    const output = await handleCommand(cmd, args, user, role)
     return NextResponse.json({ output })
-  } catch (e: any) {
-    return NextResponse.json({ output: `\x1b[31mError: ${e.message}\x1b[0m\n` })
+  } catch (ex: any) {
+    return NextResponse.json({ output: `${'\x1b'}[31mError: ${ex.message}\n` })
   }
 }
