@@ -15,6 +15,9 @@ export default function TopupPage() {
   const [user, setUser] = useState<any>(null)
   const [selected, setSelected] = useState<number>(100)
   const [loading, setLoading] = useState(true)
+  const [savedCard, setSavedCard] = useState<{ brand: string; last4: string; exp_month: number; exp_year: number } | null>(null)
+  const [quickPaying, setQuickPaying] = useState(false)
+  const [quickSuccess, setQuickSuccess] = useState('')
   const [paying, setPaying] = useState(false)
   const [success, setSuccess] = useState(false)
   const [cancelled, setCancelled] = useState(false)
@@ -28,6 +31,10 @@ export default function TopupPage() {
 
     const params = new URLSearchParams(window.location.search)
     if (params.get('success') === '1') setSuccess(true)
+    // Check for saved card
+    fetch('/api/account/topup/saved-card').then(r => r.json()).then(d => {
+      if (d.card) setSavedCard(d.card)
+    }).catch(() => {})
     if (params.get('cancelled') === '1') setCancelled(true)
   }, [])
 
@@ -47,6 +54,23 @@ export default function TopupPage() {
       setError(err.message)
       setPaying(false)
     }
+  }
+
+  async function handleQuickPay() {
+    setQuickPaying(true)
+    setQuickSuccess('')
+    try {
+      const res = await fetch('/api/account/topup/quick', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: selected }),
+      })
+      const data = await res.json()
+      if (!res.ok) { alert(data.error || 'Payment failed'); return }
+      setQuickSuccess(`£${selected} added via ${data.card}. New balance: £${data.newBalance.toFixed(2)}`)
+      setTimeout(() => window.location.reload(), 2000)
+    } catch { alert('Payment failed') }
+    finally { setQuickPaying(false) }
   }
 
   if (loading) return (
