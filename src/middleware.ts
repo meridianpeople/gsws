@@ -1,26 +1,62 @@
 import { NextRequest, NextResponse } from 'next/server'
 
-const PUBLIC_PATHS = ['/login', '/register', '/forgot-password', '/api/auth/login', '/invite', '/api/invite']
+/**
+ * Middleware — Edge-compatible, lightweight
+ *
+ * Layer 1: Public paths bypass auth
+ * Layer 2: Check session cookie exists (signature verified by API routes)
+ * Layer 3: Full session validation happens in getGswsSession() per route
+ *
+ * Better Auth session validation cannot run in Edge (uses better-sqlite3).
+ * Full validation is done in each API route via getGswsSession().
+ * Middleware only gates access — prevents unauthenticated page loads.
+ */
+
+const PUBLIC_PATHS = [
+  '/login',
+  '/register', 
+  '/forgot-password',
+  '/invite',
+  '/api/auth',
+]
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
-  const isPublic = PUBLIC_PATHS.some(p => pathname.startsWith(p))
-  const session = req.cookies.get('gsws_session')?.value
 
+  // Layer 1 — public paths pass through
+  const isPublic = PUBLIC_PATHS.some(p => pathname.startsWith(p))
   if (isPublic) {
-    if (session && pathname === '/login') {
-      return NextResponse.redirect(new URL('/dashboard', req.url))
+    // Redirect already-authenticated users away from login
+    if (pathname === '/login') {
+      const hasSession = req.cookies.get('gsws_ba.session_token')?.value
+        || req.cookies.get('gsws_session')?.value
+      if (hasSession) {
+        return NextResponse.redirect(new URL('/dashboard', req.url))
+      }
     }
     return NextResponse.next()
   }
 
-  if (!session) {
+  // Layer 2 — require a session cookie to exist
+  // Full cryptographic validation happens in getGswsSession() per route
+  const baSession = req.cookies.get('gsws_ba.session_token')?.value
+  const legacySession = req.cookies.get('gsws_session')?.value
+
+  if (!baSession && !legacySession) {
+    if (pathname.startsWith('/api/')) {
+      return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+    }
     return NextResponse.redirect(new URL('/login', req.url))
   }
 
-  // Add session token to header so API routes can validate it
+  // Layer 3 — forward session tokens to route handlers via headers
   const response = NextResponse.next()
-  response.headers.set('x-gsws-session', session)
+  if (legacySession) {
+    response.headers.set('x-gsws-session', legacySession)
+  }
+  if (baSession) {
+    response.headers.set('x-gsws-ba-session', baSession)
+  }
   return response
 }
 

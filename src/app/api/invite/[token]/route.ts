@@ -30,23 +30,37 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ tok
   if (!invite) return NextResponse.json({ error: 'Invalid or expired invitation' }, { status: 404 })
   if (!password || password.length < 8) return NextResponse.json({ error: 'Password must be at least 8 characters' }, { status: 400 })
 
-  // Hash password
-  const passwordHash = crypto.createHash('sha256').update(password + 'gsws2026salt').digest('hex')
+  // Hash password with bcrypt (rounds=12)
+  const bcrypt = await import('bcryptjs')
+  const passwordHash = await bcrypt.hash(password, 12)
 
   // Check if user already exists
   let memberUser = db.prepare('SELECT * FROM gsws_users WHERE email = ?').get(invite.email) as any
 
   if (!memberUser) {
-    // Create new user
-    const wpUserId = Date.now() // synthetic wp_user_id for invited users
+    // Create GSWS user record (native, no WP user ID needed)
+    const syntheticWpId = -(Date.now()) // negative to avoid colliding with real WP IDs
     db.prepare(`
       INSERT INTO gsws_users (wp_user_id, email, name, role, password_hash, is_active)
       VALUES (?, ?, ?, 'user', ?, 1)
-    `).run(wpUserId, invite.email, invite.name || invite.email.split('@')[0], passwordHash)
+    `).run(syntheticWpId, invite.email, invite.name || invite.email.split('@')[0], passwordHash)
     memberUser = db.prepare('SELECT * FROM gsws_users WHERE email = ?').get(invite.email) as any
+
+    // Create Better Auth user + account records for this native user
+    const baId = crypto.randomUUID()
+    db.prepare(`
+      INSERT OR IGNORE INTO "user" (id, name, email, email_verified, auth_provider, gsws_user_id, is_active, created_at, updated_at)
+      VALUES (?, ?, ?, 1, 'gsws_native', ?, 1, datetime('now'), datetime('now'))
+    `).run(baId, invite.name || invite.email.split('@')[0], invite.email, memberUser.id)
+    db.prepare(`
+      INSERT OR IGNORE INTO "account" (id, account_id, provider_id, user_id, password, created_at, updated_at)
+      VALUES (?, ?, 'credential', ?, ?, datetime('now'), datetime('now'))
+    `).run(crypto.randomUUID(), invite.email, baId, passwordHash)
   } else {
-    // Update password hash for existing user
+    // Update password hash for existing user (both GSWS and BA tables)
     db.prepare('UPDATE gsws_users SET password_hash = ? WHERE id = ?').run(passwordHash, memberUser.id)
+    db.prepare(`UPDATE "account" SET password = ? WHERE user_id = (SELECT id FROM "user" WHERE email = ?)`)
+      .run(passwordHash, invite.email)
   }
 
   // Accept invite
