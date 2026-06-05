@@ -147,9 +147,7 @@ export default function Topbar() {
     }}>
       {/* Logo */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '0 20px', width: '232px', height: '100%', flexShrink: 0, borderRight: '1px solid var(--g-topbar-border)' }}>
-        <div style={{ width: '28px', height: '28px', borderRadius: '4px', background: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-          <span style={{ fontSize: '13px', fontWeight: 900, color: '#000', lineHeight: 1 }}>G</span>
-        </div>
+        <img src="https://geig.co.uk/_next/image?url=%2Fgeig-logo.png&w=256&q=75" alt="GeiG" style={{ height: '28px', width: 'auto', objectFit: 'contain' }} />
         <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1 }}>
           <span style={{ fontSize: '13px', fontWeight: 600, color: '#fff', letterSpacing: '0.5px' }}>GeiG</span>
           <span style={{ fontSize: '9px', color: '#555', textTransform: 'uppercase', letterSpacing: '1.5px', marginTop: '2px' }}>Simple Web Service</span>
