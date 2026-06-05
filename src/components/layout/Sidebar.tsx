@@ -37,7 +37,6 @@ const nav = [
       { label: 'Hosting Packages', href: '/packages', icon: <Icon d="M22 12H2M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z" /> },
       { label: 'Websites', href: '/websites', icon: <Icon d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" /> },
       { label: 'WordPress', href: '/wordpress', icon: <Icon d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" d2="M12 6v6l4 2" /> },
-      { label: 'Drupal', href: '/drupal', icon: <Icon d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" /> },
       { label: 'Windows Hosting', href: '/windows', icon: <Icon d="M3 5h8v8H3zM13 5h8v8h-8zM3 15h8v6H3zM13 15h8v6h-8z" /> },
       { label: 'Linux Hosting', href: '/linux', icon: <Icon d="M20 3H4a1 1 0 00-1 1v16a1 1 0 001 1h16a1 1 0 001-1V4a1 1 0 00-1-1z" d2="M8 10h8M8 14h4" /> },
       { label: 'File Manager', href: '/filemanager', icon: <Icon d="M3 3h18v18H3zM3 9h18M9 21V9" /> },
@@ -47,7 +46,6 @@ const nav = [
     label: 'Email',
     items: [
       { label: 'Email', href: '/email', icon: <Icon d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" d2="M22 6l-10 7L2 6" /> },
-      { label: 'Mailboxes', href: '/email/mailboxes', icon: <Icon d="M22 13V6a2 2 0 00-2-2H4a2 2 0 00-2 2v12c0 1.1.9 2 2 2h9" d2="M18 21a3 3 0 100-6 3 3 0 000 6zM22 22l-1.5-1.5" /> },
       { label: 'Aliases', href: '/email/aliases', icon: <Icon d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" d2="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" /> },
       { label: 'Forwarders', href: '/email/forwarders', icon: <Icon d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" /> },
       { label: 'Spam Protection', href: '/email/spam', icon: <Icon d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" d2="M9 12l2 2 4-4" /> },
@@ -58,29 +56,21 @@ const nav = [
     label: 'Security',
     items: [
       { label: 'SSL / TLS', href: '/ssl', icon: <Icon d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /> },
-      { label: 'Certificates', href: '/ssl/certificates', icon: <Icon d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" /> },
       { label: 'Security', href: '/security', icon: <Icon d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" d2="M9 12l2 2 4-4" /> },
-      { label: 'Access Control', href: '/access', icon: <Icon d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" d2="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75M9 7a4 4 0 100 8 4 4 0 000-8z" /> },
-      { label: 'Firewall', href: '/firewall', icon: <Icon d="M3 7h18M3 12h18M3 17h18" /> },
     ],
   },
   {
     label: 'Performance',
     items: [
       { label: 'CDN', href: '/cdn', icon: <Icon d="M12 2a10 10 0 100 20A10 10 0 0012 2z" d2="M12 8v8M8 12h8" /> },
-      { label: 'Caching', href: '/caching', icon: <Icon d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" /> },
       { label: 'Uptime Monitoring', href: '/monitoring', icon: <Icon d="M22 12h-4l-3 9L9 3l-3 9H2" /> },
       { label: 'Analytics', href: '/analytics', icon: <Icon d="M18 20V10M12 20V4M6 20v-6" /> },
-      { label: 'Logs', href: '/logs', icon: <Icon d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" d2="M14 2v6h6M16 13H8M16 17H8M10 9H8" /> },
     ],
   },
   {
     label: 'Databases',
     items: [
       { label: 'Databases', href: '/databases', icon: <Icon d="M12 2C8.13 2 5 3.34 5 5v14c0 1.66 3.13 3 7 3s7-1.34 7-3V5c0-1.66-3.13-3-7-3z" d2="M5 5c0 1.66 3.13 3 7 3s7-1.34 7-3M5 12c0 1.66 3.13 3 7 3s7-1.34 7-3" /> },
-      { label: 'MySQL', href: '/databases/mysql', icon: <Icon d="M4 7h16M4 12h16M4 17h16" /> },
-      { label: 'PostgreSQL', href: '/databases/postgres', icon: <Icon d="M4 7h16M4 12h16M4 17h16" /> },
-      { label: 'Database Backups', href: '/databases/backups', icon: <Icon d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" d2="M7 10l5 5 5-5M12 15V3" /> },
     ],
   },
   {
@@ -88,9 +78,6 @@ const nav = [
     items: [
       { label: 'VPS', href: '/compute/vps', icon: <Icon d="M20 3H4a1 1 0 00-1 1v4a1 1 0 001 1h16a1 1 0 001-1V4a1 1 0 00-1-1zM20 13H4a1 1 0 00-1 1v4a1 1 0 001 1h16a1 1 0 001-1v-4a1 1 0 00-1-1z" d2="M7 7h.01M7 17h.01" /> },
       { label: 'GPU Compute', href: '/compute/gpu', icon: <Icon d="M9 3H5a2 2 0 00-2 2v4m6-6h10a2 2 0 012 2v4M9 3v18m0 0h10a2 2 0 002-2V9M9 21H5a2 2 0 01-2-2V9m0 0h18" /> },
-      { label: 'SSH Keys', href: '/compute/ssh-keys', icon: <Icon d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4" /> },
-      { label: 'Snapshots', href: '/compute/snapshots', icon: <Icon d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" d2="M12 17a4 4 0 100-8 4 4 0 000 8z" /> },
-      { label: 'Resource Usage', href: '/compute/usage', icon: <Icon d="M18 20V10M12 20V4M6 20v-6" /> },
     ],
   },
   {
@@ -98,7 +85,6 @@ const nav = [
     items: [
       { label: 'Backups', href: '/backups', icon: <Icon d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" d2="M7 10l5 5 5-5M12 15V3" /> },
       { label: 'Restore Points', href: '/backups/restore', icon: <Icon d="M1 4v6h6M23 20v-6h-6" d2="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15" /> },
-      { label: 'Disaster Recovery', href: '/backups/disaster-recovery', icon: <Icon d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /> },
     ],
   },
   {
@@ -115,6 +101,10 @@ export default function Sidebar() {
   const [isMember, setIsMember] = useState(false)
   const [pkgCount, setPkgCount] = useState(0)
   const [domainCount, setDomainCount] = useState(0)
+  const [packages, setPackages] = useState<{id:string,name:string,label:string}[]>([])
+  const [selectedPkg, setSelectedPkg] = useState<string>('all')
+  const [dropOpen, setDropOpen] = useState(false)
+  const [search, setSearch] = useState('')
   const pathname = usePathname()
 
   useEffect(() => {
@@ -123,12 +113,24 @@ export default function Sidebar() {
       setPkgCount(d?.user?.packageCount || 0)
       setDomainCount(d?.user?.domainCount || 0)
     }).catch(() => {})
+    fetch('/api/packages/list').then(r => r.json()).then(d => {
+      setPackages(d.packages || [])
+    }).catch(() => {})
   }, [])
 
   const isActive = (href: string) => {
     if (href === '/dashboard') return pathname === '/dashboard'
     return pathname.startsWith(href)
   }
+
+  const selectedLabel = selectedPkg === 'all'
+    ? 'All packages'
+    : packages.find(p => p.id === selectedPkg)?.name || 'All packages'
+
+  const filtered = packages.filter(p =>
+    p.name.toLowerCase().includes(search.toLowerCase()) ||
+    p.label.toLowerCase().includes(search.toLowerCase())
+  )
 
   return (
     <aside
@@ -141,12 +143,63 @@ export default function Sidebar() {
       }}
     >
       {/* Package selector */}
-      <div style={{ margin: '10px 10px 6px', padding: '10px 12px', background: '#161616', border: '1px solid #222', borderRadius: '8px', cursor: 'pointer' }}>
-        <p style={{ fontFamily: 'monospace', fontSize: '9px', textTransform: 'uppercase', letterSpacing: '1px', color: '#444', marginBottom: '5px' }}>Active Package</p>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <span style={{ fontSize: '12px', fontWeight: 500, color: '#e0e0e0' }}>All packages</span>
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#555" strokeWidth="2.5"><polyline points="6 9 12 15 18 9"/></svg>
+      <div style={{ margin: '10px 10px 6px', position: 'relative' }}>
+        <p style={{ fontFamily: 'monospace', fontSize: '9px', textTransform: 'uppercase', letterSpacing: '1px', color: '#444', marginBottom: '5px', paddingLeft: '2px' }}>Active Package</p>
+        <div
+          onClick={() => setDropOpen(o => !o)}
+          style={{ padding: '8px 10px', background: '#161616', border: '1px solid #252525', borderRadius: '8px', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '6px' }}
+        >
+          <span style={{ fontSize: '12px', fontWeight: 500, color: '#e0e0e0', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{selectedLabel}</span>
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#555" strokeWidth="2.5" style={{ flexShrink: 0, transform: dropOpen ? 'rotate(180deg)' : 'none', transition: 'transform 0.15s' }}><polyline points="6 9 12 15 18 9"/></svg>
         </div>
+
+        {dropOpen && (
+          <div style={{ position: 'absolute', top: '100%', left: 0, right: 0, marginTop: '4px', background: '#161616', border: '1px solid #252525', borderRadius: '8px', overflow: 'hidden', zIndex: 200, boxShadow: '0 8px 24px rgba(0,0,0,0.5)' }}>
+            {/* Search */}
+            <div style={{ padding: '8px', borderBottom: '1px solid #1e1e1e' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: '#0e0e0e', border: '1px solid #252525', borderRadius: '5px', padding: '5px 8px' }}>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#444" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                <input
+                  autoFocus
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  placeholder="Search packages..."
+                  style={{ background: 'transparent', border: 'none', outline: 'none', fontSize: '11px', color: '#ccc', width: '100%', fontFamily: 'inherit' }}
+                />
+              </div>
+            </div>
+            {/* Options */}
+            <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
+              <div
+                onClick={() => { setSelectedPkg('all'); setDropOpen(false); setSearch('') }}
+                style={{ padding: '8px 12px', fontSize: '12px', cursor: 'pointer', color: selectedPkg === 'all' ? '#fff' : '#aaa', background: selectedPkg === 'all' ? '#1a1a1a' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
+                onMouseEnter={e => { if (selectedPkg !== 'all') (e.currentTarget as HTMLDivElement).style.background = '#111' }}
+                onMouseLeave={e => { if (selectedPkg !== 'all') (e.currentTarget as HTMLDivElement).style.background = 'transparent' }}
+              >
+                <span>All packages</span>
+                {selectedPkg === 'all' && <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1a6ef5" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>}
+              </div>
+              {filtered.length === 0 && search && (
+                <div style={{ padding: '12px', fontSize: '11px', color: '#444', textAlign: 'center' }}>No packages found</div>
+              )}
+              {filtered.map(p => (
+                <div
+                  key={p.id}
+                  onClick={() => { setSelectedPkg(p.id); setDropOpen(false); setSearch('') }}
+                  style={{ padding: '8px 12px', fontSize: '12px', cursor: 'pointer', color: selectedPkg === p.id ? '#fff' : '#aaa', background: selectedPkg === p.id ? '#1a1a1a' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}
+                  onMouseEnter={e => { if (selectedPkg !== p.id) (e.currentTarget as HTMLDivElement).style.background = '#111' }}
+                  onMouseLeave={e => { if (selectedPkg !== p.id) (e.currentTarget as HTMLDivElement).style.background = 'transparent' }}
+                >
+                  <div style={{ overflow: 'hidden' }}>
+                    <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.name}</div>
+                    <div style={{ fontSize: '10px', color: '#555', marginTop: '1px' }}>{p.label}</div>
+                  </div>
+                  {selectedPkg === p.id && <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1a6ef5" strokeWidth="2.5" style={{ flexShrink: 0 }}><polyline points="20 6 9 17 4 12"/></svg>}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Nav */}
