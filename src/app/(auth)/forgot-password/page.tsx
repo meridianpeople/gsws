@@ -35,19 +35,31 @@ export default function ForgotPasswordPage() {
         .fp-right { width: 64%; height: 100vh; position: relative; display: flex; flex-direction: column; padding: 56px 64px; overflow: hidden; background: radial-gradient(circle at 70% 30%, #030E1E 0%, #050505 100%); box-sizing: border-box; }
         .fp-feat-card { background: rgba(17,17,17,0.8); border: 1px solid #252A30; border-radius: 8px; padding: 20px; display: flex; align-items: flex-start; gap: 16px; transition: border-color 0.2s; cursor: default; }
         .fp-feat-card:hover { border-color: rgba(0,200,255,0.3); }
+
+        /* TABLET: 50/50, hide stepper + cards */
         @media (max-width: 1024px) {
           .fp-left { width: 50%; }
           .fp-right { width: 50%; padding: 40px; }
-          .fp-stepper { display: none; }
-          .fp-cards { display: none; }
+          .fp-stepper { display: none !important; }
+          .fp-cards { display: none !important; }
+          .fp-right-bottom { flex-direction: column; align-items: flex-start !important; }
+          .fp-trust { display: none !important; }
         }
+
+        /* MOBILE: full width, no right panel, minimal padding */
         @media (max-width: 767px) {
           .fp-root { height: auto; min-height: 100vh; overflow: auto; }
-          .fp-left { width: 100%; height: auto; min-height: 100vh; border-right: none; align-items: flex-start; padding-top: 100px; padding-bottom: 80px; }
-          .fp-inner { padding: 0 24px; }
-          .fp-logo { left: 24px !important; }
+          .fp-left {
+            width: 100%; height: auto; min-height: 100vh;
+            border-right: none;
+            align-items: flex-start;
+            padding-top: 0;
+          }
+          .fp-inner { padding: 0 24px 80px; }
+          .fp-logo { left: 24px !important; top: 28px !important; }
           .fp-footer { left: 24px !important; right: 24px !important; }
           .fp-right { display: none; }
+          .fp-heading { margin-top: 88px; }
         }
       `}</style>
 
@@ -55,7 +67,6 @@ export default function ForgotPasswordPage() {
 
         {/* LEFT */}
         <aside className="fp-left">
-          {/* Logo */}
           <div className="fp-logo" style={{ position: 'absolute', top: '36px', left: '48px' }}>
             <Image src="https://geig.co.uk/_next/image?url=%2Fgeig-logo.png&w=256&q=75" alt="GeiG" width={110} height={36} style={{ objectFit: 'contain', objectPosition: 'left' }} unoptimized />
           </div>
@@ -75,7 +86,7 @@ export default function ForgotPasswordPage() {
               </div>
             ) : (
               <>
-                <div style={{ marginBottom: '20px' }}>
+                <div className="fp-heading" style={{ marginBottom: '20px' }}>
                   <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', color: '#00C8FF', textTransform: 'uppercase', letterSpacing: '0.3em', marginBottom: '6px' }}>Account Recovery</p>
                   <h1 style={{ fontSize: '22px', fontWeight: 700, color: '#fff', marginBottom: '8px', lineHeight: 1.2 }}>Forgot password?</h1>
                   <p style={{ fontSize: '13px', color: '#A0A6AD', lineHeight: 1.6, maxWidth: '300px' }}>
@@ -98,7 +109,6 @@ export default function ForgotPasswordPage() {
                     </div>
                   </div>
 
-                  {/* Silver button — matches login */}
                   <button onClick={handleSubmit} disabled={loading}
                     style={{ width: '100%', height: '44px', background: loading ? '#1a1a1a' : 'linear-gradient(135deg, #e8e8e8 0%, #c0c0c0 50%, #a8a8a8 100%)', color: '#0a0a0a', border: '1px solid rgba(255,255,255,0.15)', borderRadius: '9999px', fontSize: '14px', fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', opacity: loading ? 0.6 : 1, transition: 'filter 0.15s, transform 0.1s', boxShadow: '0 1px 3px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.3)' }}
                     onMouseEnter={e => { if (!loading) (e.currentTarget as HTMLButtonElement).style.filter = 'brightness(1.08)' }}
@@ -116,14 +126,13 @@ export default function ForgotPasswordPage() {
                   </Link>
                 </div>
 
-                <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', color: '#444', textAlign: 'center', marginTop: '20px', letterSpacing: '0.05em' }}>
+                <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '10px', color: '#444', textAlign: 'center', marginTop: '16px', letterSpacing: '0.05em' }}>
                   Reset links expire automatically for your protection.
                 </p>
               </>
             )}
           </div>
 
-          {/* Footer */}
           <div className="fp-footer" style={{ position: 'absolute', bottom: '32px', left: '48px', right: '48px' }}>
             <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '9px', color: '#6F7782', letterSpacing: '0.05em', marginBottom: '10px', textTransform: 'uppercase' }}>Secure Recovery · GeiG Infrastructure</p>
             <div style={{ display: 'flex', gap: '16px' }}>
@@ -141,22 +150,20 @@ export default function ForgotPasswordPage() {
           <div style={{ position: 'absolute', inset: 0, opacity: 0.15, pointerEvents: 'none', backgroundImage: 'radial-gradient(#1e293b 0.5px, transparent 0.5px)', backgroundSize: '24px 24px' }} />
           <div style={{ position: 'absolute', top: '-10%', right: '-10%', width: '600px', height: '600px', background: 'rgba(0,200,255,0.05)', filter: 'blur(120px)', borderRadius: '9999px', pointerEvents: 'none' }} />
 
-          {/* Top */}
           <div style={{ position: 'relative', zIndex: 10, flex: 1 }}>
             <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '11px', color: '#00C8FF', textTransform: 'uppercase', letterSpacing: '0.4em', display: 'block', marginBottom: '16px' }}>Account Recovery</span>
             <h2 style={{ fontSize: '48px', fontWeight: 800, color: '#fff', marginBottom: '20px', lineHeight: 1.1, letterSpacing: '-0.02em' }}>Secure access,<br/>restored simply.</h2>
-            <p style={{ fontSize: '16px', color: '#A0A6AD', maxWidth: '560px', lineHeight: 1.7, marginBottom: '56px' }}>
+            <p style={{ fontSize: '16px', color: '#A0A6AD', maxWidth: '560px', lineHeight: 1.7, marginBottom: '48px' }}>
               Recover your GeiG SWS workspace with a protected reset flow built for business-critical services. We prioritize infrastructure integrity at every step of your return journey.
             </p>
 
-            {/* Stepper */}
-            <div className="fp-stepper" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '32px', marginBottom: '48px' }}>
+            <div className="fp-stepper" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '32px', marginBottom: '40px' }}>
               {[
                 { n: '01', title: 'Verify.', desc: 'Confirm your workspace email.' },
                 { n: '02', title: 'Reset.', desc: 'Use a protected reset link.' },
                 { n: '03', title: 'Return.', desc: 'Get back to your services securely.' },
               ].map(({ n, title, desc }) => (
-                <div key={n} style={{ cursor: 'default' }}>
+                <div key={n}>
                   <div style={{ fontSize: '40px', fontWeight: 800, color: 'rgba(255,255,255,0.08)', lineHeight: 1, marginBottom: '8px' }}>{n}</div>
                   <div style={{ height: '1px', background: '#252A30', marginBottom: '16px' }} />
                   <div style={{ fontSize: '20px', fontWeight: 600, color: '#fff', marginBottom: '4px' }}>{title}</div>
@@ -165,7 +172,6 @@ export default function ForgotPasswordPage() {
               ))}
             </div>
 
-            {/* Feature cards */}
             <div className="fp-cards" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
               {[
                 { title: 'Protected Reset Link', desc: 'One-time use cryptographic link.', icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#00C8FF" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg> },
@@ -184,9 +190,8 @@ export default function ForgotPasswordPage() {
             </div>
           </div>
 
-          {/* Bottom */}
-          <div style={{ position: 'relative', zIndex: 10, flexShrink: 0, display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: '32px', paddingBottom: '0' }}>
-            <div style={{ maxWidth: '420px' }}>
+          <div className="fp-right-bottom" style={{ position: 'relative', zIndex: 10, flexShrink: 0, display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', gap: '32px' }}>
+            <div style={{ maxWidth: '420px', paddingBottom: '32px' }}>
               <p style={{ fontSize: '14px', color: '#A0A6AD', lineHeight: 1.7, marginBottom: '16px' }}>
                 Need help accessing your workspace? Contact GeiG Support if you no longer have access to your registered email address.
               </p>
@@ -197,8 +202,7 @@ export default function ForgotPasswordPage() {
               </a>
             </div>
 
-            {/* Trust bar */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '24px', opacity: 0.6, paddingBottom: '32px', flexShrink: 0 }}>
+            <div className="fp-trust" style={{ display: 'flex', alignItems: 'center', gap: '24px', opacity: 0.6, paddingBottom: '32px', flexShrink: 0 }}>
               {[
                 { label: 'Secure Recovery', icon: <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg> },
                 { label: 'Protected Links', icon: <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg> },
