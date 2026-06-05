@@ -1,7 +1,7 @@
 'use client'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 
 function Icon({ d, d2 }: { d: string; d2?: string }) {
   return (
@@ -101,10 +101,11 @@ export default function Sidebar() {
   const [isMember, setIsMember] = useState(false)
   const [pkgCount, setPkgCount] = useState(0)
   const [domainCount, setDomainCount] = useState(0)
-  const [packages, setPackages] = useState<{id:string,name:string,label:string}[]>([])
+  const [packages, setPackages] = useState<{id:string,name:string,label:string,href:string,group:string}[]>([])
   const [selectedPkg, setSelectedPkg] = useState<string>('all')
   const [dropOpen, setDropOpen] = useState(false)
   const [search, setSearch] = useState('')
+  const router = useRouter()
   const pathname = usePathname()
 
   useEffect(() => {
@@ -113,8 +114,15 @@ export default function Sidebar() {
       setPkgCount(d?.user?.packageCount || 0)
       setDomainCount(d?.user?.domainCount || 0)
     }).catch(() => {})
-    fetch('/api/packages/list').then(r => r.json()).then(d => {
-      setPackages(d.packages || [])
+    Promise.all([
+      fetch('/api/packages/list').then(r => r.json()),
+      fetch('/api/compute/vps').then(r => r.json()),
+      fetch('/api/compute/gpu').then(r => r.json()),
+    ]).then(([pkgs, vps, gpu]) => {
+      const hosting = (pkgs.packages || []).map((p: any) => ({ id: `pkg_${p.id}`, name: p.name, label: p.label, href: `/packages/${p.id}`, group: 'Hosting' }))
+      const vpsList = (vps.orders || []).map((v: any) => ({ id: `vps_${v.id}`, name: v.display_name || v.service_key, label: `VPS · ${v.status}`, href: `/compute/vps/${v.id}`, group: 'VPS' }))
+      const gpuList = (gpu.orders || []).map((g: any) => ({ id: `gpu_${g.id}`, name: g.service_key, label: `GPU · ${g.tier} · ${g.billing_period}`, href: `/compute/gpu/${g.id}`, group: 'GPU' }))
+      setPackages([...hosting, ...vpsList, ...gpuList])
     }).catch(() => {})
   }, [])
 
@@ -126,6 +134,8 @@ export default function Sidebar() {
   const selectedLabel = selectedPkg === 'all'
     ? 'All packages'
     : packages.find(p => p.id === selectedPkg)?.name || 'All packages'
+
+  const groups = ['Hosting', 'VPS', 'GPU']
 
   const filtered = packages.filter(p =>
     p.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -171,7 +181,7 @@ export default function Sidebar() {
             {/* Options */}
             <div style={{ maxHeight: '200px', overflowY: 'auto' }}>
               <div
-                onClick={() => { setSelectedPkg('all'); setDropOpen(false); setSearch('') }}
+                onClick={() => { setSelectedPkg('all'); setDropOpen(false); setSearch(''); router.push('/dashboard') }}
                 style={{ padding: '8px 12px', fontSize: '12px', cursor: 'pointer', color: selectedPkg === 'all' ? '#fff' : '#aaa', background: selectedPkg === 'all' ? '#1a1a1a' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
                 onMouseEnter={e => { if (selectedPkg !== 'all') (e.currentTarget as HTMLDivElement).style.background = '#111' }}
                 onMouseLeave={e => { if (selectedPkg !== 'all') (e.currentTarget as HTMLDivElement).style.background = 'transparent' }}
@@ -180,23 +190,32 @@ export default function Sidebar() {
                 {selectedPkg === 'all' && <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1a6ef5" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>}
               </div>
               {filtered.length === 0 && search && (
-                <div style={{ padding: '12px', fontSize: '11px', color: '#444', textAlign: 'center' }}>No packages found</div>
+                <div style={{ padding: '12px', fontSize: '11px', color: '#444', textAlign: 'center' }}>No results found</div>
               )}
-              {filtered.map(p => (
-                <div
-                  key={p.id}
-                  onClick={() => { setSelectedPkg(p.id); setDropOpen(false); setSearch('') }}
-                  style={{ padding: '8px 12px', fontSize: '12px', cursor: 'pointer', color: selectedPkg === p.id ? '#fff' : '#aaa', background: selectedPkg === p.id ? '#1a1a1a' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}
-                  onMouseEnter={e => { if (selectedPkg !== p.id) (e.currentTarget as HTMLDivElement).style.background = '#111' }}
-                  onMouseLeave={e => { if (selectedPkg !== p.id) (e.currentTarget as HTMLDivElement).style.background = 'transparent' }}
-                >
-                  <div style={{ overflow: 'hidden' }}>
-                    <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.name}</div>
-                    <div style={{ fontSize: '10px', color: '#555', marginTop: '1px' }}>{p.label}</div>
+              {groups.map(group => {
+                const items = filtered.filter(p => p.group === group)
+                if (items.length === 0) return null
+                return (
+                  <div key={group}>
+                    <div style={{ padding: '6px 12px 3px', fontSize: '9px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px', color: '#333' }}>{group}</div>
+                    {items.map(p => (
+                      <div
+                        key={p.id}
+                        onClick={() => { setSelectedPkg(p.id); setDropOpen(false); setSearch(''); router.push(p.href) }}
+                        style={{ padding: '7px 12px', fontSize: '12px', cursor: 'pointer', color: selectedPkg === p.id ? '#fff' : '#aaa', background: selectedPkg === p.id ? '#1a1a1a' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}
+                        onMouseEnter={e => { if (selectedPkg !== p.id) (e.currentTarget as HTMLDivElement).style.background = '#111' }}
+                        onMouseLeave={e => { if (selectedPkg !== p.id) (e.currentTarget as HTMLDivElement).style.background = 'transparent' }}
+                      >
+                        <div style={{ overflow: 'hidden' }}>
+                          <div style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{p.name}</div>
+                          <div style={{ fontSize: '10px', color: '#555', marginTop: '1px' }}>{p.label}</div>
+                        </div>
+                        {selectedPkg === p.id && <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1a6ef5" strokeWidth="2.5" style={{ flexShrink: 0 }}><polyline points="20 6 9 17 4 12"/></svg>}
+                      </div>
+                    ))}
                   </div>
-                  {selectedPkg === p.id && <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#1a6ef5" strokeWidth="2.5" style={{ flexShrink: 0 }}><polyline points="20 6 9 17 4 12"/></svg>}
-                </div>
-              ))}
+                )
+              })}
             </div>
           </div>
         )}
