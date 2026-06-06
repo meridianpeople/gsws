@@ -25,6 +25,7 @@ const nav = [
       { label: 'Domains', href: '/domains', icon: <Icon d="M12 2a10 10 0 100 20A10 10 0 0012 2zM2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20" /> },
       { label: 'Register Domain', href: '/domains/search', icon: <Icon d="M12 5v14M5 12h14" /> },
       { label: 'DNS', href: '/dns', icon: <Icon d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" /> },
+      { label: 'Renewals', href: '/renewals', icon: <Icon d="M23 4v6h-6M1 20v-6h6" d2="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 013.51 15" /> },
     ],
   },
   {
@@ -33,7 +34,6 @@ const nav = [
       { label: 'Hosting Packages', href: '/packages', icon: <Icon d="M22 12H2M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z" /> },
       { label: 'WordPress', href: '/wordpress', icon: <Icon d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" d2="M12 6v6l4 2" /> },
       { label: 'Windows Hosting', href: '/windows', icon: <Icon d="M3 5h8v8H3zM13 5h8v8h-8zM3 15h8v6H3zM13 15h8v6h-8z" /> },
-      { label: 'Linux Hosting', href: '/linux', icon: <Icon d="M20 3H4a1 1 0 00-1 1v16a1 1 0 001 1h16a1 1 0 001-1V4a1 1 0 00-1-1z" d2="M8 10h8M8 14h4" /> },
     ],
   },
   {
@@ -48,13 +48,7 @@ const nav = [
       { label: 'Security', href: '/security', icon: <Icon d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" d2="M9 12l2 2 4-4" /> },
     ],
   },
-  {
-    label: 'Performance',
-    items: [
-      { label: 'CDN', href: '/cdn', icon: <Icon d="M12 2a10 10 0 100 20A10 10 0 0012 2z" d2="M12 8v8M8 12h8" /> },
-      { label: 'Analytics', href: '/analytics', icon: <Icon d="M18 20V10M12 20V4M6 20v-6" /> },
-    ],
-  },
+
   {
     label: 'Databases',
     items: [
@@ -72,12 +66,13 @@ const nav = [
     label: 'Backup & Recovery',
     items: [
       { label: 'Backups', href: '/backups', icon: <Icon d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" d2="M7 10l5 5 5-5M12 15V3" /> },
-      { label: 'Restore Points', href: '/backups/restore', icon: <Icon d="M1 4v6h6M23 20v-6h-6" d2="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15" /> },
     ],
   },
   {
     label: 'Tools',
     items: [
+      { label: 'CDN', href: '/cdn', icon: <Icon d="M12 2a10 10 0 100 20A10 10 0 0012 2z" d2="M12 8v8M8 12h8" /> },
+      { label: 'SSL', href: '/ssl', icon: <Icon d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /> },
       { label: 'Web CLI', href: '/cli', icon: <Icon d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /> },
       { label: 'API Reference', href: '/api-reference', icon: <Icon d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /> },
       { label: 'API Credentials', href: '/account/api', icon: <Icon d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /> },
@@ -246,16 +241,7 @@ export default function Sidebar() {
         ))}
       </nav>
 
-      {/* Footer */}
-      <div style={{ padding: '12px 12px 14px', borderTop: '1px solid #1a1a1a' }}>
-        <p style={{ fontSize: '11px', color: '#3a3a3a', marginBottom: '8px' }}>
-          {domainCount} domain{domainCount !== 1 ? 's' : ''} · {pkgCount} package{pkgCount !== 1 ? 's' : ''}
-        </p>
-        <Link href="/domains/search" style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', padding: '6px 10px', borderRadius: '6px', color: '#1a6ef5', background: '#0a1628', border: '1px solid #1a3060', textDecoration: 'none' }}>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Add domain
-        </Link>
-      </div>
+
     </aside>
   )
 }
