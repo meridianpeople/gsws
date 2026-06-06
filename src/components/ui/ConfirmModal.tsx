@@ -1,4 +1,5 @@
 'use client'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
 
 interface ConfirmModalProps {
@@ -25,6 +26,59 @@ export default function ConfirmModal({
   const VAT_RATE = 0.20
   const exVat = price ? price / (1 + VAT_RATE) : null
   const vat = price && exVat ? price - exVat : null
+
+  const [pinRequired, setPinRequired] = useState(false)
+  const [pin, setPin] = useState('')
+  const [pinError, setPinError] = useState('')
+  const [pinChecked, setPinChecked] = useState(false)
+  const [verifying, setVerifying] = useState(false)
+
+  // Check if PIN required when modal opens
+  useEffect(() => {
+    if (price) checkPinRequired()
+  }, [price])
+
+  async function checkPinRequired() {
+    try {
+      const res = await fetch('/api/account/spend-pin/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ amount: price }),
+      })
+      const data = await res.json()
+      setPinRequired(data.required)
+      setPinChecked(true)
+    } catch {
+      setPinChecked(true)
+    }
+  }
+
+  async function handleConfirm() {
+    if (pinRequired) {
+      if (!pin) { setPinError('Please enter your spend PIN'); return }
+      setVerifying(true)
+      try {
+        const res = await fetch('/api/account/spend-pin/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ pin, amount: price }),
+        })
+        const data = await res.json()
+        if (!data.valid) {
+          setPinError('Incorrect PIN')
+          setPin('')
+          setVerifying(false)
+          return
+        }
+      } catch {
+        setPinError('Verification failed')
+        setVerifying(false)
+        return
+      }
+      setVerifying(false)
+    }
+    onConfirm()
+  }
 
   return (
     <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
@@ -63,7 +117,7 @@ export default function ConfirmModal({
           </div>
         )}
 
-        {/* Custom content slot */}
+        {/* Custom content */}
         {children}
 
         {/* Features */}
@@ -81,23 +135,48 @@ export default function ConfirmModal({
           </div>
         )}
 
+        {/* PIN input */}
+        {pinRequired && pinChecked && (
+          <div style={{ background: '#f0f4ff', border: '1px solid #c7d7fd', borderRadius: '8px', padding: '14px 16px', marginBottom: '16px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1a6ef5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              <span style={{ fontSize: '12px', fontWeight: 600, color: '#1a6ef5' }}>Spend PIN required for this amount</span>
+            </div>
+            <input
+              type="password"
+              inputMode="numeric"
+              maxLength={6}
+              value={pin}
+              onChange={e => { setPin(e.target.value.replace(/\D/g, '')); setPinError('') }}
+              placeholder="Enter your spend PIN"
+              style={{ width: '100%', height: '38px', border: `1px solid ${pinError ? '#fca5a5' : '#c7d7fd'}`, borderRadius: '6px', fontSize: '18px', padding: '0 12px', fontFamily: 'monospace', letterSpacing: '4px', background: '#fff', outline: 'none', boxSizing: 'border-box' }}
+              autoFocus
+            />
+            {pinError && <p style={{ fontSize: '11px', color: '#dc2626', marginTop: '6px' }}>{pinError}</p>}
+            <p style={{ fontSize: '11px', color: '#6b7280', marginTop: '6px' }}>
+              Your spend PIN is required for purchases above your set threshold. <Link href="/account/security" style={{ color: '#1a6ef5' }}>Manage PIN →</Link>
+            </p>
+          </div>
+        )}
+
         {/* Terms */}
         {terms && (
           <p style={{ fontSize: '11px', color: '#9a9a9a', marginBottom: '16px', lineHeight: 1.5 }}>
-            {terms} By confirming, you agree to our{' '}
-            <Link href="/terms" style={{ color: '#1a6ef5' }}>Terms of Service</Link>.
+            {terms} By confirming, you agree to our <Link href="/terms" style={{ color: '#1a6ef5' }}>Terms of Service</Link>.
           </p>
         )}
 
         {/* Buttons */}
         <div style={{ display: 'flex', gap: '10px' }}>
-          <button onClick={onCancel} disabled={loading}
-            style={{ flex: 1, height: '42px', background: '#f7f7f7', border: '1px solid #d4d4d4', borderRadius: '8px', fontSize: '13px', fontWeight: 600, cursor: loading ? 'not-allowed' : 'pointer', color: '#5a5a5a' }}>
+          <button onClick={onCancel} disabled={loading || verifying}
+            style={{ flex: 1, height: '42px', background: '#f7f7f7', border: '1px solid #d4d4d4', borderRadius: '8px', fontSize: '13px', fontWeight: 600, cursor: 'pointer', color: '#5a5a5a' }}>
             Cancel
           </button>
-          <button onClick={onConfirm} disabled={loading}
-            style={{ flex: 2, height: '42px', background: loading ? '#ccc' : danger ? '#dc2626' : '#1a6ef5', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: 700, cursor: loading ? 'not-allowed' : 'pointer' }}>
-            {loading ? 'Processing...' : (confirmLabel || `Confirm · £${price?.toFixed(2)}`)}
+          <button onClick={handleConfirm} disabled={loading || verifying || !pinChecked}
+            style={{ flex: 2, height: '42px', background: loading || verifying ? '#ccc' : danger ? '#dc2626' : '#1a6ef5', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: 700, cursor: loading || verifying ? 'not-allowed' : 'pointer' }}>
+            {verifying ? 'Verifying PIN...' : loading ? 'Processing...' : (confirmLabel || `Confirm · £${price?.toFixed(2)}`)}
           </button>
         </div>
       </div>
