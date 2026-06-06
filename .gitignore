@@ -42,3 +42,4 @@ next-env.d.ts
 data/gsws.db
 data/gsws.db-shm
 data/gsws.db-wal
+gsws.db
