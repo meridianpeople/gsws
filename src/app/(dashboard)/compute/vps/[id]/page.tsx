@@ -38,6 +38,9 @@ export default function VPSDetailPage() {
   const [newRule, setNewRule] = useState({ protocol: 'tcp', port: '', cidr: '0.0.0.0/0', action: 'accept', displayName: '' })
   const [savingRule, setSavingRule] = useState(false)
   const [editingFwName, setEditingFwName] = useState(false)
+  const [editingVpsName, setEditingVpsName] = useState(false)
+  const [newVpsName, setNewVpsName] = useState('')
+  const [showUpgrade, setShowUpgrade] = useState(false)
   const [newFwName, setNewFwName] = useState('')
 
   useEffect(() => { loadVPS() }, [id])
@@ -127,7 +130,25 @@ export default function VPSDetailPage() {
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', position: 'relative' }}>
           <div>
             <p style={{ fontSize: '10px', fontWeight: 600, letterSpacing: '0.12em', color: '#666', textTransform: 'uppercase', marginBottom: '8px' }}>Cloud VPS · {pd?.region || 'EU'}</p>
-            <h1 style={{ fontSize: '24px', fontWeight: 700, color: '#f5f5f5', margin: '0 0 12px', letterSpacing: '-0.02em' }}>{name}</h1>
+            {editingVpsName ? (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+                <input value={newVpsName} onChange={e => setNewVpsName(e.target.value)}
+                  style={{ height: '34px', background: '#1a1a1a', border: '1px solid #444', borderRadius: '7px', padding: '0 12px', fontSize: '18px', fontWeight: 700, color: '#f5f5f5', fontFamily: 'inherit', width: '280px' }} />
+                <button onClick={async () => {
+                  try {
+                    await doAction('rename', { displayName: newVpsName })
+                    setEditingVpsName(false); loadVPS()
+                  } catch {}
+                }} style={{ height: '34px', padding: '0 12px', background: '#4ade80', color: '#0a0a0a', border: 'none', borderRadius: '6px', fontSize: '12px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>Save</button>
+                <button onClick={() => setEditingVpsName(false)} style={{ height: '34px', padding: '0 12px', background: '#1a1a1a', color: '#9a9a9a', border: '1px solid #333', borderRadius: '6px', fontSize: '12px', cursor: 'pointer', fontFamily: 'inherit' }}>Cancel</button>
+              </div>
+            ) : (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+                <h1 style={{ fontSize: '24px', fontWeight: 700, color: '#f5f5f5', margin: '0', letterSpacing: '-0.02em' }}>{name}</h1>
+                <button onClick={() => { setNewVpsName(name); setEditingVpsName(true) }}
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#555', fontSize: '13px', padding: '0', lineHeight: 1, marginTop: '2px' }} title="Rename">✏️</button>
+              </div>
+            )}
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
               <span style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '12px', color: '#9a9a9a', fontFamily: "'DM Mono', monospace" }}>
                 {ICON.ip}<span style={{ color: '#e5e5e5' }}>{ip}</span>
@@ -534,6 +555,40 @@ export default function VPSDetailPage() {
                 </button>
               </div>
             ))}
+          </div>
+
+          {/* Upgrade plan */}
+          <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '12px', padding: '18px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: showUpgrade ? '16px' : '0' }}>
+              <div>
+                <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#9a9a9a', marginBottom: '4px' }}>Current Plan</p>
+                <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a' }}>{order.service_key} — {pd?.cpuCores || '—'} vCPU · {pd?.ramMb ? `${pd.ramMb/1024}GB` : '—'} RAM · {pd?.diskMb ? `${pd.diskMb/1024}GB` : '—'} SSD</p>
+              </div>
+              <button onClick={() => setShowUpgrade(s => !s)}
+                style={{ height: '32px', padding: '0 14px', background: '#f7f7f7', color: '#333', border: '1px solid #d4d4d4', borderRadius: '7px', fontSize: '12px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
+                {showUpgrade ? 'Cancel' : 'Upgrade Plan'}
+              </button>
+            </div>
+            {showUpgrade && (
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '8px' }}>
+                {[
+                  { id: 'V22', label: 'VPS 10', cpu: 4, ram: 8, disk: 150, price: '£6.80' },
+                  { id: 'V24', label: 'VPS 20', cpu: 6, ram: 12, disk: 200, price: '£6.80' },
+                  { id: 'V26', label: 'VPS 30', cpu: 8, ram: 24, disk: 300, price: '£12.00' },
+                  { id: 'V28', label: 'VPS 40', cpu: 10, ram: 48, disk: 400, price: '£20.00' },
+                  { id: 'V30', label: 'VPS 50', cpu: 12, ram: 96, disk: 600, price: '£36.00' },
+                ].map(plan => (
+                  <div key={plan.id} style={{ border: `2px solid ${order.service_key === plan.id ? '#0a0a0a' : '#ebebeb'}`, borderRadius: '10px', padding: '14px', textAlign: 'center', cursor: 'pointer' }}
+                    onClick={() => { if (confirm(`Upgrade to ${plan.label}? This will change your monthly cost to ${plan.price}.`)) doAction('upgrade', { productId: plan.id }) }}>
+                    <p style={{ fontSize: '12px', fontWeight: 700, color: '#0a0a0a', marginBottom: '6px' }}>{plan.label}</p>
+                    <p style={{ fontSize: '10px', color: '#666', marginBottom: '2px' }}>{plan.cpu} vCPU</p>
+                    <p style={{ fontSize: '10px', color: '#666', marginBottom: '2px' }}>{plan.ram}GB RAM</p>
+                    <p style={{ fontSize: '10px', color: '#666', marginBottom: '8px' }}>{plan.disk}GB SSD</p>
+                    <p style={{ fontSize: '12px', fontWeight: 700, color: '#0a0a0a' }}>{plan.price}/mo</p>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Danger zone */}

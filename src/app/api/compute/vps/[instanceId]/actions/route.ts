@@ -72,6 +72,16 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ ins
         db.prepare("UPDATE gsws_compute_orders SET status = 'cancelled', updated_at = datetime('now') WHERE id = ?").run(instanceId)
         return NextResponse.json({ message: 'VPS cancellation scheduled for end of billing period' })
 
+      case 'rename':
+        const { displayName } = body
+        if (!displayName) return NextResponse.json({ error: 'displayName required' }, { status: 400 })
+        await contaboFetch(`/v1/compute/instances/${pid}`, {
+          method: 'PATCH',
+          body: JSON.stringify({ displayName }),
+        })
+        db.prepare("UPDATE gsws_compute_orders SET notes = ?, updated_at = datetime('now') WHERE id = ?").run(`Imported: ${displayName}`, instanceId)
+        return NextResponse.json({ message: `VPS renamed to ${displayName}` })
+
       case 'upgrade':
         const { productId } = body
         if (!productId) return NextResponse.json({ error: 'productId required' }, { status: 400 })
