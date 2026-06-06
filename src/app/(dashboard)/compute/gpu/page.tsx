@@ -256,7 +256,7 @@ export default function GPUComputePage() {
                 </div>
                 <div style={{ fontSize: '11px', textAlign: 'right' }}>
                   <div style={{ fontWeight: 700, color: selectedOffer?.id === o.id ? '#1a6ef5' : '#111' }}>
-                    £{(o.price_per_hr * 1.05 * 0.79).toFixed(3)}/hr
+                    £{(o.price_per_hr * 1.05 * 0.79 * ({hourly:1,daily:24,weekly:168,monthly:720,annual:8760}[selectedPeriod] || 1) * ({hourly:1.0,daily:0.95,weekly:0.90,monthly:0.85,annual:0.75}[selectedPeriod] || 1)).toFixed(selectedPeriod === 'hourly' ? 3 : 2)}/{selectedPeriod === 'hourly' ? 'hr' : selectedPeriod}
                   </div>
                   {selectedOffer?.id === o.id && <div style={{ color: '#1a6ef5', fontWeight: 700, fontSize: '10px' }}>✓ Selected</div>}
                 </div>
@@ -277,7 +277,12 @@ export default function GPUComputePage() {
             <button key={p.key} onClick={() => setSelectedPeriod(p.key)}
               style={{ padding: '12px 8px', border: `2px solid ${selectedPeriod === p.key ? '#1a6ef5' : '#e5e7eb'}`, borderRadius: '8px', background: selectedPeriod === p.key ? '#e8f0fe' : '#fff', cursor: 'pointer', textAlign: 'center' }}>
               <div style={{ fontSize: '13px', fontWeight: 700, color: selectedPeriod === p.key ? '#1a6ef5' : '#111' }}>{p.label}</div>
-              <div style={{ fontSize: '12px', color: '#666', marginTop: '2px' }}>£{tier.pricing[p.key as keyof typeof tier.pricing].toLocaleString()}</div>
+              <div style={{ fontSize: '12px', color: '#666', marginTop: '2px' }}>
+                £{selectedOffer
+                  ? Math.round(selectedOffer.price_per_hr * 1.05 * 0.79 * ({hourly:1,daily:24,weekly:168,monthly:720,annual:8760}[p.key as string] || 1) * ({hourly:1.0,daily:0.95,weekly:0.90,monthly:0.85,annual:0.75}[p.key as string] || 1) * 100) / 100
+                  : tier.pricing[p.key as keyof typeof tier.pricing]
+                }
+              </div>
               {p.discount && <div style={{ fontSize: '10px', color: '#16a34a', marginTop: '2px', fontWeight: 600 }}>{p.discount}</div>}
             </button>
           ))}
