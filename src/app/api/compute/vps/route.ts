@@ -26,7 +26,27 @@ export async function GET(req: NextRequest) {
     ORDER BY created_at DESC
   `).all(user.id) as any[]
 
-  return NextResponse.json({ orders })
+  // Enrich with live Contabo data
+  try {
+    const instances = await listInstances()
+    const instanceMap: Record<string, any> = {}
+    for (const i of (instances?.data || [])) {
+      instanceMap[String(i.instanceId)] = i
+    }
+    const enriched = orders.map((o: any) => {
+      const live = instanceMap[String(o.provider_instance_id)]
+      if (live) {
+        const fresh = JSON.stringify(live)
+        db.prepare("UPDATE gsws_compute_orders SET provider_data = ?, status = ?, updated_at = datetime('now') WHERE id = ?")
+          .run(fresh, live.status || o.status, o.id)
+        return { ...o, provider_data: fresh, status: live.status || o.status }
+      }
+      return o
+    })
+    return NextResponse.json({ orders: enriched })
+  } catch {
+    return NextResponse.json({ orders })
+  }
 }
 
 export async function POST(req: NextRequest) {
