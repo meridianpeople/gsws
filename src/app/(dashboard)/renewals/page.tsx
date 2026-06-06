@@ -154,7 +154,7 @@ export default function RenewalsPage() {
                 {/* Price */}
                 <div style={{ textAlign: 'right', flexShrink: 0, marginRight: '16px' }}>
                   <p style={{ fontSize: '14px', fontWeight: 700, color: '#0a0a0a' }}>£{(r.renewal_price_inc_vat || 0).toFixed(2)}</p>
-                  <p style={{ fontSize: '10px', color: '#9a9a9a', textTransform: 'uppercase', letterSpacing: '0.05em' }}>inc VAT / year</p>
+                  <p style={{ fontSize: '10px', color: '#9a9a9a', textTransform: 'uppercase', letterSpacing: '0.05em' }}>inc VAT / {r.billing_period || 'year'}</p>
                 </div>
 
                 {/* Auto-renew toggle */}
