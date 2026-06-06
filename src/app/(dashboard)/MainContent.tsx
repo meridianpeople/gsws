@@ -18,7 +18,7 @@ export default function MainContent({ children }: { children: React.ReactNode })
       background: '#f5f5f5',
       transition: 'padding-top 0.1s',
     }}>
-      <div style={{ padding: '28px 32px', maxWidth: '1400px', width: '100%' }}>
+      <div style={{ padding: '28px 32px', width: '100%' }}>
         {children}
       </div>
     </main>
