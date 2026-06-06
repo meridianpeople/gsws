@@ -203,7 +203,7 @@ export default function VPSDetailPage() {
                   {icon}
                   <span style={{ fontSize: '10px', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' }}>{label}</span>
                 </div>
-                <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', fontFamily: mono ? "'DM Mono', monospace" : 'inherit', fontSize: mono ? '12px' : '13px' } as any}>{value}</p>
+                <p style={{ fontSize: mono ? '12px' : '13px', fontWeight: 600, color: '#0a0a0a', fontFamily: mono ? "'DM Mono', monospace" : 'inherit' } as any}>{value}</p>
               </div>
             ))}
           </div>
