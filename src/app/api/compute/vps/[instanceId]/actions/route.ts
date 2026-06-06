@@ -56,11 +56,49 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ ins
 
       case 'rescue':
         await contaboFetch(`/v1/compute/instances/${pid}/actions/rescue`, { method: 'POST' })
-        return NextResponse.json({ message: 'Rescue mode activated' })
+        return NextResponse.json({ message: 'Rescue mode activated — server rebooting into rescue system' })
+
+      case 'shutdown':
+        await contaboFetch(`/v1/compute/instances/${pid}/actions/shutdown`, { method: 'POST' })
+        return NextResponse.json({ message: 'Graceful shutdown initiated' })
 
       case 'reset_credentials':
-        await contaboFetch(`/v1/compute/instances/${pid}/actions/resetCredentials`, { method: 'POST' })
-        return NextResponse.json({ message: 'Credentials reset — check your email' })
+        await contaboFetch(`/v1/compute/instances/${pid}/actions/resetPassword`, { method: 'POST' })
+        return NextResponse.json({ message: 'Password reset — check your registered email' })
+
+      case 'cancel':
+        await contaboFetch(`/v1/compute/instances/${pid}/cancel`, { method: 'POST' })
+        db.prepare("UPDATE gsws_compute_orders SET status = 'cancelled', updated_at = datetime('now') WHERE id = ?").run(instanceId)
+        return NextResponse.json({ message: 'VPS cancellation scheduled for end of billing period' })
+
+      case 'upgrade':
+        const { productId } = await req.json().catch(() => ({}))
+        if (!productId) return NextResponse.json({ error: 'productId required' }, { status: 400 })
+        await contaboFetch(`/v1/compute/instances/${pid}/upgrade`, {
+          method: 'POST',
+          body: JSON.stringify({ productId }),
+        })
+        return NextResponse.json({ message: 'Upgrade initiated' })
+
+      case 'create_firewall':
+        const fw = await contaboFetch('/v1/firewalls', {
+          method: 'POST',
+          body: JSON.stringify({ name: `fw-${pid}`, description: 'SWS managed firewall' }),
+        })
+        const fwId = fw?.data?.[0]?.firewallId
+        if (fwId) {
+          await contaboFetch(`/v1/firewalls/${fwId}/instances/${pid}`, { method: 'POST' })
+        }
+        return NextResponse.json({ message: 'Firewall created and assigned', firewallId: fwId })
+
+      case 'create_dns_zone':
+        const { zoneName } = await req.json().catch(() => ({}))
+        if (!zoneName) return NextResponse.json({ error: 'zoneName required' }, { status: 400 })
+        await contaboFetch('/v1/dns/zones', {
+          method: 'POST',
+          body: JSON.stringify({ name: zoneName }),
+        })
+        return NextResponse.json({ message: `DNS zone ${zoneName} created` })
 
       default:
         return NextResponse.json({ error: `Unknown action: ${action}` }, { status: 400 })

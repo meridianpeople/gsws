@@ -123,6 +123,13 @@ export default function VPSDetailPage() {
             style={{ height: '34px', padding: '0 14px', background: '#f7f7f7', color: '#333', border: '1px solid #d4d4d4', borderRadius: '7px', fontSize: '12px', fontWeight: 600, cursor: 'pointer' }}>
             ↺ Restart
           </button>
+          <button onClick={() => {
+            const vncUrl = `https://${instance?.vncIp || pd?.vncIp}:${instance?.vncPort || pd?.vncPort}`
+            window.open(vncUrl, '_blank')
+          }} disabled={!instance?.vncIp && !pd?.vncIp}
+            style={{ height: '34px', padding: '0 14px', background: '#6366f1', color: '#fff', border: 'none', borderRadius: '7px', fontSize: '12px', fontWeight: 600, cursor: 'pointer' }}>
+            🖥 VNC
+          </button>
         </div>
       </div>
 
@@ -340,22 +347,39 @@ export default function VPSDetailPage() {
 
       {/* Actions tab */}
       {tab === 'Actions' && (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-          {[
-            { label: 'Rescue Mode', desc: 'Boot into rescue system for emergency access', action: 'rescue', color: '#854d0e', bg: '#fefce8' },
-            { label: 'Reset Credentials', desc: 'Reset root/admin password', action: 'reset_credentials', color: '#1a6ef5', bg: '#eff6ff' },
-            { label: 'Create Snapshot', desc: 'Save current state as a snapshot', action: 'snapshot', color: '#3b6d11', bg: '#eaf3de' },
-            { label: 'VNC Console', desc: 'Access server via browser VNC', action: 'vnc', color: '#6366f1', bg: '#eef2ff' },
-          ].map(({ label, desc, action, color, bg }) => (
-            <div key={action} style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', padding: '18px' }}>
-              <p style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a', marginBottom: '4px' }}>{label}</p>
-              <p style={{ fontSize: '12px', color: '#9a9a9a', marginBottom: '12px' }}>{desc}</p>
-              <button onClick={() => doAction(action)} disabled={!!actionLoading}
-                style={{ height: '32px', padding: '0 14px', background: bg, color, border: `1px solid ${color}33`, borderRadius: '6px', fontSize: '12px', fontWeight: 600, cursor: 'pointer' }}>
-                {actionLoading === action ? 'Processing...' : label}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+            {[
+              { label: 'Create Snapshot', desc: 'Save current state — can be restored later', action: 'snapshot', color: '#3b6d11', bg: '#eaf3de' },
+              { label: 'Graceful Shutdown', desc: 'Send shutdown signal — OS closes cleanly', action: 'shutdown', color: '#854d0e', bg: '#fefce8' },
+              { label: 'Rescue Mode', desc: 'Boot into rescue system for emergency access', action: 'rescue', color: '#7c3aed', bg: '#f5f3ff' },
+              { label: 'Reset Password', desc: 'Reset root/admin password via email', action: 'reset_credentials', color: '#1a6ef5', bg: '#eff6ff' },
+            ].map(({ label, desc, action, color, bg }) => (
+              <div key={action} style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', padding: '18px' }}>
+                <p style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a', marginBottom: '4px' }}>{label}</p>
+                <p style={{ fontSize: '12px', color: '#9a9a9a', marginBottom: '12px' }}>{desc}</p>
+                <button onClick={() => doAction(action)} disabled={!!actionLoading}
+                  style={{ height: '32px', padding: '0 14px', background: bg, color, border: `1px solid ${color}33`, borderRadius: '6px', fontSize: '12px', fontWeight: 600, cursor: 'pointer' }}>
+                  {actionLoading === action ? 'Processing...' : label}
+                </button>
+              </div>
+            ))}
+          </div>
+
+          {/* Danger zone */}
+          <div style={{ border: '1px solid #fca5a5', borderRadius: '10px', padding: '18px', background: '#fef2f2' }}>
+            <p style={{ fontSize: '13px', fontWeight: 700, color: '#dc2626', marginBottom: '12px' }}>⚠️ Danger Zone</p>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div>
+                <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '2px' }}>Cancel VPS</p>
+                <p style={{ fontSize: '12px', color: '#9a9a9a' }}>Schedule cancellation at end of billing period. Data will be permanently deleted.</p>
+              </div>
+              <button onClick={() => { if (confirm('Cancel this VPS? It will be terminated at end of billing period and all data deleted.')) doAction('cancel') }} disabled={!!actionLoading}
+                style={{ height: '34px', padding: '0 16px', background: '#dc2626', color: '#fff', border: 'none', borderRadius: '6px', fontSize: '12px', fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap', marginLeft: '16px' }}>
+                Cancel VPS
               </button>
             </div>
-          ))}
+          </div>
         </div>
       )}
     </div>
