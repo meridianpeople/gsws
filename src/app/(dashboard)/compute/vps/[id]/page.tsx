@@ -3,14 +3,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 
-// Always show core tabs, show addon tabs based on what's provisioned
-  const hasBackup = instance?.addOns?.some((a: any) => a.id === 1305 || a.id === 1306) || false
-  const hasPrivateNet = instance?.addOns?.some((a: any) => a.id === 1401) || false
-  const TABS = ['Overview', 'Snapshots', 'Images', 
-    ...(hasBackup ? ['Backups'] : []),
-    ...(hasPrivateNet ? ['Network'] : []),
-    'Firewall', 'DNS', 'Actions'
-  ]
+const TABS_BASE = ['Overview', 'Snapshots', 'Images', 'Firewall', 'DNS', 'Actions']
 
 export default function VPSDetailPage() {
   const { id } = useParams()
@@ -77,6 +70,14 @@ export default function VPSDetailPage() {
     } catch (err: any) { setError(err.message) }
     finally { setActionLoading('') }
   }
+
+  const hasBackup = instance?.addOns?.some((a: any) => a.id === 1305 || a.id === 1306) || false
+  const hasPrivateNet = instance?.addOns?.some((a: any) => a.id === 1401) || false
+  const TABS = ['Overview', 'Snapshots', 'Images',
+    ...(hasBackup ? ['Backups'] : []),
+    ...(hasPrivateNet ? ['Network'] : []),
+    'Firewall', 'DNS', 'Actions'
+  ]
 
   if (loading) return <div style={{ color: '#9a9a9a', fontSize: '13px', padding: '24px' }}>Loading...</div>
   if (!order) return <div style={{ color: '#dc2626', padding: '24px' }}>VPS not found</div>
