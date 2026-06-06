@@ -572,11 +572,11 @@ export default function VPSDetailPage() {
             {showUpgrade && (
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '8px' }}>
                 {[
-                  { id: 'V22', label: 'VPS 10', cpu: 4, ram: 8, disk: 150, price: '£6.80' },
-                  { id: 'V24', label: 'VPS 20', cpu: 6, ram: 12, disk: 200, price: '£6.80' },
-                  { id: 'V26', label: 'VPS 30', cpu: 8, ram: 24, disk: 300, price: '£12.00' },
-                  { id: 'V28', label: 'VPS 40', cpu: 10, ram: 48, disk: 400, price: '£20.00' },
-                  { id: 'V30', label: 'VPS 50', cpu: 12, ram: 96, disk: 600, price: '£36.00' },
+                  { id: 'V92', label: 'VPS 10', cpu: 4, ram: 8, disk: 150, price: '£6.80' },
+                  { id: 'V95', label: 'VPS 20', cpu: 6, ram: 12, disk: 200, price: '£6.80' },
+                  { id: 'V98', label: 'VPS 30', cpu: 8, ram: 24, disk: 300, price: '£12.00' },
+                  { id: 'V45', label: 'VPS 40', cpu: 10, ram: 48, disk: 400, price: '£20.00' },
+                  { id: 'V50', label: 'VPS 50', cpu: 12, ram: 96, disk: 600, price: '£36.00' },
                 ].map(plan => (
                   <div key={plan.id} style={{ border: `2px solid ${order.service_key === plan.id ? '#0a0a0a' : '#ebebeb'}`, borderRadius: '10px', padding: '14px', textAlign: 'center', cursor: 'pointer' }}
                     onClick={() => { if (confirm(`Upgrade to ${plan.label}? This will change your monthly cost to ${plan.price}.`)) doAction('upgrade', { productId: plan.id }) }}>
