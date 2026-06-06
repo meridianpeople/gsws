@@ -120,11 +120,15 @@ async function getVpsCredentials(orderId, userId) {
   db.close()
   if (!order) throw new Error('Access denied')
 
-  const providerData = order.provider_data ? JSON.parse(order.provider_data) : null
-  const ip = providerData?.ipConfig?.v4?.ip
-  if (!ip) throw new Error('VPS IP not available yet — provisioning may still be in progress')
+  // Use stored ssh_host/ssh_user if available, fall back to provider_data
+  const host = order.ssh_host || (() => {
+    const pd = order.provider_data ? JSON.parse(order.provider_data) : null
+    return pd?.ipConfig?.v4?.ip
+  })()
+  if (!host) throw new Error('VPS IP not available yet — provisioning may still be in progress')
 
-  return { host: ip, port: 22, username: 'root', domain: order.service_key }
+  const username = order.ssh_user || 'root'
+  return { host, port: order.ssh_port || 22, username, domain: order.service_key || order.notes }
 }
 
 function auditLog(userId, action, detail) {

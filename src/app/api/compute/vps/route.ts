@@ -75,8 +75,8 @@ export async function POST(req: NextRequest) {
       imageId: IMAGES[image_key || 'ubuntu-24.04'] || IMAGES['ubuntu-24.04'],
       displayName: display_name || `gsws-${service_key}-${user.id}`,
       period: months,
-      defaultUser: default_user || 'admin',
-      // sshKeys: [] — requires Contabo secret ID, added after key registration
+      defaultUser: 'root',
+      sshKeys: [Number(process.env.CONTABO_SSH_KEY_ID || '384170')],
       ...(Object.keys(addOns).length > 0 && { addOns }),
     })
     contaboInstance = result.data?.[0] || result
