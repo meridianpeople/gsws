@@ -3,15 +3,17 @@ import { cookies } from 'next/headers'
 import { getGswsSession } from '@/lib/session'
 import db from '@/lib/db'
 
-export default async function PackagesPage() {
+export default async function PackagesPage({ searchParams }: { searchParams: Promise<{ filter?: string }> }) {
+  const { filter } = await searchParams
   const cookieStore = await cookies()
   const user = await getGswsSession()
 
-  const packages = user ? db.prepare(`
+  const allPackages = user ? db.prepare(`
     SELECT twentyi_package_id as id, domain_name as name, package_type as type,
            package_label as label, status, created_at
     FROM gsws_user_packages WHERE user_id = ? ORDER BY created_at DESC
   `).all(user.id) : []
+  const packages = filter ? (allPackages as any[]).filter((p: any) => p.type?.toLowerCase().includes(filter.toLowerCase()) || p.label?.toLowerCase().includes(filter.toLowerCase())) : allPackages
 
   const domains = user ? db.prepare(`
     SELECT domain_name as name FROM gsws_user_domains WHERE user_id = ?

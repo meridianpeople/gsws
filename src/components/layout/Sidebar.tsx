@@ -16,7 +16,6 @@ const nav = [
     label: 'Workspace',
     items: [
       { label: 'Overview', href: '/dashboard', icon: <Icon d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" d2="M9 22V12h6v10" /> },
-      { label: 'Activity', href: '/account/activity', icon: <Icon d="M22 12h-4l-3 9L9 3l-3 9H2" /> },
     ],
   },
   {
@@ -34,6 +33,7 @@ const nav = [
       { label: 'Hosting Packages', href: '/packages', icon: <Icon d="M22 12H2M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z" /> },
       { label: 'WordPress', href: '/wordpress', icon: <Icon d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" d2="M12 6v6l4 2" /> },
       { label: 'Windows Hosting', href: '/windows', icon: <Icon d="M3 5h8v8H3zM13 5h8v8h-8zM3 15h8v6H3zM13 15h8v6h-8z" /> },
+      { label: 'Linux Hosting', href: '/packages?filter=linux', icon: <Icon d="M20 3H4a1 1 0 00-1 1v16a1 1 0 001 1h16a1 1 0 001-1V4a1 1 0 00-1-1z" d2="M8 10h8M8 14h4" /> },
     ],
   },
   {
