@@ -150,9 +150,9 @@ export async function POST(req: NextRequest) {
 
   // Add to renewals
   const renewalExpiry = expiresAt ? expiresAt.toISOString().split('T')[0] : new Date(Date.now() + 30*86400000).toISOString().split('T')[0]
-  const priceExVat = Math.round(priceIncVat / 1.2 * 100) / 100
+  const renewalPriceExVat = Math.round(priceIncVat / 1.2 * 100) / 100
   db.prepare(`INSERT INTO gsws_renewals (user_id, resource_type, resource_id, resource_name, plan_name, registered_at, expires_at, renewal_price_ex_vat, renewal_price_inc_vat, auto_renew, status) VALUES (?, 'vps', ?, ?, ?, date('now'), ?, ?, ?, 1, 'active')`)
-    .run(user.id, String(orderId), catalogue.name, catalogue.name, renewalExpiry, priceExVat, priceIncVat)
+    .run(user.id, String(orderId), catalogue.name, catalogue.name, renewalExpiry, renewalPriceExVat, priceIncVat)
 
   // Audit
   db.prepare(`INSERT INTO gsws_audit_log (user_id, action, resource_type, resource_name, detail) VALUES (?, 'vps_order', 'compute', ?, ?)`).run(
