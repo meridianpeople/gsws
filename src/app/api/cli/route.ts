@@ -55,6 +55,8 @@ async function handleCommand(cmd: string, args: string[], user: any, role: strin
         '  package <id> email               List mailboxes',
         '  package <id> ssl                 SSL status',
         '  package <id> php                 PHP version',
+        '  package <id> mysql               List MySQL databases',
+        '  package <id> backup              Trigger backup',
         '',
         c('1', 'Domains:'),
         '  domains                          List your domains',
@@ -118,9 +120,29 @@ async function handleCommand(cmd: string, args: string[], user: any, role: strin
     }
 
     case 'domains': {
-      const domains = db.prepare(`SELECT domain_name, status, expires_at FROM gsws_user_domains WHERE user_id = ? ORDER BY created_at DESC`).all(user.id) as any[]
-      if (!domains.length) return `${c('33', 'No domains found')}\n`
-      return '\n' + domains.map(d => `  ${c('1', d.domain_name)} — ${d.status}${d.expires_at ? ` (expires ${d.expires_at})` : ''}`).join('\n') + '\n\n'
+      // First try local DB
+      const localDomains = db.prepare('SELECT domain_name FROM gsws_user_domains WHERE user_id = ? ORDER BY registered_at DESC').all(user.id) as any[]
+      if (localDomains.length) {
+        return '\n' + localDomains.map((d: any) => `  ${c('1', d.domain_name)}`).join('\n') + '\n\n'
+      }
+      // Fall back to 20i API
+      try {
+        const res = await client.get('/domain') as any
+        const all = res?.data || []
+        // Filter to domains owned by this user via gsws_user_packages
+        const userPkgs = db.prepare('SELECT domain_name FROM gsws_user_packages WHERE user_id = ?').all(user.id) as any[]
+        const pkgDomains = new Set(userPkgs.map((p: any) => p.domain_name))
+        const userDomains = all.filter((d: any) => pkgDomains.has(d.name) || pkgDomains.has(d.domain))
+        const domainList = userDomains.length ? userDomains : all.slice(0, 50)
+        if (!domainList.length) return `${c('33', 'No domains found')}\n`
+        return '\n' + domainList.map((d: any) => {
+          const name = d.name || d.domain || d.domain_name
+          const expiry = d.expiryDate ? ` (exp: ${new Date(d.expiryDate).toLocaleDateString('en-GB')})` : ''
+          return `  ${c('1', name)}${c('90', expiry)}`
+        }).join('\n') + '\n\n'
+      } catch (ex: any) {
+        return `${c('31', 'Error fetching domains: ' + ex.message)}\n`
+      }
     }
 
     case 'notifications': {
@@ -181,6 +203,22 @@ async function handleCommand(cmd: string, args: string[], user: any, role: strin
         try {
           const res = await client.get(`/package/${pkgId}/web/php`) as any
           return `\n  PHP Version: ${c('1', res?.data?.version || 'unknown')}\n\n`
+        } catch (ex: any) { return `${c('31', `Error: ${ex.message}`)}\n` }
+      }
+
+      if (sub === 'mysql') {
+        try {
+          const res = await client.get(`/package/${pkgId}/web/mysqlDatabases`) as any
+          const dbs = res?.data || []
+          if (!dbs.length) return `${c('33', 'No MySQL databases')}\n`
+          return '\n' + dbs.map((d: any) => `  ${c('1', d.name)}  ${d.server || ''}  ${d.quotaMb ? d.quotaMb+'MB quota' : ''}`).join('\n') + '\n\n'
+        } catch (ex: any) { return `${c('31', `Error: ${ex.message}`)}\n` }
+      }
+
+      if (sub === 'backup') {
+        try {
+          await client.post(`/package/${pkgId}/web/backup`, {})
+          return `${c('32', `✓ Backup triggered for ${pkg.domain_name}`)}\n`
         } catch (ex: any) { return `${c('31', `Error: ${ex.message}`)}\n` }
       }
 

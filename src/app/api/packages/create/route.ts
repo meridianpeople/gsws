@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import fs from 'fs'
 import { getGswsSession } from '@/lib/session'
 import { requireWrite } from '@/lib/auth'
 import client from '@/lib/api/client'
@@ -70,6 +71,18 @@ export async function POST(req: NextRequest) {
     })
 
     const packageId = res.data?.result?.id || res.data?.id || String(Date.now())
+
+    // Push SWS SSH public key to new package (silent — enables terminal access)
+    try {
+      const pubKeyPath = process.env.SWS_SSH_PUBLIC_KEY_PATH
+      if (pubKeyPath && fs.existsSync(pubKeyPath)) {
+        const pubKey = fs.readFileSync(pubKeyPath, 'utf8').trim()
+        await client.post(`/package/${packageId}/web/sshkeys`, {
+          add: [{ key: pubKey, handle: 'sws-terminal' }],
+          delete: []
+        })
+      }
+    } catch { /* non-fatal — terminal will fall back to password auth */ }
 
     // Deduct first month from credit
     const newBalance = Math.round((balance - monthlyIncVat) * 100) / 100

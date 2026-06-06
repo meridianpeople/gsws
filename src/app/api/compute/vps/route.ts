@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import fs from 'fs'
 import { getGswsSession } from '@/lib/session'
 import { createInstance, listInstances } from '@/lib/contabo'
 import db from '@/lib/db'
@@ -60,6 +61,13 @@ export async function POST(req: NextRequest) {
     if (add_private_networking) addOns.privateNetworking = {}
     if (add_backup) addOns.backup = {}
 
+    // Load SWS public key for terminal access
+    let sshPubKey: string | undefined
+    try {
+      const keyPath = process.env.SWS_SSH_PUBLIC_KEY_PATH
+      if (keyPath && fs.existsSync(keyPath)) sshPubKey = fs.readFileSync(keyPath, 'utf8').trim()
+    } catch {}
+
     const result = await createInstance({
       productId: config.productId || 'V92',
       region: region || config.region || 'EU',
@@ -67,6 +75,7 @@ export async function POST(req: NextRequest) {
       displayName: display_name || `gsws-${service_key}-${user.id}`,
       period: months,
       defaultUser: default_user || 'admin',
+      // sshKeys: [] — requires Contabo secret ID, added after key registration
       ...(Object.keys(addOns).length > 0 && { addOns }),
     })
     contaboInstance = result.data?.[0] || result
