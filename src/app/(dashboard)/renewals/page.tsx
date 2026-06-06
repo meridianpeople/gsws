@@ -2,12 +2,19 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 
-const TYPE_INFO: Record<string, { icon: string; label: string }> = {
-  domain:  { icon: '🌐', label: 'Domain' },
-  hosting: { icon: '🖥️', label: 'Hosting' },
-  vps:     { icon: '⚡', label: 'VPS' },
-  gpu:     { icon: '🎮', label: 'GPU Server' },
-  managed: { icon: '🛠️', label: 'Managed Service' },
+const TYPE_ICONS: Record<string, JSX.Element> = {
+  domain: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>,
+  hosting: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>,
+  vps: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><path d="M6 6h.01M6 18h.01"/></svg>,
+  gpu: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M1 15h3M20 9h3M20 15h3"/></svg>,
+  managed: <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>,
+}
+const TYPE_INFO: Record<string, { icon: JSX.Element; label: string; color: string; bg: string }> = {
+  domain:  { label: 'Domain', color: '#1d4ed8', bg: '#eff6ff', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> },
+  hosting: { label: 'Hosting', color: '#6d28d9', bg: '#f5f3ff', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg> },
+  vps:     { label: 'VPS', color: '#15803d', bg: '#f0fdf4', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><path d="M6 6h.01M6 18h.01"/></svg> },
+  gpu:     { label: 'GPU', color: '#b45309', bg: '#fffbeb', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M20 9h3"/></svg> },
+  managed: { label: 'Managed', color: '#0e7490', bg: '#ecfeff', icon: <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> },
 }
 
 const URGENCY_INFO: Record<string, { label: string; color: string; bg: string }> = {
@@ -63,10 +70,10 @@ export default function RenewalsPage() {
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px' }}>
         {[
-          { label: 'Total services', value: stats.total || 0, icon: '📦', color: '#185fa5', bg: '#e8f0fe' },
-          { label: 'Due this month', value: stats.dueThisMonth || 0, icon: '⏰', color: '#854f0b', bg: '#faeeda' },
-          { label: 'Overdue', value: stats.overdue || 0, icon: '⚠️', color: '#a32d2d', bg: '#fcebeb' },
-          { label: 'Annual cost', value: `£${((stats.monthlyTotal || 0) * 12).toFixed(2)}`, icon: '💷', color: '#3b6d11', bg: '#eaf3de' },
+          { label: 'Total services', value: stats.total || 0, icon: <svg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round'><rect x='2' y='2' width='20' height='8' rx='2'/><rect x='2' y='14' width='20' height='8' rx='2'/><path d='M6 6h.01M6 18h.01'/></svg>, color: '#185fa5', bg: '#e8f0fe' },
+          { label: 'Due this month', value: stats.dueThisMonth || 0, icon: <svg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round'><circle cx='12' cy='12' r='10'/><polyline points='12 6 12 12 16 14'/></svg>, color: '#854f0b', bg: '#faeeda' },
+          { label: 'Overdue', value: stats.overdue || 0, icon: <svg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round'><path d='M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z'/><line x1='12' y1='9' x2='12' y2='13'/><line x1='12' y1='17' x2='12.01' y2='17'/></svg>, color: '#a32d2d', bg: '#fcebeb' },
+          { label: 'Annual cost', value: `£${((stats.monthlyTotal || 0) * 12).toFixed(2)}`, icon: <svg width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='1.5' strokeLinecap='round' strokeLinejoin='round'><line x1='12' y1='1' x2='12' y2='23'/><path d='M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6'/></svg>, color: '#3b6d11', bg: '#eaf3de' },
         ].map(s => (
           <div key={s.label} style={{ padding: '16px', borderRadius: '10px', background: s.bg }}>
             <span style={{ fontSize: '18px' }}>{s.icon}</span>
@@ -122,7 +129,7 @@ export default function RenewalsPage() {
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
           {filtered.map((r: any) => {
-            const typeInfo = TYPE_INFO[r.resource_type] || { icon: '📦', label: 'Service' }
+            const typeInfo = TYPE_INFO[r.resource_type] || { icon: <svg width='15' height='15' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='1.5'><rect x='2' y='2' width='20' height='20' rx='2'/></svg>, label: 'Service', color: '#555', bg: '#f7f7f7' }
             const urgInfo = URGENCY_INFO[r.urgency] || URGENCY_INFO.ok
             const daysText = r.daysLeft < 0 ? `${Math.abs(r.daysLeft)} days overdue` : r.daysLeft === 0 ? 'Expires today' : `${r.daysLeft} days left`
             return (
