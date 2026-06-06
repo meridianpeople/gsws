@@ -85,6 +85,10 @@ export async function POST(req: NextRequest) {
     console.error('[VPS provision error]', err.message)
   }
 
+  // Check spend PIN
+  const pinCheck = await checkSpendPin(req, user.id, priceIncVat)
+  if (pinCheck) return pinCheck
+
   // Deduct credit regardless (order still created, support can fix if provision failed)
   db.prepare('UPDATE gsws_user_credits SET balance = balance - ? WHERE user_id = ?').run(priceIncVat, user.id)
   const newBalance = (db.prepare('SELECT balance FROM gsws_user_credits WHERE user_id = ?').get(user.id) as any)?.balance || 0

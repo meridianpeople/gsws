@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
 
     // Deduct credits (VAT-inclusive)
     // Check spend PIN
-    const pinCheck = await checkSpendPin(req, user.id, totalIncVat)
+    const pinCheck = await checkSpendPin(req, user.id, total)
     if (pinCheck) return pinCheck
 
     const newBalance = Math.round((balance - total) * 100) / 100

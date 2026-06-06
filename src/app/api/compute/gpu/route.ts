@@ -66,6 +66,10 @@ export async function POST(req: NextRequest) {
     default:        expiresAt = new Date(now.getTime() + 60 * 60 * 1000)
   }
 
+  // Check spend PIN
+  const pinCheck = await checkSpendPin(req, user.id, priceIncVat)
+  if (pinCheck) return pinCheck
+
   // Deduct credit
   db.prepare('UPDATE gsws_user_credits SET balance = balance - ? WHERE user_id = ?').run(priceIncVat, user.id)
   const newBalance = (db.prepare('SELECT balance FROM gsws_user_credits WHERE user_id = ?').get(user.id) as any)?.balance || 0
