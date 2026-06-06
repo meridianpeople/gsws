@@ -39,7 +39,10 @@ export default function TerminalPage() {
       try {
         const pkgs = await fetch('/api/packages/list').then(r => r.json())
         for (const p of pkgs.packages || []) {
-          svcs.push({ id: `pkg_${p.id}`, name: p.name, type: 'hosting', packageId: p.id })
+          // Only show packages with SSH enabled (Linux/WordPress — not Windows)
+          if (p.platform !== 'windows') {
+            svcs.push({ id: `pkg_${p.id}`, name: p.name, type: 'hosting', packageId: p.id })
+          }
         }
         const vps = await fetch('/api/compute/vps').then(r => r.json())
         for (const v of vps.orders || []) {

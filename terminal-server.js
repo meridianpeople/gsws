@@ -3,6 +3,7 @@ const { Client: SSHClient } = require('ssh2')
 const fs = require('fs')
 const http = require('http')
 const path = require('path')
+const crypto = require('crypto')
 
 // Load env
 const envPath = path.join(__dirname, '.env.local')
@@ -13,14 +14,44 @@ const TWENTYI_API_KEY = getEnv('TWENTYI_API_KEY')
 const SWS_PRIVATE_KEY_PATH = getEnv('SWS_SSH_PRIVATE_KEY_PATH') || '/home/ovie/.ssh/sws_terminal'
 const PORT = 3001
 
-// Simple session validation via SWS API
+// Rate limiting — max 3 concurrent WS connections per user
+const userConnections = new Map()
+const MAX_CONNECTIONS_PER_USER = 3
+
+// Session validation via DB
 async function validateSession(req) {
   try {
     const Database = require('better-sqlite3')
     const db = new Database(path.join(__dirname, 'data/gsws.db'))
     const cookieHeader = req.headers.cookie || ''
 
-    // Try gsws_session cookie first
+    // Try Better Auth session cookie
+    const secureCookie = cookieHeader.match(/__Secure-gsws_ba\.session_token=([^;]+)/)
+    const normalCookie = cookieHeader.match(/gsws_ba\.session_token=([^;]+)/)
+    const tokenMatch = secureCookie || normalCookie
+
+    if (tokenMatch) {
+      const rawToken = decodeURIComponent(tokenMatch[1].trim())
+      const tokenId = rawToken.split('.')[0]
+      if (tokenId) {
+        const baSession = db.prepare(`
+          SELECT s.token, s.userId, u.email, u.gswsUserId
+          FROM session s
+          JOIN user u ON u.id = s.userId
+          WHERE s.token = ? AND s.expiresAt > datetime('now')
+        `).get(tokenId)
+
+        if (baSession) {
+          const gswsUser = baSession.gswsUserId
+            ? db.prepare('SELECT id, role, is_active FROM gsws_users WHERE id = ? AND is_active = 1').get(baSession.gswsUserId)
+            : db.prepare('SELECT id, role, is_active FROM gsws_users WHERE email = ? AND is_active = 1').get(baSession.email)
+          db.close()
+          if (gswsUser) return { user_id: gswsUser.id, email: baSession.email, role: gswsUser.role }
+        }
+      }
+    }
+
+    // Try gsws_sessions
     const gswsMatch = cookieHeader.match(/gsws_session=([^;]+)/)
     if (gswsMatch) {
       const token = decodeURIComponent(gswsMatch[1].trim())
@@ -34,39 +65,23 @@ async function validateSession(req) {
       if (session) return session
     }
 
-    // Try Better Auth session cookie
-    const secureCookie = cookieHeader.match(/__Secure-gsws_ba\.session_token=([^;]+)/)
-    const normalCookie = cookieHeader.match(/gsws_ba\.session_token=([^;]+)/)
-    const tokenMatch = secureCookie || normalCookie
-    if (tokenMatch) {
-      const rawToken = decodeURIComponent(tokenMatch[1].trim())
-      const tokenId = rawToken.split('.')[0]
-      console.log('BA token found, tokenId:', tokenId.substring(0, 20) + '...')
-      if (tokenId) {
-        const baSession = db.prepare(`
-          SELECT s.token, s.userId, u.email, u.gswsUserId
-          FROM session s
-          JOIN user u ON u.id = s.userId
-          WHERE s.token = ? AND s.expiresAt > datetime('now')
-        `).get(tokenId)
-        if (baSession) {
-          // Get role from gsws_users
-          const gswsUser = baSession.gswsUserId
-            ? db.prepare('SELECT id, role FROM gsws_users WHERE id = ?').get(baSession.gswsUserId)
-            : db.prepare('SELECT id, role FROM gsws_users WHERE email = ?').get(baSession.email)
-          db.close()
-          if (gswsUser) { console.log('Auth OK:', baSession.email); return { user_id: gswsUser.id, email: baSession.email, role: gswsUser.role } }
-          else console.log('gswsUser not found for:', baSession.email)
-        }
-      }
-    }
-
     db.close()
     return null
   } catch (e) {
-    console.error('Session validation error:', e.message, e.stack?.split('\n')[1])
+    console.error('Session validation error:', e.message)
     return null
   }
+}
+
+// Verify session is still valid (called periodically during active connections)
+function isSessionStillValid(userId) {
+  try {
+    const Database = require('better-sqlite3')
+    const db = new Database(path.join(__dirname, 'data/gsws.db'))
+    const user = db.prepare('SELECT id FROM gsws_users WHERE id = ? AND is_active = 1').get(userId)
+    db.close()
+    return !!user
+  } catch { return false }
 }
 
 async function getHostingCredentials(packageId, userId) {
@@ -77,24 +92,22 @@ async function getHostingCredentials(packageId, userId) {
     headers: { Authorization: `Bearer ${encoded}`, 'Content-Type': 'application/json' }
   })
 
-  // Verify ownership
   const Database = require('better-sqlite3')
   const db = new Database(path.join(__dirname, 'data/gsws.db'))
   const pkg = db.prepare('SELECT * FROM gsws_user_packages WHERE twentyi_package_id = ? AND user_id = ?').get(packageId, userId)
   db.close()
   if (!pkg) throw new Error('Access denied')
 
-  const [limits, webInfo, creds] = await Promise.all([
+  const [limits, webInfo] = await Promise.all([
     client.get(`/package/${packageId}/web/limits`).then(r => r.data).catch(() => ({})),
     client.get(`/package/${packageId}/web`).then(r => r.data).catch(() => null),
-    client.get(`/package/${packageId}/web/ftpCredentials`).then(r => r.data).catch(() => []),
   ])
 
-  if (!limits.ssh) throw new Error('SSH not enabled for this package. Please contact support.')
+  if (!limits.ssh) throw new Error('SSH not enabled for this package type. Contact support to enable SSH access.')
 
   const ftpServer = webInfo?.info?.ftpserver || 'ftp.gb.stackcp.com'
   const host = ftpServer.replace('ftp.', 'ssh.')
-  const username = creds[0]?.username
+  const username = pkg.domain_name
   if (!username) throw new Error('No SSH credentials found')
 
   return { host, port: 22, username, domain: pkg.domain_name }
@@ -114,6 +127,15 @@ async function getVpsCredentials(orderId, userId) {
   return { host: ip, port: 22, username: 'root', domain: order.service_key }
 }
 
+function auditLog(userId, action, detail) {
+  try {
+    const Database = require('better-sqlite3')
+    const db = new Database(path.join(__dirname, 'data/gsws.db'))
+    db.prepare(`INSERT INTO gsws_audit_log (user_id, action, resource_type, resource_name, detail) VALUES (?, ?, 'terminal', 'ssh', ?)`).run(userId, action, detail)
+    db.close()
+  } catch {}
+}
+
 const server = http.createServer((req, res) => {
   res.writeHead(200, { 'Content-Type': 'text/plain' })
   res.end('SWS Terminal Server')
@@ -123,41 +145,56 @@ const wss = new WebSocketServer({ server })
 
 wss.on('connection', async (ws, req) => {
   const url = new URL(req.url, `http://localhost:${PORT}`)
-  // Auth via cookie (forwarded by nginx)
   const packageId = url.searchParams.get('packageId')
   const type = url.searchParams.get('type') || 'hosting'
   const orderId = url.searchParams.get('orderId')
 
   const send = (data) => ws.readyState === ws.OPEN && ws.send(data)
-  console.log('WS connect - ALL cookies:', req.headers.cookie || 'NONE')
   const sendCtrl = (msg) => send(JSON.stringify({ type: 'control', msg }))
 
-  // Validate session
+  // 1. Validate session
   const session = await validateSession(req)
   if (!session) {
     sendCtrl('Authentication failed')
     return ws.close()
   }
 
-  console.log('Session validated for:', session.email, 'type:', type)
-  sendCtrl(`Connecting to ${type === 'vps' ? 'VPS' : 'hosting package'}...`)
+  // 2. Rate limit — max connections per user
+  const userConns = userConnections.get(session.user_id) || 0
+  if (userConns >= MAX_CONNECTIONS_PER_USER) {
+    sendCtrl('Too many active terminal sessions. Please disconnect an existing session first.')
+    return ws.close()
+  }
+  userConnections.set(session.user_id, userConns + 1)
 
+  // 3. Get credentials
+  sendCtrl(`Connecting to ${type === 'vps' ? 'VPS' : 'hosting package'}...`)
   let credentials
   try {
-    if (type === 'vps') {
-      credentials = await getVpsCredentials(orderId, session.user_id)
-    } else {
-      credentials = await getHostingCredentials(packageId, session.user_id)
-    }
+    if (type === 'vps') credentials = await getVpsCredentials(orderId, session.user_id)
+    else credentials = await getHostingCredentials(packageId, session.user_id)
   } catch (err) {
     sendCtrl(`Error: ${err.message}`)
+    userConnections.set(session.user_id, (userConnections.get(session.user_id) || 1) - 1)
     return ws.close()
   }
 
   sendCtrl(`Connecting to ${credentials.domain} (${credentials.host})...`)
+  auditLog(session.user_id, 'terminal_connect', `SSH to ${credentials.domain} (${credentials.host})`)
 
   const ssh = new SSHClient()
   let stream = null
+  let sessionCheckInterval = null
+
+  // 4. Periodic session validation — disconnect if user logs out
+  sessionCheckInterval = setInterval(() => {
+    if (!isSessionStillValid(session.user_id)) {
+      sendCtrl('Session expired. Disconnecting.')
+      if (stream) stream.close()
+      ssh.end()
+      ws.close()
+    }
+  }, 30000) // check every 30s
 
   ssh.on('ready', () => {
     sendCtrl('Connected! Starting shell...')
@@ -168,7 +205,6 @@ wss.on('connection', async (ws, req) => {
       }
       stream = s
 
-      // SSH → WebSocket
       stream.on('data', (data) => {
         if (ws.readyState === ws.OPEN) ws.send(data, { binary: true })
       })
@@ -181,7 +217,6 @@ wss.on('connection', async (ws, req) => {
         ws.close()
       })
 
-      // WebSocket → SSH
       ws.on('message', (data) => {
         try {
           const msg = JSON.parse(data)
@@ -191,7 +226,6 @@ wss.on('connection', async (ws, req) => {
             stream.write(msg.data)
           }
         } catch {
-          // Raw input
           if (stream) stream.write(data)
         }
       })
@@ -204,8 +238,14 @@ wss.on('connection', async (ws, req) => {
   })
 
   ws.on('close', () => {
+    clearInterval(sessionCheckInterval)
     if (stream) stream.close()
     ssh.end()
+    // Decrement connection count
+    const conns = userConnections.get(session.user_id) || 1
+    if (conns <= 1) userConnections.delete(session.user_id)
+    else userConnections.set(session.user_id, conns - 1)
+    auditLog(session.user_id, 'terminal_disconnect', `SSH session ended for ${credentials?.domain || 'unknown'}`)
   })
 
   // Load private key
@@ -213,7 +253,7 @@ wss.on('connection', async (ws, req) => {
   try {
     privateKey = fs.readFileSync(SWS_PRIVATE_KEY_PATH)
   } catch {
-    sendCtrl('SSH key not found on server')
+    sendCtrl('SSH key not found on server. Contact support.')
     return ws.close()
   }
 
