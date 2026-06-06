@@ -369,13 +369,21 @@ export default function VPSDetailPage() {
       {tab === 'DNS' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <p style={{ fontSize: '13px', color: '#9a9a9a' }}>Manage DNS zones for your VPS IP address <strong style={{ fontFamily: 'monospace' }}>{ip}</strong></p>
-          <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', padding: '48px', textAlign: 'center' }}>
+          <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', padding: '24px' }}>
             <p style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a', marginBottom: '6px' }}>No DNS zones configured</p>
-            <p style={{ fontSize: '13px', color: '#9a9a9a', marginBottom: '16px' }}>Create a DNS zone to manage records for a domain pointing to this VPS</p>
-            <button onClick={() => doAction('create_dns_zone')} disabled={!!actionLoading}
-              style={{ height: '36px', padding: '0 16px', background: '#1a6ef5', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>
-              + Create DNS Zone
-            </button>
+            <p style={{ fontSize: '13px', color: '#9a9a9a', marginBottom: '16px' }}>Enter a domain name to create a DNS zone pointing to this VPS</p>
+            <div style={{ display: 'flex', gap: '8px', maxWidth: '480px' }}>
+              <input id="dns-zone-name" placeholder="e.g. example.com"
+                style={{ flex: 1, height: '38px', border: '1px solid #d4d4d4', borderRadius: '7px', padding: '0 12px', fontSize: '13px', outline: 'none' }} />
+              <button onClick={() => {
+                const zn = (document.getElementById('dns-zone-name') as HTMLInputElement)?.value?.trim()
+                if (!zn) { alert('Please enter a domain name'); return }
+                doAction('create_dns_zone', { zoneName: zn })
+              }} disabled={!!actionLoading}
+                style={{ height: '38px', padding: '0 16px', background: '#1a6ef5', color: '#fff', border: 'none', borderRadius: '7px', fontSize: '13px', fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                {actionLoading === 'create_dns_zone' ? 'Creating...' : '+ Create Zone'}
+              </button>
+            </div>
           </div>
         </div>
       )}

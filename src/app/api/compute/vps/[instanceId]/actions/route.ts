@@ -11,7 +11,8 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ ins
   const order = db.prepare("SELECT * FROM gsws_compute_orders WHERE (id = ? OR provider_instance_id = ?) AND user_id = ? AND resource_type = 'vps'").get(instanceId, instanceId, user.id) as any
   if (!order) return NextResponse.json({ error: 'Not found' }, { status: 404 })
 
-  const { action, snapshotId, imageId } = await req.json()
+  const body = await req.json()
+  const { action, snapshotId, imageId } = body
   const pid = order.provider_instance_id
 
   try {
@@ -72,7 +73,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ ins
         return NextResponse.json({ message: 'VPS cancellation scheduled for end of billing period' })
 
       case 'upgrade':
-        const { productId } = await req.json().catch(() => ({}))
+        const { productId } = body
         if (!productId) return NextResponse.json({ error: 'productId required' }, { status: 400 })
         await contaboFetch(`/v1/compute/instances/${pid}/upgrade`, {
           method: 'POST',
@@ -83,7 +84,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ ins
       case 'create_firewall':
         const fw = await contaboFetch('/v1/firewalls', {
           method: 'POST',
-          body: JSON.stringify({ name: `fw-${pid}`, description: 'SWS managed firewall' }),
+          body: JSON.stringify({ name: `fw-${pid}`, description: 'SWS managed firewall', status: 'active' }),
         })
         const fwId = fw?.data?.[0]?.firewallId
         if (fwId) {
@@ -92,7 +93,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ ins
         return NextResponse.json({ message: 'Firewall created and assigned', firewallId: fwId })
 
       case 'create_dns_zone':
-        const { zoneName } = await req.json().catch(() => ({}))
+        const { zoneName } = body
         if (!zoneName) return NextResponse.json({ error: 'zoneName required' }, { status: 400 })
         await contaboFetch('/v1/dns/zones', {
           method: 'POST',
