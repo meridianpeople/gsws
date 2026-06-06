@@ -8,7 +8,7 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ inst
   const user = await getGswsSession(req)
   if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
 
-  const order = db.prepare("SELECT * FROM gsws_compute_orders WHERE id = ? AND user_id = ? AND resource_type = 'vps'").get(instanceId, user.id) as any
+  const order = db.prepare("SELECT * FROM gsws_compute_orders WHERE (id = ? OR provider_instance_id = ?) AND user_id = ? AND resource_type = 'vps'").get(instanceId, instanceId, user.id) as any
   if (!order) return NextResponse.json({ error: 'Not found' }, { status: 404 })
 
   try {
