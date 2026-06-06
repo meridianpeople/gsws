@@ -82,13 +82,25 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ ins
         return NextResponse.json({ message: 'Upgrade initiated' })
 
       case 'create_firewall':
-        const fw = await contaboFetch('/v1/firewalls', {
-          method: 'POST',
-          body: JSON.stringify({ name: `fw-${pid}`, description: 'SWS managed firewall', status: 'active' }),
-        })
-        const fwId = fw?.data?.[0]?.firewallId
+        let fwId: string | null = null
+        try {
+          const fw = await contaboFetch('/v1/firewalls', {
+            method: 'POST',
+            body: JSON.stringify({ name: `fw-${pid}`, description: 'SWS managed firewall', status: 'active' }),
+          })
+          fwId = fw?.data?.[0]?.firewallId
+        } catch (fwErr: any) {
+          // 409 = already exists, find it
+          if (fwErr.message?.includes('409')) {
+            const existing = await contaboFetch('/v1/firewalls')
+            const found = existing?.data?.find((f: any) => f.name === `fw-${pid}`)
+            fwId = found?.firewallId || null
+          } else throw fwErr
+        }
         if (fwId) {
-          await contaboFetch(`/v1/firewalls/${fwId}/instances/${pid}`, { method: 'POST' })
+          try {
+            await contaboFetch(`/v1/firewalls/${fwId}/instances/${pid}`, { method: 'POST' })
+          } catch {}
         }
         return NextResponse.json({ message: 'Firewall created and assigned', firewallId: fwId })
 
