@@ -66,7 +66,7 @@ export default function DomainSearchPage() {
     setEntityEmail('')
   }
 
-  async function handleRegister() {
+  async function handleRegister(pin?: string) {
     if (!modalDomain) return
     setRegistering(modalDomain.name)
     setError('')
@@ -74,7 +74,7 @@ export default function DomainSearchPage() {
     try {
       const res = await fetch('/api/domains/register', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...(pin ? { 'x-spend-pin': pin } : {}) },
         body: JSON.stringify({
           domain: modalDomain.name,
           privacyService: addPrivacy,

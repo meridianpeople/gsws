@@ -120,13 +120,13 @@ export default function GPUComputePage() {
   const totalExVat = basePrice + managedAddon
   const totalIncVat = totalExVat * 1.2
 
-  async function handleOrder() {
+  async function handleOrder(pin?: string) {
     setShowOrderModal(false)
     setOrdering(true); setError(''); setSuccess('')
     try {
       const res = await fetch('/api/compute/gpu', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...(pin ? { 'x-spend-pin': pin } : {}) },
         body: JSON.stringify({ tier: selectedTier, billing_period: selectedPeriod, managed_level: selectedManaged, template: selectedTemplate, custom_image: customImage, offer_id: selectedOffer?.id }),
       })
       const data = await res.json()
@@ -383,7 +383,7 @@ export default function GPUComputePage() {
           terms="GPU compute is charged immediately and non-refundable. Instances are provisioned within 2 hours."
           confirmLabel={ordering ? 'Processing...' : `Confirm Order · £${totalIncVat.toFixed(2)}`}
           loading={ordering}
-          onConfirm={handleOrder}
+          onConfirm={(pin) => handleOrder(pin)}
           onCancel={() => setShowOrderModal(false)}
         />
       )}

@@ -160,12 +160,12 @@ export default function VPSPage() {
     } catch {}
   }
 
-  async function handleOrder() {
+  async function handleOrder(pin?: string) {
     setOrdering(true); setError(''); setSuccess('')
     try {
       const res = await fetch('/api/compute/vps', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...(pin ? { 'x-spend-pin': pin } : {}) },
         body: JSON.stringify({
           service_key: selectedPlan,
           image_key: selectedImage,

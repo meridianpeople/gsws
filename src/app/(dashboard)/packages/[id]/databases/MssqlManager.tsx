@@ -16,14 +16,14 @@ export default function MssqlManager({ packageId, initialDatabases, creditBalanc
   const [balance, setBalance] = useState(creditBalance)
   const PRICE = 14.95
 
-  async function handleOrder() {
+  async function handleOrder(pin?: string) {
     setOrdering(true)
     setError('')
     setSuccess('')
     try {
       const res = await fetch(`/api/packages/${packageId}/mssql`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...(pin ? { 'x-spend-pin': pin } : {}) },
       })
       const data = await res.json()
       if (!res.ok) throw new Error(data.error || 'Failed to order MSSQL')
