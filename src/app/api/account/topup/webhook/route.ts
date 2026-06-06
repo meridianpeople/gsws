@@ -62,6 +62,33 @@ export async function POST(req: NextRequest) {
       VALUES (?, 'credit_topup', 'account', 'topup', ?, 'webhook')
     `).run(user.id, `£${amount} credit added via WooCommerce order #${order_id}`)
 
+    // Auto-resume suspended GPU orders if now have enough credit
+    const suspended = db.prepare(`
+      SELECT * FROM gsws_compute_orders
+      WHERE user_id = ? AND resource_type = 'gpu' AND status = 'suspended'
+      ORDER BY updated_at DESC
+    `).all(user.id) as any[]
+
+    for (const order of suspended) {
+      if (newBalance >= order.price_inc_vat) {
+        const PERIOD_MS: Record<string, number> = {
+          hourly: 3600000, daily: 86400000, weekly: 604800000,
+          monthly: 30 * 86400000, annual: 365 * 86400000
+        }
+        const ms = PERIOD_MS[order.billing_period] || 3600000
+        const newExpiry = new Date(Date.now() + ms).toISOString()
+        const afterBalance = Math.round((newBalance - order.price_inc_vat) * 100) / 100
+
+        db.prepare('UPDATE gsws_user_credits SET balance = ? WHERE user_id = ?').run(afterBalance, user.id)
+        db.prepare("UPDATE gsws_compute_orders SET status = 'active', expires_at = ?, updated_at = datetime('now') WHERE id = ?").run(newExpiry, order.id)
+        db.prepare(`INSERT INTO gsws_credit_transactions (user_id, amount, type, description, reference, balance_after) VALUES (?, ?, 'gpu_compute', ?, ?, ?)`)
+          .run(user.id, -order.price_inc_vat, `GPU resumed: ${order.tier} (${order.billing_period})`, order.service_key, afterBalance)
+        db.prepare(`INSERT INTO gsws_notifications (user_id, type, title, message) VALUES (?, 'success', 'GPU instance resumed', ?)`)
+          .run(user.id, `Your GPU instance (${order.tier}) has been automatically resumed after top-up.`)
+        break // Only resume one at a time
+      }
+    }
+
     return NextResponse.json({ success: true, credited: amount })
   } catch (err: any) {
     console.error('Topup webhook error:', err)
