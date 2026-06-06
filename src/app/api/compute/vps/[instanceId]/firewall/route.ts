@@ -40,3 +40,23 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ inst
     return NextResponse.json({ error: err.message }, { status: 500 })
   }
 }
+
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ instanceId: string }> }) {
+  const { instanceId } = await params
+  const user = await getGswsSession(req)
+  if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
+
+  const order = db.prepare("SELECT * FROM gsws_compute_orders WHERE (id = ? OR provider_instance_id = ?) AND user_id = ? AND resource_type = 'vps'").get(instanceId, instanceId, user.id) as any
+  if (!order) return NextResponse.json({ error: 'Not found' }, { status: 404 })
+
+  try {
+    const { firewallId, name } = await req.json()
+    const data = await contaboFetch(`/v1/firewalls/${firewallId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ name }),
+    })
+    return NextResponse.json({ success: true, firewall: data?.data?.[0] })
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message }, { status: 500 })
+  }
+}

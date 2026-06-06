@@ -24,6 +24,8 @@ export default function VPSDetailPage() {
   const [showAddRule, setShowAddRule] = useState(false)
   const [newRule, setNewRule] = useState({ protocol: 'tcp', port: '', cidr: '0.0.0.0/0', action: 'accept', displayName: '' })
   const [savingRule, setSavingRule] = useState(false)
+  const [editingFwName, setEditingFwName] = useState(false)
+  const [newFwName, setNewFwName] = useState('')
 
   useEffect(() => {
     loadVPS()
@@ -381,7 +383,34 @@ export default function VPSDetailPage() {
               {/* Firewall header */}
               <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <p style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a' }}>{firewall.name}</p>
+                  {editingFwName ? (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <input value={newFwName} onChange={e => setNewFwName(e.target.value)}
+                        style={{ height: '30px', border: '1px solid #1a6ef5', borderRadius: '5px', padding: '0 8px', fontSize: '13px', fontWeight: 600, outline: 'none', width: '200px' }} />
+                      <button onClick={async () => {
+                        try {
+                          const res = await fetch(`/api/compute/vps/${id}/firewall`, {
+                            method: 'PATCH',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ firewallId: firewall.firewallId, name: newFwName })
+                          })
+                          const data = await res.json()
+                          if (!res.ok) throw new Error(data.error)
+                          setSuccess('Firewall renamed')
+                          setEditingFwName(false)
+                          loadFirewall()
+                        } catch (err: any) { setError(err.message) }
+                      }} style={{ height: '30px', padding: '0 10px', background: '#3b6d11', color: '#fff', border: 'none', borderRadius: '5px', fontSize: '12px', cursor: 'pointer' }}>Save</button>
+                      <button onClick={() => setEditingFwName(false)}
+                        style={{ height: '30px', padding: '0 10px', background: '#f7f7f7', border: '1px solid #d4d4d4', borderRadius: '5px', fontSize: '12px', cursor: 'pointer' }}>Cancel</button>
+                    </div>
+                  ) : (
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <p style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a' }}>{firewall.name}</p>
+                      <button onClick={() => { setNewFwName(firewall.name); setEditingFwName(true) }}
+                        style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9a9a9a', fontSize: '12px', padding: '2px 4px' }} title="Rename">✏️</button>
+                    </div>
+                  )}
                   <span style={{ padding: '2px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 600, background: '#eaf3de', color: '#3b6d11' }}>{firewall.status}</span>
                 </div>
                 <button onClick={() => setShowAddRule(r => !r)}
