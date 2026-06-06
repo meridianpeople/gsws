@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
+import ConfirmModal from '@/components/ui/ConfirmModal'
 
 const TIERS = [
   { key: 'entry',       label: 'Entry',       vram: '16GB',    desc: 'RTX 5060 Ti · RTX 5070 Ti · RTX 4070S Ti', color: '#6b7280', pricing: { hourly: 0.27, daily: 6.12, weekly: 40.54, monthly: 162.16, annual: 1742 } },
@@ -49,6 +50,7 @@ export default function GPUComputePage() {
   const [offers, setOffers] = useState<any[]>([])
   const [loadingOffers, setLoadingOffers] = useState(false)
   const [ordering, setOrdering] = useState(false)
+  const [showOrderModal, setShowOrderModal] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [orders, setOrders] = useState<any[]>([])
@@ -77,7 +79,7 @@ export default function GPUComputePage() {
   }
 
   async function handleCancelOrder(orderId: number) {
-    if (!confirm('Cancel this GPU order? This will destroy the instance.')) return
+    if (!window.confirm('Cancel this GPU order? This will destroy the instance.')) return
     try {
       const res = await fetch('/api/compute/gpu/' + orderId, { method: 'DELETE' })
       const data = await res.json()
@@ -119,6 +121,7 @@ export default function GPUComputePage() {
   const totalIncVat = totalExVat * 1.2
 
   async function handleOrder() {
+    setShowOrderModal(false)
     setOrdering(true); setError(''); setSuccess('')
     try {
       const res = await fetch('/api/compute/gpu', {
@@ -359,12 +362,31 @@ export default function GPUComputePage() {
             <span style={{ color: '#4ade80' }}>£{totalIncVat.toFixed(2)}</span>
           </div>
         </div>
-        <button onClick={handleOrder} disabled={ordering}
+        <button onClick={() => setShowOrderModal(true)} disabled={ordering}
           style={{ width: '100%', height: '46px', background: ordering ? '#374151' : '#1a6ef5', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: 700, cursor: ordering ? 'not-allowed' : 'pointer' }}>
           {ordering ? 'Processing...' : `Order ${tier.label} GPU — £${totalIncVat.toFixed(2)} inc VAT`}
         </button>
         <p style={{ fontSize: '11px', color: '#6b7280', textAlign: 'center', margin: '10px 0 0' }}>Charged from credit balance · Provisioned within 15 minutes</p>
       </div>
+      {showOrderModal && (
+        <ConfirmModal
+          title={`GPU Compute — ${tier?.label}`}
+          subtitle={`${tier?.desc} · ${selectedPeriod} billing`}
+          price={totalIncVat}
+          priceLabel={selectedPeriod}
+          features={[
+            `${tier?.vram} VRAM — ${tier?.desc}`,
+            `Billing: ${selectedPeriod} (charged immediately)`,
+            `Managed level: ${MANAGED_LEVELS.find(m => m.key === selectedManaged)?.label || 'Self-managed'}`,
+            `Template: ${TEMPLATES.find(t => t.key === selectedTemplate)?.label || 'None'}`,
+          ]}
+          terms="GPU compute is charged immediately and non-refundable. Instances are provisioned within 2 hours."
+          confirmLabel={ordering ? 'Processing...' : `Confirm Order · £${totalIncVat.toFixed(2)}`}
+          loading={ordering}
+          onConfirm={handleOrder}
+          onCancel={() => setShowOrderModal(false)}
+        />
+      )}
     </div>
   )
 }

@@ -1,6 +1,7 @@
 'use client'
 import { useState } from 'react'
 import Link from 'next/link'
+import ConfirmModal from '@/components/ui/ConfirmModal'
 
 export default function MssqlManager({ packageId, initialDatabases, creditBalance }: {
   packageId: string
@@ -126,65 +127,25 @@ export default function MssqlManager({ packageId, initialDatabases, creditBalanc
         <strong>Note:</strong> MSSQL databases are billed annually at £{PRICE.toFixed(2)} inc. VAT. MySQL is not available on Windows hosting — use MSSQL for all database needs on this package.
       </div>
 
-      {/* Confirmation Modal */}
       {showModal && (
-        <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-          <div style={{ background: '#fff', borderRadius: '12px', width: '100%', maxWidth: '480px', padding: '28px', boxShadow: '0 20px 60px rgba(0,0,0,0.2)' }}>
-            <h2 style={{ fontSize: '17px', fontWeight: 700, color: '#0a0a0a', marginBottom: '4px' }}>Add MSSQL Database</h2>
-            <p style={{ fontSize: '13px', color: '#9a9a9a', marginBottom: '20px' }}>Annual add-on for Windows hosting</p>
-
-            {/* Price summary */}
-            <div style={{ background: '#f7f7f7', borderRadius: '8px', padding: '14px 16px', marginBottom: '20px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                <span style={{ fontSize: '13px', color: '#5a5a5a' }}>MSSQL Database (1 year)</span>
-                <span style={{ fontSize: '13px', fontWeight: 600 }}>£{(PRICE / 1.20).toFixed(2)}</span>
-              </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                <span style={{ fontSize: '13px', color: '#5a5a5a' }}>VAT (20%)</span>
-                <span style={{ fontSize: '13px', fontWeight: 600 }}>£{(PRICE - PRICE / 1.20).toFixed(2)}</span>
-              </div>
-              <div style={{ borderTop: '1px solid #d4d4d4', marginTop: '8px', paddingTop: '8px', display: 'flex', justifyContent: 'space-between' }}>
-                <span style={{ fontSize: '13px', fontWeight: 700 }}>Total charged from credit</span>
-                <span style={{ fontSize: '14px', fontWeight: 700, color: '#1a6ef5' }}>£{PRICE.toFixed(2)}</span>
-              </div>
-              <div style={{ marginTop: '6px', fontSize: '11px', color: '#9a9a9a' }}>
-                Your balance after: £{(balance - PRICE).toFixed(2)}
-              </div>
-            </div>
-
-            {/* What you get */}
-            <div style={{ border: '1px solid #ebebeb', borderRadius: '8px', padding: '14px', marginBottom: '20px' }}>
-              <p style={{ fontSize: '12px', fontWeight: 600, color: '#0a0a0a', marginBottom: '8px' }}>What's included:</p>
-              {[
-                'One MSSQL database slot assigned to this Windows package',
-                'Microsoft SQL Server access via standard connection string',
-                'Valid for 12 months from activation',
-                'Renew annually to keep your database active',
-              ].map(item => (
-                <div key={item} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', marginBottom: '6px' }}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3b6d11" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: '1px' }}><polyline points="20 6 9 17 4 12"/></svg>
-                  <span style={{ fontSize: '12px', color: '#5a5a5a' }}>{item}</span>
-                </div>
-              ))}
-            </div>
-
-            <div style={{ display: 'flex', gap: '10px' }}>
-              <button
-                onClick={() => setShowModal(false)}
-                style={{ flex: 1, height: '42px', background: '#f7f7f7', border: '1px solid #d4d4d4', borderRadius: '8px', fontSize: '13px', fontWeight: 600, cursor: 'pointer', color: '#5a5a5a' }}
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleOrder}
-                disabled={ordering}
-                style={{ flex: 2, height: '42px', background: ordering ? '#ccc' : '#1a6ef5', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: 700, cursor: ordering ? 'not-allowed' : 'pointer' }}
-              >
-                {ordering ? 'Processing...' : `Confirm · £${PRICE.toFixed(2)}/yr`}
-              </button>
-            </div>
-          </div>
-        </div>
+        <ConfirmModal
+          title="Add MSSQL Database"
+          subtitle="Annual add-on for Windows hosting"
+          price={PRICE}
+          priceLabel="1 year"
+          balanceAfter={balance - PRICE}
+          features={[
+            'One MSSQL database slot assigned to this Windows package',
+            'Microsoft SQL Server access via standard connection string',
+            'Valid for 12 months from activation',
+            'Renew annually to keep your database active',
+          ]}
+          terms="This charge is non-refundable once the database slot is provisioned."
+          confirmLabel={`Confirm · £${PRICE.toFixed(2)}/yr`}
+          loading={ordering}
+          onConfirm={handleOrder}
+          onCancel={() => setShowModal(false)}
+        />
       )}
     </div>
   )

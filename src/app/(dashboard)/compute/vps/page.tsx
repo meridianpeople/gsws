@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
+import ConfirmModal from '@/components/ui/ConfirmModal'
 
 const PLANS = [
   { key: 'vps_10_ssd', label: 'Cloud VPS 10', cpu: 4,  ram: 8,   disk: 150, storage: 'SSD', snapshots: 2, price: 6.80,  color: '#3b82f6', productId: 'V92' },
@@ -117,7 +118,7 @@ export default function VPSPage() {
   }
 
   async function deleteSnapshot(instanceId: string, snapshotId: string) {
-    if (!confirm('Delete this snapshot?')) return
+    setConfirmAction({type: 'snapshot_delete', id: instanceId, label: 'Delete this snapshot? This cannot be undone.'}); return
     try {
       await fetch('/api/compute/vps/' + instanceId + '/snapshots/' + snapshotId, { method: 'DELETE' })
       loadSnapshots(instanceId)
@@ -125,7 +126,7 @@ export default function VPSPage() {
   }
 
   async function rollbackSnapshot(instanceId: string, snapshotId: string) {
-    if (!confirm('Roll back to this snapshot? Current state will be lost.')) return
+    setConfirmAction({type: 'snapshot_rollback', id: instanceId, label: 'Roll back to this snapshot? Current state will be lost.'}); return
     try {
       const res = await fetch('/api/compute/vps/' + instanceId + '/snapshots/' + snapshotId, {
         method: 'POST',
@@ -139,7 +140,7 @@ export default function VPSPage() {
   }
 
   async function activateRescue(instanceId: string) {
-    if (!confirm('Activate rescue mode? The VPS will reboot into rescue system.')) return
+    setConfirmAction({type: 'rescue', id: instanceId, label: 'Activate rescue mode? The VPS will reboot into the rescue system.'}); return
     try {
       const res = await fetch('/api/compute/vps/' + instanceId + '/rescue', { method: 'POST' })
       const data = await res.json()
@@ -149,7 +150,7 @@ export default function VPSPage() {
   }
 
   async function cancelVPS(instanceId: string) {
-    if (!confirm('Cancel this VPS? It will be terminated at end of billing period.')) return
+    setConfirmAction({type: 'cancel_vps', id: instanceId, label: 'Cancel this VPS? It will be terminated at the end of the billing period.'}); return
     try {
       const res = await fetch('/api/compute/vps/' + instanceId, { method: 'DELETE' })
       const data = await res.json()
@@ -443,6 +444,21 @@ export default function VPSPage() {
           Charged from credit balance · Auto-provisioned via Contabo · Root password sent by email
         </p>
       </div>
+      {confirmAction && (
+        <ConfirmModal
+          title={confirmAction.type === 'cancel_vps' ? 'Cancel VPS' : confirmAction.type === 'rescue' ? 'Activate Rescue Mode' : 'Confirm Action'}
+          subtitle={confirmAction.label}
+          confirmLabel="Confirm"
+          danger={confirmAction.type === 'cancel_vps' || confirmAction.type === 'snapshot_delete'}
+          onConfirm={async () => {
+            const action = confirmAction
+            setConfirmAction(null)
+            if (action.type === 'rescue') await activateRescue(action.id)
+            else if (action.type === 'cancel_vps') await cancelVPS(action.id)
+          }}
+          onCancel={() => setConfirmAction(null)}
+        />
+      )}
     </div>
   )
 }
