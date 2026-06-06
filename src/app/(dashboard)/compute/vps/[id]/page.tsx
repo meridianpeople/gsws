@@ -3,7 +3,14 @@ import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 
-const TABS = ['Overview', 'Snapshots', 'Images', 'Backups', 'Network', 'Firewall', 'DNS', 'Actions']
+// Always show core tabs, show addon tabs based on what's provisioned
+  const hasBackup = instance?.addOns?.some((a: any) => a.id === 1305 || a.id === 1306) || false
+  const hasPrivateNet = instance?.addOns?.some((a: any) => a.id === 1401) || false
+  const TABS = ['Overview', 'Snapshots', 'Images', 
+    ...(hasBackup ? ['Backups'] : []),
+    ...(hasPrivateNet ? ['Network'] : []),
+    'Firewall', 'DNS', 'Actions'
+  ]
 
 export default function VPSDetailPage() {
   const { id } = useParams()
@@ -154,6 +161,19 @@ export default function VPSDetailPage() {
             </div>
           ))}
 
+          {/* Add-on upsells */}
+          {!hasBackup && (
+            <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '8px', padding: '14px 16px', gridColumn: 'span 2', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div>
+                <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '2px' }}>Auto Backup</p>
+                <p style={{ fontSize: '11px', color: '#9a9a9a' }}>Daily automated backups with 7-day retention — add to next renewal</p>
+              </div>
+              <button style={{ height: '32px', padding: '0 14px', background: '#f7f7f7', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '12px', fontWeight: 600, cursor: 'pointer', color: '#333', whiteSpace: 'nowrap' }}>
+                Add Backup
+              </button>
+            </div>
+          )}
+
           {/* Terminal shortcut */}
           <div style={{ background: '#0a0a0a', border: '1px solid #1a1a1a', borderRadius: '8px', padding: '14px 16px', gridColumn: 'span 2', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div>
@@ -257,29 +277,26 @@ export default function VPSDetailPage() {
         </div>
       )}
 
-      {/* Backups tab */}
+      {/* Backups tab - only shown if addon active */}
       {tab === 'Backups' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <p style={{ fontSize: '13px', color: '#9a9a9a' }}>Automatic daily backups with retention management.</p>
           <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', padding: '24px' }}>
-            <h3 style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a', marginBottom: '8px' }}>Auto Backup</h3>
-            <p style={{ fontSize: '13px', color: '#9a9a9a', marginBottom: '16px' }}>Automatic daily backups with 7-day retention. Requires the Auto Backup add-on.</p>
-            <a href={`https://my.contabo.com/compute/vps/${order.provider_instance_id}`} target="_blank" rel="noopener"
-              style={{ display: 'inline-flex', height: '36px', alignItems: 'center', padding: '0 16px', background: '#1a6ef5', color: '#fff', borderRadius: '8px', fontSize: '13px', fontWeight: 600, textDecoration: 'none' }}>
-              Manage Backups →
-            </a>
+            <p style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a', marginBottom: '8px' }}>Auto Backup active</p>
+            <p style={{ fontSize: '13px', color: '#9a9a9a' }}>Your VPS is being backed up automatically. Contact support to manage retention settings.</p>
           </div>
         </div>
       )}
 
-      {/* Network tab */}
+      {/* Network tab - only shown if addon active */}
       {tab === 'Network' && (
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
           {[
-            { label: 'IPv4 Address', value: instance?.ipConfig?.v4?.ip || order.ssh_host || '—' },
+            { label: 'IPv4 Address', value: ip },
             { label: 'IPv6 Address', value: instance?.ipConfig?.v6?.ip || '—' },
             { label: 'Gateway', value: instance?.ipConfig?.v4?.gateway || '—' },
             { label: 'MAC Address', value: instance?.macAddress || '—' },
-            { label: 'Data Centre', value: instance?.dataCenter || instance?.region || '—' },
+            { label: 'Data Centre', value: instance?.dataCenter || '—' },
             { label: 'Region', value: instance?.regionName || instance?.region || '—' },
           ].map(({ label, value }) => (
             <div key={label} style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '8px', padding: '14px 16px' }}>
@@ -287,39 +304,36 @@ export default function VPSDetailPage() {
               <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', fontFamily: 'monospace' }}>{value}</p>
             </div>
           ))}
-          <div style={{ gridColumn: 'span 2', background: '#fff', border: '1px solid #ebebeb', borderRadius: '8px', padding: '14px 16px' }}>
-            <p style={{ fontSize: '12px', fontWeight: 600, color: '#0a0a0a', marginBottom: '6px' }}>Additional IPs</p>
-            <p style={{ fontSize: '12px', color: '#9a9a9a', marginBottom: '10px' }}>Order additional IPv4 addresses for this instance</p>
-            <a href={`https://my.contabo.com/compute/vps/${order.provider_instance_id}`} target="_blank" rel="noopener"
-              style={{ display: 'inline-flex', height: '32px', alignItems: 'center', padding: '0 14px', background: '#1a6ef5', color: '#fff', borderRadius: '6px', fontSize: '12px', fontWeight: 600, textDecoration: 'none' }}>
-              Order Additional IPs →
-            </a>
-          </div>
         </div>
       )}
 
       {/* Firewall tab */}
       {tab === 'Firewall' && (
-        <div style={{ padding: '48px', textAlign: 'center', background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px' }}>
-          <p style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a', marginBottom: '6px' }}>Firewall Management</p>
-          <p style={{ fontSize: '13px', color: '#9a9a9a', marginBottom: '16px' }}>Manage firewall rules via Contabo panel</p>
-          <a href={`https://my.contabo.com/compute/vps/${order.provider_instance_id}`} target="_blank" rel="noopener"
-            style={{ display: 'inline-flex', height: '36px', alignItems: 'center', padding: '0 16px', background: '#1a6ef5', color: '#fff', borderRadius: '8px', fontSize: '13px', fontWeight: 600, textDecoration: 'none' }}>
-            Open Contabo Panel →
-          </a>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <p style={{ fontSize: '13px', color: '#9a9a9a' }}>Firewall rules control inbound and outbound traffic to your VPS.</p>
+          <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', padding: '48px', textAlign: 'center' }}>
+            <p style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a', marginBottom: '6px' }}>No firewall configured</p>
+            <p style={{ fontSize: '13px', color: '#9a9a9a', marginBottom: '16px' }}>Create a firewall to control traffic to this instance</p>
+            <button onClick={() => doAction('create_firewall')} disabled={!!actionLoading}
+              style={{ height: '36px', padding: '0 16px', background: '#1a6ef5', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>
+              + Create Firewall
+            </button>
+          </div>
         </div>
       )}
 
       {/* DNS tab */}
       {tab === 'DNS' && (
-        <div style={{ padding: '48px', textAlign: 'center', background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px' }}>
-          <p style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a', marginBottom: '6px' }}>DNS Management</p>
-          <p style={{ fontSize: '13px', color: '#9a9a9a', marginBottom: '4px' }}>Primary IP: <strong style={{ fontFamily: 'monospace' }}>{ip}</strong></p>
-          <p style={{ fontSize: '13px', color: '#9a9a9a', marginBottom: '16px' }}>Manage DNS zones and reverse DNS via Contabo panel</p>
-          <a href={`https://my.contabo.com/compute/vps/${order.provider_instance_id}`} target="_blank" rel="noopener"
-            style={{ display: 'inline-flex', height: '36px', alignItems: 'center', padding: '0 16px', background: '#1a6ef5', color: '#fff', borderRadius: '8px', fontSize: '13px', fontWeight: 600, textDecoration: 'none' }}>
-            Open Contabo Panel →
-          </a>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <p style={{ fontSize: '13px', color: '#9a9a9a' }}>Manage DNS zones for your VPS IP address <strong style={{ fontFamily: 'monospace' }}>{ip}</strong></p>
+          <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', padding: '48px', textAlign: 'center' }}>
+            <p style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a', marginBottom: '6px' }}>No DNS zones configured</p>
+            <p style={{ fontSize: '13px', color: '#9a9a9a', marginBottom: '16px' }}>Create a DNS zone to manage records for a domain pointing to this VPS</p>
+            <button onClick={() => doAction('create_dns_zone')} disabled={!!actionLoading}
+              style={{ height: '36px', padding: '0 16px', background: '#1a6ef5', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>
+              + Create DNS Zone
+            </button>
+          </div>
         </div>
       )}
 
