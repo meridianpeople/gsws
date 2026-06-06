@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { checkSpendPin } from '@/lib/spendPin'
 import { getGswsSession } from '@/lib/session'
 import { requireWrite } from '@/lib/auth'
 import client from '@/lib/api/client'
@@ -53,6 +54,10 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
   }
 
   try {
+    // Check spend PIN
+    const pinCheck = await checkSpendPin(req, user.id, MSSQL_PRICE_INC_VAT)
+    if (pinCheck) return pinCheck
+
     // Step 1: Order MSSQL slot from 20i
     const RESELLER_ID = process.env.TWENTYI_RESELLER_ID_NUM || '511'
     const orderRes = await client.post(`/reseller/${RESELLER_ID}/addMssql`, {})

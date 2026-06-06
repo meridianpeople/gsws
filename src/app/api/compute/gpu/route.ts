@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { checkSpendPin } from '@/lib/spendPin'
 import { getGswsSession } from '@/lib/session'
 import { searchOffers } from '@/lib/vastai'
 import db from '@/lib/db'

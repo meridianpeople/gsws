@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { checkSpendPin } from '@/lib/spendPin'
 import fs from 'fs'
 import { getGswsSession } from '@/lib/session'
 import { createInstance, listInstances } from '@/lib/contabo'

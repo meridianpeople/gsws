@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { checkSpendPin } from '@/lib/spendPin'
 import fs from 'fs'
 import { getGswsSession } from '@/lib/session'
 import { requireWrite } from '@/lib/auth'
@@ -56,6 +57,10 @@ export async function POST(req: NextRequest) {
         warning: `This domain already has a ${existingPkg.package_label} package. Creating a new package will delete all website files and data. Email accounts and data will be preserved.`,
       }, { status: 409 })
     }
+
+    // Check spend PIN
+    const pinCheck = await checkSpendPin(req, user.id, monthlyIncVat)
+    if (pinCheck) return pinCheck
 
     // Delete old package if replacing
     if (existingPkg) {

@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 
 interface ConfirmModalProps {
-  onConfirm: () => void
+  onConfirm: (pin?: string) => void
   onCancel: () => void
   loading?: boolean
   title: string
@@ -77,7 +77,7 @@ export default function ConfirmModal({
       }
       setVerifying(false)
     }
-    onConfirm()
+    onConfirm(pinRequired ? pin : undefined)
   }
 
   return (

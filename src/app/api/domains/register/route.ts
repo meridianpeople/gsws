@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
+import { checkSpendPin } from '@/lib/spendPin'
 import { getGswsSession } from '@/lib/session'
 import { requireWrite } from '@/lib/auth'
 import client from '@/lib/api/client'
@@ -52,6 +53,10 @@ export async function POST(req: NextRequest) {
     })
 
     // Deduct credits (VAT-inclusive)
+    // Check spend PIN
+    const pinCheck = await checkSpendPin(req, user.id, totalIncVat)
+    if (pinCheck) return pinCheck
+
     const newBalance = Math.round((balance - total) * 100) / 100
     db.prepare('INSERT OR REPLACE INTO gsws_user_credits (user_id, balance) VALUES (?, ?)').run(user.id, newBalance)
 
