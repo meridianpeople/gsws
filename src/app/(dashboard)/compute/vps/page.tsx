@@ -23,7 +23,7 @@ export default function VPSPage() {
         <div>
           <h1 style={{ fontSize: '20px', fontWeight: 600, color: '#0a0a0a' }}>Cloud VPS</h1>
           <p style={{ fontSize: '13px', color: '#9a9a9a', marginTop: '3px' }}>
-            High-performance virtual servers powered by Contabo — EU, UK, US, Singapore, Australia
+            High-performance virtual servers across EU, UK, US, Singapore and Australia
           </p>
         </div>
         <Link href="/compute/vps/new"

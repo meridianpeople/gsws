@@ -195,7 +195,7 @@ export default function VPSPage() {
           <span style={{ fontSize: '13px', color: '#0a0a0a' }}>Order new VPS</span>
         </div>
         <h1 style={{ fontSize: '22px', fontWeight: 700, color: '#111', margin: 0 }}>Order new VPS</h1>
-        <p style={{ fontSize: '13px', color: '#666', marginTop: '4px' }}>High-performance virtual servers powered by Contabo — EU, UK, US, Singapore, Australia</p>
+        <p style={{ fontSize: '13px', color: '#666', marginTop: '4px' }}>High-performance virtual servers  — EU, UK, US, Singapore, Australia</p>
       </div>
 
       {available === false && <div style={{ padding: '12px 16px', background: '#fef9c3', border: '1px solid #fde68a', borderRadius: '8px', color: '#92400e', fontSize: '13px', marginBottom: '16px' }}>⚠️ VPS provisioning temporarily unavailable. Orders will be queued.</div>}
@@ -394,7 +394,7 @@ export default function VPSPage() {
           </div>
         </div>
         <p style={{ fontSize: '11px', color: '#9a9a9a', margin: '10px 0 0' }}>
-          🔑 Root password will be emailed to you by Contabo after provisioning. You can add SSH keys from your VPS control panel.
+          🔑 Root password will be emailed to you by  after provisioning. You can add SSH keys from your VPS control panel.
         </p>
       </div>
 
@@ -448,7 +448,7 @@ export default function VPSPage() {
           {ordering ? 'Provisioning your VPS...' : `Order ${plan.label} — £${totalIncVat.toFixed(2)} inc VAT`}
         </button>
         <p style={{ fontSize: '11px', color: '#6b7280', textAlign: 'center', margin: '10px 0 0' }}>
-          Charged from credit balance · Auto-provisioned via Contabo · Root password sent by email
+          Charged from credit balance · Auto-provisioned via  · Root password sent by email
         </p>
       </div>
       {confirmAction && (

@@ -30,7 +30,7 @@ export async function GET(req: NextRequest) {
   try {
     const instances = await listInstances()
     const instanceMap: Record<string, any> = {}
-    for (const i of (instances?.data || [])) {
+    for (const i of (instances || [])) {
       instanceMap[String(i.instanceId)] = i
     }
     const enriched = orders.map((o: any) => {
