@@ -12,7 +12,7 @@ const getEnv = (key) => env.match(new RegExp(key + '=(.+)'))?.[1]?.trim()
 
 const TWENTYI_API_KEY = getEnv('TWENTYI_API_KEY')
 const SWS_PRIVATE_KEY_PATH = getEnv('SWS_SSH_PRIVATE_KEY_PATH') || '/home/ovie/.ssh/sws_terminal'
-const PORT = 3001
+const PORT = 3002
 
 // Rate limiting — max 3 concurrent WS connections per user
 const userConnections = new Map()
