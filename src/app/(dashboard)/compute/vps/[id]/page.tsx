@@ -21,6 +21,9 @@ export default function VPSDetailPage() {
   const [imageFilter, setImageFilter] = useState('all')
   const [firewall, setFirewall] = useState<any>(null)
   const [dnsZones, setDnsZones] = useState<any[]>([])
+  const [showAddRule, setShowAddRule] = useState(false)
+  const [newRule, setNewRule] = useState({ protocol: 'tcp', port: '', cidr: '0.0.0.0/0', action: 'accept', displayName: '' })
+  const [savingRule, setSavingRule] = useState(false)
 
   useEffect(() => {
     loadVPS()
@@ -374,31 +377,117 @@ export default function VPSDetailPage() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <p style={{ fontSize: '13px', color: '#9a9a9a' }}>Firewall rules control inbound and outbound traffic to your VPS.</p>
           {firewall ? (
-            <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', padding: '20px' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-                <div>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+              {/* Firewall header */}
+              <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <p style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a' }}>{firewall.name}</p>
-                  <span style={{ padding: '2px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 600, background: firewall.status === 'active' ? '#eaf3de' : '#f3f4f6', color: firewall.status === 'active' ? '#3b6d11' : '#666' }}>
-                    {firewall.status}
-                  </span>
+                  <span style={{ padding: '2px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 600, background: '#eaf3de', color: '#3b6d11' }}>{firewall.status}</span>
                 </div>
-                <span style={{ fontSize: '11px', color: '#9a9a9a', fontFamily: 'monospace' }}>{firewall.firewallId}</span>
+                <button onClick={() => setShowAddRule(r => !r)}
+                  style={{ height: '32px', padding: '0 14px', background: '#1a6ef5', color: '#fff', border: 'none', borderRadius: '6px', fontSize: '12px', fontWeight: 600, cursor: 'pointer' }}>
+                  + Add Rule
+                </button>
               </div>
-              {firewall.rules?.inbound?.length > 0 || firewall.rules?.outbound?.length > 0 ? (
-                <div>
-                  <p style={{ fontSize: '12px', fontWeight: 600, color: '#0a0a0a', marginBottom: '8px' }}>Rules</p>
-                  {[...(firewall.rules?.inbound || []), ...(firewall.rules?.outbound || [])].map((r: any, i: number) => (
-                    <div key={i} style={{ display: 'flex', gap: '12px', padding: '8px 0', borderBottom: '1px solid #f0f0f0', fontSize: '12px' }}>
-                      <span style={{ fontWeight: 600, color: r.type === 'inbound' ? '#3b6d11' : '#854d0e' }}>{r.type || 'rule'}</span>
-                      <span>{r.protocol}</span>
-                      <span>{r.port || 'all'}</span>
-                      <span style={{ color: '#9a9a9a' }}>{r.source || r.destination || '0.0.0.0/0'}</span>
+
+              {/* Add rule form */}
+              {showAddRule && (
+                <div style={{ background: '#f0f4ff', border: '1px solid #c7d7fd', borderRadius: '10px', padding: '16px 20px' }}>
+                  <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '12px' }}>New inbound rule</p>
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr 1fr auto', gap: '8px', alignItems: 'end' }}>
+                    <div>
+                      <label style={{ fontSize: '11px', fontWeight: 500, color: '#666', display: 'block', marginBottom: '4px' }}>Protocol</label>
+                      <select value={newRule.protocol} onChange={e => setNewRule(r => ({ ...r, protocol: e.target.value }))}
+                        style={{ width: '100%', height: '36px', border: '1px solid #d4d4d4', borderRadius: '6px', padding: '0 8px', fontSize: '13px' }}>
+                        <option value="tcp">TCP</option>
+                        <option value="udp">UDP</option>
+                        <option value="icmp">ICMP</option>
+                        <option value="">Any</option>
+                      </select>
                     </div>
-                  ))}
+                    <div>
+                      <label style={{ fontSize: '11px', fontWeight: 500, color: '#666', display: 'block', marginBottom: '4px' }}>Port</label>
+                      <input value={newRule.port} onChange={e => setNewRule(r => ({ ...r, port: e.target.value }))} placeholder="e.g. 80 or 8000-9000"
+                        style={{ width: '100%', height: '36px', border: '1px solid #d4d4d4', borderRadius: '6px', padding: '0 10px', fontSize: '13px', boxSizing: 'border-box' }} />
+                    </div>
+                    <div>
+                      <label style={{ fontSize: '11px', fontWeight: 500, color: '#666', display: 'block', marginBottom: '4px' }}>Source CIDR</label>
+                      <input value={newRule.cidr} onChange={e => setNewRule(r => ({ ...r, cidr: e.target.value }))} placeholder="0.0.0.0/0"
+                        style={{ width: '100%', height: '36px', border: '1px solid #d4d4d4', borderRadius: '6px', padding: '0 10px', fontSize: '13px', boxSizing: 'border-box' }} />
+                    </div>
+                    <div>
+                      <label style={{ fontSize: '11px', fontWeight: 500, color: '#666', display: 'block', marginBottom: '4px' }}>Action</label>
+                      <select value={newRule.action} onChange={e => setNewRule(r => ({ ...r, action: e.target.value }))}
+                        style={{ width: '100%', height: '36px', border: '1px solid #d4d4d4', borderRadius: '6px', padding: '0 8px', fontSize: '13px' }}>
+                        <option value="accept">Accept</option>
+                        <option value="drop">Drop</option>
+                      </select>
+                    </div>
+                    <button onClick={async () => {
+                      setSavingRule(true)
+                      try {
+                        const existingRules = firewall.rules?.inbound || []
+                        const portRange = newRule.port.includes('-')
+                          ? { from: parseInt(newRule.port.split('-')[0]), to: parseInt(newRule.port.split('-')[1]) }
+                          : newRule.port ? [parseInt(newRule.port)] : []
+                        const newRuleObj = {
+                          protocol: newRule.protocol,
+                          destPorts: Array.isArray(portRange) ? portRange : [portRange],
+                          srcCidr: { ipv4: [newRule.cidr], ipv6: [] },
+                          action: newRule.action,
+                          status: 'active',
+                          displayName: newRule.displayName || `${newRule.protocol} ${newRule.port || 'all'}`
+                        }
+                        const res = await fetch(`/api/compute/vps/${id}/firewall`, {
+                          method: 'PUT',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({ firewallId: firewall.firewallId, rules: { inbound: [...existingRules.filter((r: any) => r.displayName !== 'Block all traffic'), newRuleObj] } })
+                        })
+                        const data = await res.json()
+                        if (!res.ok) throw new Error(data.error)
+                        setSuccess('Rule added')
+                        setShowAddRule(false)
+                        setNewRule({ protocol: 'tcp', port: '', cidr: '0.0.0.0/0', action: 'accept', displayName: '' })
+                        loadFirewall()
+                      } catch (err: any) { setError(err.message) }
+                      finally { setSavingRule(false) }
+                    }} disabled={savingRule}
+                      style={{ height: '36px', padding: '0 16px', background: '#3b6d11', color: '#fff', border: 'none', borderRadius: '6px', fontSize: '12px', fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap' }}>
+                      {savingRule ? 'Saving...' : 'Add Rule'}
+                    </button>
+                  </div>
                 </div>
-              ) : (
-                <p style={{ fontSize: '13px', color: '#9a9a9a' }}>No rules configured — all traffic allowed.</p>
               )}
+
+              {/* Rules list */}
+              <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', overflow: 'hidden' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
+                  <thead>
+                    <tr style={{ background: '#f7f7f7', borderBottom: '1px solid #ebebeb' }}>
+                      {['Name', 'Protocol', 'Ports', 'Source', 'Action'].map(h => (
+                        <th key={h} style={{ padding: '10px 16px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: '#9a9a9a', textTransform: 'uppercase' }}>{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {(firewall.rules?.inbound || []).length === 0 ? (
+                      <tr><td colSpan={5} style={{ padding: '24px', textAlign: 'center', color: '#9a9a9a' }}>No inbound rules</td></tr>
+                    ) : (firewall.rules?.inbound || []).map((r: any, i: number) => (
+                      <tr key={i} style={{ borderBottom: '1px solid #f0f0f0' }}>
+                        <td style={{ padding: '11px 16px', fontWeight: 600 }}>{r.displayName || '—'}</td>
+                        <td style={{ padding: '11px 16px', color: '#666' }}>{r.protocol || 'any'}</td>
+                        <td style={{ padding: '11px 16px', color: '#666', fontFamily: 'monospace', fontSize: '12px' }}>{r.destPorts?.length > 0 ? r.destPorts.join(', ') : 'all'}</td>
+                        <td style={{ padding: '11px 16px', color: '#666', fontFamily: 'monospace', fontSize: '12px' }}>{r.srcCidr?.ipv4?.join(', ') || '0.0.0.0/0'}</td>
+                        <td style={{ padding: '11px 16px' }}>
+                          <span style={{ padding: '2px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 600, background: r.action === 'accept' ? '#eaf3de' : '#fef2f2', color: r.action === 'accept' ? '#3b6d11' : '#dc2626' }}>
+                            {r.action}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           ) : (
             <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', padding: '48px', textAlign: 'center' }}>
