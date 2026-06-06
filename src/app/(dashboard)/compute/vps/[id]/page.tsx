@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import Link from 'next/link'
 
-const TABS = ['Overview', 'Snapshots', 'Images', 'Firewall', 'DNS', 'Actions']
+const TABS = ['Overview', 'Snapshots', 'Images', 'Backups', 'Network', 'Firewall', 'DNS', 'Actions']
 
 export default function VPSDetailPage() {
   const { id } = useParams()
@@ -74,7 +74,8 @@ export default function VPSDetailPage() {
   if (loading) return <div style={{ color: '#9a9a9a', fontSize: '13px', padding: '24px' }}>Loading...</div>
   if (!order) return <div style={{ color: '#dc2626', padding: '24px' }}>VPS not found</div>
 
-  const ip = instance?.ipConfig?.v4?.ip || order.ssh_host || '—'
+  const pd = order.provider_data ? JSON.parse(order.provider_data) : null
+  const ip = instance?.ipConfig?.v4?.ip || pd?.ipConfig?.v4?.ip || order.ssh_host || '—'
   const status = instance?.status || order.status
   const statusColor = status === 'running' || status === 'active' ? '#3b6d11' : status === 'stopped' ? '#dc2626' : '#854d0e'
   const statusBg = status === 'running' || status === 'active' ? '#eaf3de' : status === 'stopped' ? '#fef2f2' : '#fefce8'
@@ -138,11 +139,11 @@ export default function VPSDetailPage() {
             { label: 'Status', value: status },
             { label: 'Plan', value: order.service_key },
             { label: 'Region', value: instance?.region || 'EU' },
-            { label: 'OS', value: instance?.osType || 'Linux' },
+            { label: 'OS', value: instance?.osType || pd?.osType || 'Linux' },
             { label: 'SSH User', value: order.ssh_user || 'admin' },
-            { label: 'vCPU', value: instance?.productType?.cpuCores ? `${instance.productType.cpuCores} vCPU` : '—' },
-            { label: 'RAM', value: instance?.productType?.ramMb ? `${instance.productType.ramMb / 1024}GB` : '—' },
-            { label: 'Disk', value: instance?.productType?.diskMb ? `${instance.productType.diskMb / 1024}GB SSD` : '—' },
+            { label: 'vCPU', value: instance?.cpuCores ? `${instance.cpuCores} vCPU` : '—' },
+            { label: 'RAM', value: instance?.ramMb ? `${Math.round(instance.ramMb / 1024)}GB` : '—' },
+            { label: 'Disk', value: instance?.diskMb ? `${Math.round(instance.diskMb / 1024)}GB SSD` : '—' },
             { label: 'Created', value: order.created_at?.substring(0, 10) || '—' },
             { label: 'Expires', value: order.expires_at?.substring(0, 10) || '—' },
             { label: 'IPv6', value: instance?.ipConfig?.v6?.ip || '—' },
@@ -240,18 +241,59 @@ export default function VPSDetailPage() {
                     <td style={{ padding: '12px 16px', color: '#666' }}>{img.sizeMb ? `${(img.sizeMb/1024).toFixed(1)}GB` : '—'}</td>
                     <td style={{ padding: '12px 16px' }}>
                       <button onClick={() => {
-                        if (confirm(`Reinstall with ${img.name}? All data will be lost.`)) {
+                        if (confirm(`Install ${img.name}? All data on the VPS will be wiped.`)) {
                           doAction('reinstall', { imageId: img.imageId })
                         }
                       }}
                         style={{ padding: '4px 12px', background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: '5px', fontSize: '11px', cursor: 'pointer', color: '#dc2626', fontWeight: 600 }}>
-                        Reinstall
+                        Install
                       </button>
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+
+      {/* Backups tab */}
+      {tab === 'Backups' && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', padding: '24px' }}>
+            <h3 style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a', marginBottom: '8px' }}>Auto Backup</h3>
+            <p style={{ fontSize: '13px', color: '#9a9a9a', marginBottom: '16px' }}>Automatic daily backups with 7-day retention. Requires the Auto Backup add-on.</p>
+            <a href={`https://my.contabo.com/compute/vps/${order.provider_instance_id}`} target="_blank" rel="noopener"
+              style={{ display: 'inline-flex', height: '36px', alignItems: 'center', padding: '0 16px', background: '#1a6ef5', color: '#fff', borderRadius: '8px', fontSize: '13px', fontWeight: 600, textDecoration: 'none' }}>
+              Manage Backups →
+            </a>
+          </div>
+        </div>
+      )}
+
+      {/* Network tab */}
+      {tab === 'Network' && (
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+          {[
+            { label: 'IPv4 Address', value: instance?.ipConfig?.v4?.ip || order.ssh_host || '—' },
+            { label: 'IPv6 Address', value: instance?.ipConfig?.v6?.ip || '—' },
+            { label: 'Gateway', value: instance?.ipConfig?.v4?.gateway || '—' },
+            { label: 'MAC Address', value: instance?.macAddress || '—' },
+            { label: 'Data Centre', value: instance?.dataCenter || instance?.region || '—' },
+            { label: 'Region', value: instance?.regionName || instance?.region || '—' },
+          ].map(({ label, value }) => (
+            <div key={label} style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '8px', padding: '14px 16px' }}>
+              <p style={{ fontSize: '11px', color: '#9a9a9a', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '4px' }}>{label}</p>
+              <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', fontFamily: 'monospace' }}>{value}</p>
+            </div>
+          ))}
+          <div style={{ gridColumn: 'span 2', background: '#fff', border: '1px solid #ebebeb', borderRadius: '8px', padding: '14px 16px' }}>
+            <p style={{ fontSize: '12px', fontWeight: 600, color: '#0a0a0a', marginBottom: '6px' }}>Additional IPs</p>
+            <p style={{ fontSize: '12px', color: '#9a9a9a', marginBottom: '10px' }}>Order additional IPv4 addresses for this instance</p>
+            <a href={`https://my.contabo.com/compute/vps/${order.provider_instance_id}`} target="_blank" rel="noopener"
+              style={{ display: 'inline-flex', height: '32px', alignItems: 'center', padding: '0 14px', background: '#1a6ef5', color: '#fff', borderRadius: '6px', fontSize: '12px', fontWeight: 600, textDecoration: 'none' }}>
+              Order Additional IPs →
+            </a>
           </div>
         </div>
       )}

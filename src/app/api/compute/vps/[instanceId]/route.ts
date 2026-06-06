@@ -8,11 +8,11 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ inst
   if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
 
   const { instanceId } = await params
-  const order = db.prepare('SELECT * FROM gsws_compute_orders WHERE provider_instance_id = ? AND user_id = ?').get(instanceId, user.id) as any
+  const order = db.prepare('SELECT * FROM gsws_compute_orders WHERE (id = ? OR provider_instance_id = ?) AND user_id = ?').get(instanceId, instanceId, user.id) as any
   if (!order) return NextResponse.json({ error: 'Not found' }, { status: 404 })
 
   try {
-    const instance = await getInstance(instanceId)
+    const instance = await getInstance(order.provider_instance_id)
     return NextResponse.json({ instance, order })
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 })
@@ -24,7 +24,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ ins
   if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
 
   const { instanceId } = await params
-  const order = db.prepare('SELECT * FROM gsws_compute_orders WHERE provider_instance_id = ? AND user_id = ?').get(instanceId, user.id) as any
+  const order = db.prepare('SELECT * FROM gsws_compute_orders WHERE (id = ? OR provider_instance_id = ?) AND user_id = ?').get(instanceId, instanceId, user.id) as any
   if (!order) return NextResponse.json({ error: 'Not found' }, { status: 404 })
 
   const { action } = await req.json()
@@ -50,7 +50,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ i
   if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
 
   const { instanceId } = await params
-  const order = db.prepare('SELECT * FROM gsws_compute_orders WHERE provider_instance_id = ? AND user_id = ?').get(instanceId, user.id) as any
+  const order = db.prepare('SELECT * FROM gsws_compute_orders WHERE (id = ? OR provider_instance_id = ?) AND user_id = ?').get(instanceId, instanceId, user.id) as any
   if (!order) return NextResponse.json({ error: 'Not found' }, { status: 404 })
 
   try {
@@ -69,7 +69,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ inst
   if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
 
   const { instanceId } = await params
-  const order = db.prepare('SELECT * FROM gsws_compute_orders WHERE provider_instance_id = ? AND user_id = ?').get(instanceId, user.id) as any
+  const order = db.prepare('SELECT * FROM gsws_compute_orders WHERE (id = ? OR provider_instance_id = ?) AND user_id = ?').get(instanceId, instanceId, user.id) as any
   if (!order) return NextResponse.json({ error: 'Not found' }, { status: 404 })
 
   const { displayName } = await req.json()
