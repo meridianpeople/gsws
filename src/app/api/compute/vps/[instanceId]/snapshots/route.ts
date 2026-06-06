@@ -1,58 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getGswsSession } from '@/lib/session'
 import db from '@/lib/db'
-
-async function contaboFetch(path: string, options: RequestInit = {}) {
-  const { getToken } = await import('@/lib/contabo')
-  const token = await (getToken as any)()
-  const { v4: uuidv4 } = await import('uuid')
-  const res = await fetch(`https://api.contabo.com${path}`, {
-    ...options,
-    headers: {
-      'Authorization': `Bearer ${token}`,
-      'x-request-id': uuidv4(),
-      'Content-Type': 'application/json',
-      ...options.headers,
-    },
-  })
-  const text = await res.text()
-  return text ? JSON.parse(text) : {}
-}
+import { contaboFetch } from '@/lib/contabo'
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ instanceId: string }> }) {
+  const { instanceId } = await params
   const user = await getGswsSession(req)
   if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
-  const { instanceId } = await params
 
-  const order = db.prepare('SELECT * FROM gsws_compute_orders WHERE provider_instance_id = ? AND user_id = ?').get(instanceId, user.id) as any
+  const order = db.prepare("SELECT * FROM gsws_compute_orders WHERE id = ? AND user_id = ? AND resource_type = 'vps'").get(instanceId, user.id) as any
   if (!order) return NextResponse.json({ error: 'Not found' }, { status: 404 })
 
   try {
-    const data = await contaboFetch(`/v1/compute/instances/${instanceId}/snapshots`)
-    return NextResponse.json({ snapshots: data.data || [] })
+    const data = await contaboFetch(`/v1/compute/instances/${order.provider_instance_id}/snapshots`)
+    return NextResponse.json({ snapshots: data?.data || [] })
   } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 })
-  }
-}
-
-export async function POST(req: NextRequest, { params }: { params: Promise<{ instanceId: string }> }) {
-  const user = await getGswsSession(req)
-  if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
-  const { instanceId } = await params
-  const { name, description } = await req.json()
-
-  const order = db.prepare('SELECT * FROM gsws_compute_orders WHERE provider_instance_id = ? AND user_id = ?').get(instanceId, user.id) as any
-  if (!order) return NextResponse.json({ error: 'Not found' }, { status: 404 })
-
-  try {
-    const data = await contaboFetch(`/v1/compute/instances/${instanceId}/snapshots`, {
-      method: 'POST',
-      body: JSON.stringify({ name: name || 'Snapshot', description: description || '' }),
-    })
-    db.prepare(`INSERT INTO gsws_audit_log (user_id, action, resource_type, resource_name, detail) VALUES (?, 'vps_snapshot', 'vps', ?, ?)`).run(
-      user.id, instanceId, `Snapshot created: ${name || 'Snapshot'}`)
-    return NextResponse.json({ success: true, snapshot: data.data?.[0] })
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 })
+    return NextResponse.json({ snapshots: [] })
   }
 }

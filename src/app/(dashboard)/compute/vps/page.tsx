@@ -1,4 +1,5 @@
 'use client'
+import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import ConfirmModal from '@/components/ui/ConfirmModal'
 
@@ -207,7 +208,7 @@ export default function VPSPage() {
               <div key={o.id} style={{ border: '1px solid #f3f4f6', borderRadius: '8px', marginBottom: '8px', overflow: 'hidden' }}>
                 <div style={{ padding: '14px', display: 'grid', gridTemplateColumns: '1.5fr 1fr 1fr 1fr auto', gap: '12px', alignItems: 'center' }}>
                   <div>
-                    <div style={{ fontSize: '13px', fontWeight: 700 }}>{pd?.productName || o.service_key.toUpperCase()}</div>
+                    <Link href={`/compute/vps/${o.id}`} style={{ fontSize: '13px', fontWeight: 700, color: '#0a0a0a', textDecoration: 'none' }}>{pd?.productName || o.service_key.toUpperCase()}</Link>
                     <div style={{ fontSize: '11px', color: '#666' }}>Order #{o.id} · {new Date(o.created_at).toLocaleDateString('en-GB')}</div>
                   </div>
                   <div style={{ fontSize: '12px' }}>
