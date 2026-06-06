@@ -54,7 +54,8 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 
   try {
     // Step 1: Order MSSQL slot from 20i
-    const orderRes = await client.post('/reseller/*/addMssql', {})
+    const RESELLER_ID = process.env.TWENTYI_RESELLER_ID_NUM || '511'
+    const orderRes = await client.post(`/reseller/${RESELLER_ID}/addMssql`, {})
     if (!orderRes.data) throw new Error('Failed to order MSSQL from provider')
 
     // Step 2: Get the new MSSQL ID
