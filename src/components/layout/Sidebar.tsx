@@ -16,7 +16,6 @@ const nav = [
     label: 'Workspace',
     items: [
       { label: 'Overview', href: '/dashboard', icon: <Icon d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" d2="M9 22V12h6v10" /> },
-      { label: 'Provisioned Services', href: '/services', icon: <Icon d="M4 6h16M4 10h16M4 14h16M4 18h16" /> },
       { label: 'Activity', href: '/account/activity', icon: <Icon d="M22 12h-4l-3 9L9 3l-3 9H2" /> },
     ],
   },
@@ -26,36 +25,26 @@ const nav = [
       { label: 'Domains', href: '/domains', icon: <Icon d="M12 2a10 10 0 100 20A10 10 0 0012 2zM2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20" /> },
       { label: 'Register Domain', href: '/domains/search', icon: <Icon d="M12 5v14M5 12h14" /> },
       { label: 'DNS', href: '/dns', icon: <Icon d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" /> },
-      { label: 'Nameservers', href: '/nameservers', icon: <Icon d="M20 3H4a1 1 0 00-1 1v4a1 1 0 001 1h16a1 1 0 001-1V4a1 1 0 00-1-1zM20 13H4a1 1 0 00-1 1v4a1 1 0 001 1h16a1 1 0 001-1v-4a1 1 0 00-1-1z" d2="M7 7h.01M7 17h.01" /> },
-      { label: 'Domain Transfers', href: '/domains/transfers', icon: <Icon d="M8 3H5a2 2 0 00-2 2v3m18 0V5a2 2 0 00-2-2h-3m0 18h3a2 2 0 002-2v-3M3 16v3a2 2 0 002 2h3" /> },
-      { label: 'Renewals', href: '/renewals', icon: <Icon d="M23 4v6h-6M1 20v-6h6" d2="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15" /> },
     ],
   },
   {
     label: 'Websites & Hosting',
     items: [
       { label: 'Hosting Packages', href: '/packages', icon: <Icon d="M22 12H2M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z" /> },
-      { label: 'Websites', href: '/websites', icon: <Icon d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" /> },
       { label: 'WordPress', href: '/wordpress', icon: <Icon d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" d2="M12 6v6l4 2" /> },
       { label: 'Windows Hosting', href: '/windows', icon: <Icon d="M3 5h8v8H3zM13 5h8v8h-8zM3 15h8v6H3zM13 15h8v6h-8z" /> },
       { label: 'Linux Hosting', href: '/linux', icon: <Icon d="M20 3H4a1 1 0 00-1 1v16a1 1 0 001 1h16a1 1 0 001-1V4a1 1 0 00-1-1z" d2="M8 10h8M8 14h4" /> },
-      { label: 'File Manager', href: '/filemanager', icon: <Icon d="M3 3h18v18H3zM3 9h18M9 21V9" /> },
     ],
   },
   {
     label: 'Email',
     items: [
       { label: 'Email', href: '/email', icon: <Icon d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" d2="M22 6l-10 7L2 6" /> },
-      { label: 'Aliases', href: '/email/aliases', icon: <Icon d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71" d2="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" /> },
-      { label: 'Forwarders', href: '/email/forwarders', icon: <Icon d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" /> },
-      { label: 'Spam Protection', href: '/email/spam', icon: <Icon d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" d2="M9 12l2 2 4-4" /> },
-      { label: 'SPF / DKIM / DMARC', href: '/email/authentication', icon: <Icon d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /> },
     ],
   },
   {
     label: 'Security',
     items: [
-      { label: 'SSL / TLS', href: '/ssl', icon: <Icon d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /> },
       { label: 'Security', href: '/security', icon: <Icon d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" d2="M9 12l2 2 4-4" /> },
     ],
   },
@@ -63,7 +52,6 @@ const nav = [
     label: 'Performance',
     items: [
       { label: 'CDN', href: '/cdn', icon: <Icon d="M12 2a10 10 0 100 20A10 10 0 0012 2z" d2="M12 8v8M8 12h8" /> },
-      { label: 'Uptime Monitoring', href: '/monitoring', icon: <Icon d="M22 12h-4l-3 9L9 3l-3 9H2" /> },
       { label: 'Analytics', href: '/analytics', icon: <Icon d="M18 20V10M12 20V4M6 20v-6" /> },
     ],
   },
