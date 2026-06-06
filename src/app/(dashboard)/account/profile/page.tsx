@@ -176,24 +176,49 @@ export default function ProfilePage() {
         )}
       </div>
 
-      {/* Quick links */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
-        {[
-          { label: 'Statement', desc: 'Full transaction history and balance', href: '/account/statement', icon: '📄' },
-          { label: 'Renewals', desc: 'Manage service renewals and auto-renew', href: '/renewals', icon: '🔄' },
-          { label: 'Team members', desc: 'Invite and manage sub-users', href: '/account/members', icon: '👥' },
-          { label: 'Activity log', desc: 'View all account actions and sessions', href: '/account/activity', icon: '📋' },
-          { label: 'Top up credit', desc: 'Add credit to your account', href: '/account/topup', icon: '💳' },
-        ].map(l => (
-          <Link key={l.href} href={l.href}
-            style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '14px 16px', background: '#fff', border: '1px solid #ebebeb', borderRadius: '8px', textDecoration: 'none' }}>
-            <span style={{ fontSize: '20px' }}>{l.icon}</span>
-            <div>
-              <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a' }}>{l.label}</p>
-              <p style={{ fontSize: '11px', color: '#9a9a9a' }}>{l.desc}</p>
-            </div>
-          </Link>
-        ))}
+      {/* Account links */}
+      <div>
+        <h2 style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a', marginBottom: '10px' }}>Account</h2>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
+          {[
+            { label: 'Statement', desc: 'Full transaction history and balance', href: '/account/statement', icon: '📄' },
+            { label: 'Renewals', desc: 'Manage service renewals and auto-renew', href: '/renewals', icon: '🔄' },
+            { label: 'Team members', desc: 'Invite and manage sub-users', href: '/account/members', icon: '👥' },
+            { label: 'Activity log', desc: 'View all account actions and sessions', href: '/account/activity', icon: '📋' },
+            { label: 'Top up credit', desc: 'Add credit to your account', href: '/account/topup', icon: '💳' },
+          ].map(l => (
+            <Link key={l.href} href={l.href}
+              style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '14px 16px', background: '#fff', border: '1px solid #ebebeb', borderRadius: '8px', textDecoration: 'none' }}>
+              <span style={{ fontSize: '20px' }}>{l.icon}</span>
+              <div>
+                <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a' }}>{l.label}</p>
+                <p style={{ fontSize: '11px', color: '#9a9a9a' }}>{l.desc}</p>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      {/* Security links */}
+      <div>
+        <h2 style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a', marginBottom: '10px' }}>Security</h2>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
+          {[
+            { label: 'Spend PIN', desc: 'Require a PIN for purchases above a threshold', href: '/account/security', icon: '🔐' },
+            { label: 'API Credentials', desc: 'Manage API keys and access tokens', href: '/account/api', icon: '🔑' },
+            { label: 'Two-factor auth', desc: 'Add an extra layer of login security', href: '/account/security#2fa', icon: '📱' },
+            { label: 'Active sessions', desc: 'View and revoke active login sessions', href: '/account/security#sessions', icon: '🖥️' },
+          ].map(l => (
+            <Link key={l.href} href={l.href}
+              style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '14px 16px', background: '#fff', border: '1px solid #ebebeb', borderRadius: '8px', textDecoration: 'none' }}>
+              <span style={{ fontSize: '20px' }}>{l.icon}</span>
+              <div>
+                <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a' }}>{l.label}</p>
+                <p style={{ fontSize: '11px', color: '#9a9a9a' }}>{l.desc}</p>
+              </div>
+            </Link>
+          ))}
+        </div>
       </div>
 
     </div>
