@@ -41,7 +41,7 @@ export async function contaboFetch(path: string, options: RequestInit = {}) {
     headers: {
       'Authorization': `Bearer ${token}`,
       'x-request-id': uuidv4(),
-      'Content-Type': 'application/json',
+      ...(options.body ? { 'Content-Type': 'application/json' } : {}),
       ...options.headers,
     },
   })
