@@ -7,7 +7,7 @@ export async function GET(req: NextRequest) {
   if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
 
   try {
-    const data = await contaboFetch('/v1/compute/images?size=100')
+    const data = await contaboFetch('/v1/compute/images?size=100&orderBy=name:asc')
     return NextResponse.json({ images: data?.data || [] })
   } catch (err: any) {
     return NextResponse.json({ images: [] })

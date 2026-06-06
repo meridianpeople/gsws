@@ -13,7 +13,13 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ inst
 
   try {
     const instance = await getInstance(order.provider_instance_id)
-    return NextResponse.json({ instance, order })
+    // Fetch VNC info
+    let vnc = null
+    try {
+      const vncData = await contaboFetch(`/v1/compute/instances/${order.provider_instance_id}/vnc`)
+      vnc = vncData?.data?.[0] || null
+    } catch {}
+    return NextResponse.json({ instance: { ...instance, vncIp: vnc?.vncIp, vncPort: vnc?.vncPort, vncEnabled: vnc?.enabled }, order })
   } catch (err: any) {
     return NextResponse.json({ error: err.message }, { status: 500 })
   }

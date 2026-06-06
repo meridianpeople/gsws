@@ -17,6 +17,8 @@ export default function VPSDetailPage() {
   const [actionLoading, setActionLoading] = useState('')
   const [snapshots, setSnapshots] = useState<any[]>([])
   const [images, setImages] = useState<any[]>([])
+  const [imageSearch, setImageSearch] = useState('')
+  const [imageFilter, setImageFilter] = useState('all')
   const [firewall, setFirewall] = useState<any>(null)
 
   useEffect(() => {
@@ -248,32 +250,64 @@ export default function VPSDetailPage() {
       {/* Images tab */}
       {tab === 'Images' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <p style={{ fontSize: '13px', color: '#9a9a9a' }}>Reinstall your VPS with a different operating system. <strong style={{ color: '#dc2626' }}>Warning: this will wipe all data.</strong></p>
+          <p style={{ fontSize: '13px', color: '#dc2626', background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: '8px', padding: '10px 14px' }}>
+            ⚠️ Installing a new OS will permanently wipe all data on this VPS.
+          </p>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <input
+              value={imageSearch}
+              onChange={e => setImageSearch(e.target.value)}
+              placeholder="Search images..."
+              style={{ flex: 1, height: '36px', border: '1px solid #d4d4d4', borderRadius: '7px', padding: '0 12px', fontSize: '13px', outline: 'none' }}
+            />
+            {['all', 'Linux', 'Windows'].map(f => (
+              <button key={f} onClick={() => setImageFilter(f)}
+                style={{ height: '36px', padding: '0 14px', background: imageFilter === f ? '#1a6ef5' : '#f7f7f7', color: imageFilter === f ? '#fff' : '#333', border: `1px solid ${imageFilter === f ? '#1a6ef5' : '#d4d4d4'}`, borderRadius: '7px', fontSize: '12px', fontWeight: 600, cursor: 'pointer' }}>
+                {f === 'all' ? 'All' : f}
+              </button>
+            ))}
+          </div>
           <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', overflow: 'hidden' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
               <thead>
                 <tr style={{ background: '#f7f7f7', borderBottom: '1px solid #ebebeb' }}>
-                  {['Image', 'OS', 'Version', 'Size', ''].map(h => (
+                  {['Image', 'Type', 'Version', ''].map(h => (
                     <th key={h} style={{ padding: '10px 16px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: '#9a9a9a', textTransform: 'uppercase' }}>{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {images.length === 0 ? (
-                  <tr><td colSpan={5} style={{ padding: '24px', textAlign: 'center', color: '#9a9a9a' }}>Loading images...</td></tr>
-                ) : images.map((img: any) => (
-                  <tr key={img.imageId} style={{ borderBottom: '1px solid #f0f0f0' }}>
-                    <td style={{ padding: '12px 16px', fontWeight: 600 }}>{img.name}</td>
-                    <td style={{ padding: '12px 16px', color: '#666' }}>{img.osType}</td>
-                    <td style={{ padding: '12px 16px', color: '#666' }}>{img.version}</td>
-                    <td style={{ padding: '12px 16px', color: '#666' }}>{img.sizeMb ? `${(img.sizeMb/1024).toFixed(1)}GB` : '—'}</td>
-                    <td style={{ padding: '12px 16px' }}>
+                  <tr><td colSpan={4} style={{ padding: '24px', textAlign: 'center', color: '#9a9a9a' }}>Loading images...</td></tr>
+                ) : images
+                  .filter((img: any) => {
+                    const matchOs = imageFilter === 'all' || img.osType === imageFilter
+                    const matchSearch = !imageSearch || img.name.toLowerCase().includes(imageSearch.toLowerCase()) || img.version?.toLowerCase().includes(imageSearch.toLowerCase())
+                    return matchOs && matchSearch
+                  })
+                  .map((img: any) => (
+                  <tr key={img.imageId} style={{ borderBottom: '1px solid #f0f0f0' }}
+                    onMouseEnter={e => (e.currentTarget.style.background = '#fafafa')}
+                    onMouseLeave={e => (e.currentTarget.style.background = '')}>
+                    <td style={{ padding: '11px 16px', fontWeight: 600, color: '#0a0a0a' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <span style={{ fontSize: '16px' }}>{img.osType === 'Windows' ? '🪟' : '🐧'}</span>
+                        {img.name}
+                      </div>
+                    </td>
+                    <td style={{ padding: '11px 16px' }}>
+                      <span style={{ padding: '2px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 600, background: img.osType === 'Windows' ? '#eff6ff' : '#eaf3de', color: img.osType === 'Windows' ? '#1a6ef5' : '#3b6d11' }}>
+                        {img.osType}
+                      </span>
+                    </td>
+                    <td style={{ padding: '11px 16px', color: '#666', fontSize: '12px' }}>{img.version}</td>
+                    <td style={{ padding: '11px 16px' }}>
                       <button onClick={() => {
-                        if (confirm(`Install ${img.name}? All data on the VPS will be wiped.`)) {
+                        if (confirm(`Install ${img.name}? All data on this VPS will be permanently wiped.`)) {
                           doAction('reinstall', { imageId: img.imageId })
                         }
-                      }}
-                        style={{ padding: '4px 12px', background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: '5px', fontSize: '11px', cursor: 'pointer', color: '#dc2626', fontWeight: 600 }}>
+                      }} disabled={!!actionLoading}
+                        style={{ padding: '5px 12px', background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: '6px', fontSize: '11px', cursor: 'pointer', color: '#dc2626', fontWeight: 600 }}>
                         Install
                       </button>
                     </td>
@@ -282,6 +316,7 @@ export default function VPSDetailPage() {
               </tbody>
             </table>
           </div>
+          <p style={{ fontSize: '11px', color: '#9a9a9a' }}>{images.filter((img: any) => (imageFilter === 'all' || img.osType === imageFilter) && (!imageSearch || img.name.toLowerCase().includes(imageSearch.toLowerCase()))).length} of {images.length} images shown</p>
         </div>
       )}
 
