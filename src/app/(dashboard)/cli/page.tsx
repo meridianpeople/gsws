@@ -187,6 +187,7 @@ export default function TerminalPage() {
 
     ws.onopen = () => { setConnected(true); setConnecting(false) }
 
+    ws.binaryType = 'arraybuffer'
     ws.onmessage = (event) => {
       if (typeof event.data === 'string') {
         try {
@@ -196,8 +197,10 @@ export default function TerminalPage() {
             return
           }
         } catch {}
+        xtermRef.current?.write(event.data)
+      } else {
+        xtermRef.current?.write(new Uint8Array(event.data))
       }
-      xtermRef.current?.write(typeof event.data === 'string' ? event.data : new Uint8Array(event.data))
     }
 
     ws.onclose = () => { setConnected(false); setConnecting(false); xtermRef.current?.writeln('\r\n\x1b[33m[Disconnected]\x1b[0m') }

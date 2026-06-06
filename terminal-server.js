@@ -41,22 +41,30 @@ async function validateSession(req) {
     if (tokenMatch) {
       const rawToken = decodeURIComponent(tokenMatch[1].trim())
       const tokenId = rawToken.split('.')[0]
+      console.log('BA token found, tokenId:', tokenId.substring(0, 20) + '...')
       if (tokenId) {
-        const session = db.prepare(`
-          SELECT s.token, s.userId as user_id, u.email, u.role
+        const baSession = db.prepare(`
+          SELECT s.token, s.userId, u.email, u.gswsUserId
           FROM session s
           JOIN user u ON u.id = s.userId
           WHERE s.token = ? AND s.expiresAt > datetime('now')
         `).get(tokenId)
-        db.close()
-        if (session) return session
+        if (baSession) {
+          // Get role from gsws_users
+          const gswsUser = baSession.gswsUserId
+            ? db.prepare('SELECT id, role FROM gsws_users WHERE id = ?').get(baSession.gswsUserId)
+            : db.prepare('SELECT id, role FROM gsws_users WHERE email = ?').get(baSession.email)
+          db.close()
+          if (gswsUser) { console.log('Auth OK:', baSession.email); return { user_id: gswsUser.id, email: baSession.email, role: gswsUser.role } }
+          else console.log('gswsUser not found for:', baSession.email)
+        }
       }
     }
 
     db.close()
     return null
   } catch (e) {
-    console.error('Session validation error:', e.message)
+    console.error('Session validation error:', e.message, e.stack?.split('\n')[1])
     return null
   }
 }
@@ -121,6 +129,7 @@ wss.on('connection', async (ws, req) => {
   const orderId = url.searchParams.get('orderId')
 
   const send = (data) => ws.readyState === ws.OPEN && ws.send(data)
+  console.log('WS connect - ALL cookies:', req.headers.cookie || 'NONE')
   const sendCtrl = (msg) => send(JSON.stringify({ type: 'control', msg }))
 
   // Validate session
@@ -130,6 +139,7 @@ wss.on('connection', async (ws, req) => {
     return ws.close()
   }
 
+  console.log('Session validated for:', session.email, 'type:', type)
   sendCtrl(`Connecting to ${type === 'vps' ? 'VPS' : 'hosting package'}...`)
 
   let credentials
@@ -159,8 +169,12 @@ wss.on('connection', async (ws, req) => {
       stream = s
 
       // SSH → WebSocket
-      stream.on('data', (data) => send(data))
-      stream.stderr.on('data', (data) => send(data))
+      stream.on('data', (data) => {
+        if (ws.readyState === ws.OPEN) ws.send(data, { binary: true })
+      })
+      stream.stderr.on('data', (data) => {
+        if (ws.readyState === ws.OPEN) ws.send(data, { binary: true })
+      })
       stream.on('close', () => {
         sendCtrl('Session closed')
         ssh.end()
