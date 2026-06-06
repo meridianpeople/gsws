@@ -426,7 +426,7 @@ export default function DomainSearchPage() {
 
             {/* Actions */}
             <div style={{ display: 'flex', gap: '10px' }}>
-              <button onClick={handleRegister}
+              <button onClick={() => handleRegister()}
                 disabled={!agreedTerms || (differentEntity && (!entityName || !entityEmail))}
                 style={{ flex: 1, height: '40px', background: '#1a6ef5', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: 600, cursor: !agreedTerms ? 'not-allowed' : 'pointer', fontFamily: 'inherit', opacity: !agreedTerms ? 0.5 : 1 }}>
                 Confirm & Register {modalDomain.name}
