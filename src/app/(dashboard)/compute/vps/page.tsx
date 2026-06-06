@@ -46,6 +46,7 @@ export default function VPSPage() {
   const [addBackup, setAddBackup]             = useState(false)
   const [addPrivateNet, setAddPrivateNet]     = useState(false)
   const [ordering, setOrdering]               = useState(false)
+  const [confirmAction, setConfirmAction] = useState<{type: string, id: string, label: string} | null>(null)
   const [error, setError]                     = useState('')
   const [success, setSuccess]                 = useState('')
   const [orders, setOrders]                   = useState<any[]>([])

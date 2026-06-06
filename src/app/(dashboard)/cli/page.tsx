@@ -103,7 +103,7 @@ export default function CLIPage() {
     } else if (e.key === 'Tab') {
       e.preventDefault()
       // Basic tab completion
-      const cmds = ['help', 'balance', 'packages', 'domains', 'notifications', 'statement', 'package', 'whoami', 'clear', 'stats', 'audit', 'customer', 'support']
+      const cmds = ['help', 'balance', 'packages', 'domains', 'notifications', 'statement', 'package', 'whoami', 'clear', 'stats', 'audit', 'customer', 'support', 'compute', 'vps', 'gpu', 'credit', 'user', 'coupon', 'impersonate', 'sessions', 'version']
       const match = cmds.find(c => c.startsWith(input))
       if (match) setInput(match)
     }

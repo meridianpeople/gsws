@@ -72,13 +72,29 @@ async function handleCommand(cmd: string, args: string[], user: any, role: strin
         lines.push('  customer balance <email>         Customer balance')
         lines.push('  customer notify <email> <msg>    Send notification')
         lines.push('  impersonate <email>              Start impersonation session')
+        lines.push('  sessions                         Active impersonation sessions')
         lines.push('  audit [email] [--limit=N]        Audit log')
         lines.push('  support list [--status=X]        Support requests')
         lines.push('  support update <id> <status>     Update request status')
+        lines.push('  compute list [email]             List compute orders')
+        lines.push('  compute show <id>                Show compute order')
+        lines.push('  compute update <id> <instance>   Set instance ID')
+        lines.push('  compute status <id> <status>     Update order status')
+        lines.push('  compute sync <id>                Sync from Contabo')
+        lines.push('  compute cancel <id>              Cancel order')
+        lines.push('  vps list [email]                 List VPS orders')
+        lines.push('  gpu list [email]                 List GPU orders')
       }
       if (isSuperAdmin) {
         lines.push('', c('1;31', 'Admin commands:'))
         lines.push('  stats                            Platform stats')
+        lines.push('  credit add <email> <amount>      Add credit to account')
+        lines.push('  credit deduct <email> <amount>   Deduct credit from account')
+        lines.push('  user list [--limit=N]            List all users')
+        lines.push('  user disable <email>             Disable user account')
+        lines.push('  user enable <email>              Enable user account')
+        lines.push('  coupon list                      List coupons')
+        lines.push('  coupon create <code> <amount>    Create coupon')
       }
       lines.push('')
       return lines.join('\n')
@@ -453,6 +469,97 @@ async function handleCommand(cmd: string, args: string[], user: any, role: strin
     }
 
     default:
+
+    case 'vps': {
+      if (!isSupport) return `${c('31', 'Permission denied')}\n`
+      const emailArgV = args[0]?.includes('@') ? args[0] : undefined
+      let vpsOrders: any[]
+      if (emailArgV) {
+        const cu = db.prepare('SELECT id FROM gsws_users WHERE email = ?').get(emailArgV) as any
+        if (!cu) return `${c('31', 'User not found: ' + emailArgV)}\n`
+        vpsOrders = db.prepare("SELECT o.*, u.email as user_email FROM gsws_compute_orders o JOIN gsws_users u ON u.id = o.user_id WHERE o.user_id = ? AND o.resource_type = 'vps' ORDER BY o.created_at DESC LIMIT 20").all(cu.id) as any[]
+      } else {
+        vpsOrders = db.prepare("SELECT o.*, u.email as user_email FROM gsws_compute_orders o JOIN gsws_users u ON u.id = o.user_id WHERE o.resource_type = 'vps' ORDER BY o.created_at DESC LIMIT 20").all() as any[]
+      }
+      if (!vpsOrders.length) return `${c('33', 'No VPS orders found')}\n`
+      return '\n' + vpsOrders.map((o: any) => {
+        const sc = o.status === 'active' ? '32' : o.status === 'pending' ? '33' : '31'
+        return `  #${o.id} [${c(sc, o.status)}] ${o.service_key} | ${o.user_email} | £${(o.price_inc_vat||0).toFixed(2)} | ${o.provider_instance_id || c('90', 'no instance')}`
+      }).join('\n') + '\n\n'
+    }
+
+    case 'gpu': {
+      if (!isSupport) return `${c('31', 'Permission denied')}\n`
+      const emailArgG = args[0]?.includes('@') ? args[0] : undefined
+      let gpuOrders: any[]
+      if (emailArgG) {
+        const cu = db.prepare('SELECT id FROM gsws_users WHERE email = ?').get(emailArgG) as any
+        if (!cu) return `${c('31', 'User not found: ' + emailArgG)}\n`
+        gpuOrders = db.prepare("SELECT o.*, u.email as user_email FROM gsws_compute_orders o JOIN gsws_users u ON u.id = o.user_id WHERE o.user_id = ? AND o.resource_type = 'gpu' ORDER BY o.created_at DESC LIMIT 20").all(cu.id) as any[]
+      } else {
+        gpuOrders = db.prepare("SELECT o.*, u.email as user_email FROM gsws_compute_orders o JOIN gsws_users u ON u.id = o.user_id WHERE o.resource_type = 'gpu' ORDER BY o.created_at DESC LIMIT 20").all() as any[]
+      }
+      if (!gpuOrders.length) return `${c('33', 'No GPU orders found')}\n`
+      return '\n' + gpuOrders.map((o: any) => {
+        const sc = o.status === 'active' ? '32' : o.status === 'pending' ? '33' : '31'
+        return `  #${o.id} [${c(sc, o.status)}] ${o.tier} ${o.billing_period} | ${o.user_email} | £${(o.price_inc_vat||0).toFixed(2)}`
+      }).join('\n') + '\n\n'
+    }
+
+    case 'credit': {
+      if (!isSuperAdmin) return `${c('31', 'Permission denied')}\n`
+      const creditSub = args[0]; const creditEmail = args[1]; const creditAmount = parseFloat(args[2])
+      if (!creditSub || !creditEmail || isNaN(creditAmount)) return `${c('31', 'Usage: credit <add|deduct> <email> <amount>')}\n`
+      const creditUser = db.prepare('SELECT id FROM gsws_users WHERE email = ?').get(creditEmail) as any
+      if (!creditUser) return `${c('31', 'User not found: ' + creditEmail)}\n`
+      const adj = creditSub === 'deduct' ? -Math.abs(creditAmount) : Math.abs(creditAmount)
+      db.prepare('INSERT OR IGNORE INTO gsws_user_credits (user_id, balance) VALUES (?, 0)').run(creditUser.id)
+      db.prepare('UPDATE gsws_user_credits SET balance = balance + ? WHERE user_id = ?').run(adj, creditUser.id)
+      const newBal = (db.prepare('SELECT balance FROM gsws_user_credits WHERE user_id = ?').get(creditUser.id) as any)?.balance || 0
+      db.prepare('INSERT INTO gsws_credit_transactions (user_id, amount, type, description, reference, balance_after) VALUES (?, ?, ?, ?, ?, ?)').run(creditUser.id, adj, 'admin_adjustment', `${creditSub === 'deduct' ? 'Deduction' : 'Credit'} by admin via CLI`, 'cli', newBal)
+      db.prepare('INSERT INTO gsws_audit_log (user_id, action, resource_type, resource_name, detail) VALUES (?, ?, ?, ?, ?)').run(user.actualUserId, 'credit_adjust', 'account', creditEmail, `${creditSub} £${Math.abs(creditAmount).toFixed(2)} — new balance: £${newBal.toFixed(2)}`)
+      return `${c('32', `✓ ${creditSub === 'deduct' ? 'Deducted' : 'Added'} £${Math.abs(creditAmount).toFixed(2)} — new balance: £${newBal.toFixed(2)}`)}\n`
+    }
+
+    case 'user': {
+      if (!isSuperAdmin) return `${c('31', 'Permission denied')}\n`
+      const userSub = args[0]
+      if (userSub === 'list') {
+        const ulimit = parseInt(args.find((a: string) => a.startsWith('--limit='))?.split('=')[1] || '20')
+        const users = db.prepare('SELECT id, email, role, is_active, created_at FROM gsws_users ORDER BY created_at DESC LIMIT ?').all(ulimit) as any[]
+        return '\n' + users.map((u: any) => `  ${u.is_active ? c('32', '●') : c('31', '●')} ${c('1', u.email)} ${c('90', '(' + u.role + ')')} — ${u.created_at.substring(0,10)}`).join('\n') + '\n\n'
+      }
+      if (userSub === 'disable' || userSub === 'enable') {
+        const uemail = args[1]
+        if (!uemail) return `${c('31', 'Usage: user ' + userSub + ' <email>')}\n`
+        const uu = db.prepare('SELECT id FROM gsws_users WHERE email = ?').get(uemail) as any
+        if (!uu) return `${c('31', 'User not found: ' + uemail)}\n`
+        db.prepare('UPDATE gsws_users SET is_active = ? WHERE id = ?').run(userSub === 'enable' ? 1 : 0, uu.id)
+        db.prepare('INSERT INTO gsws_audit_log (user_id, action, resource_type, resource_name, detail) VALUES (?, ?, ?, ?, ?)').run(user.actualUserId, 'user_' + userSub, 'user', uemail, 'Account ' + userSub + 'd by admin')
+        return `${c('32', '✓ ' + uemail + ' ' + userSub + 'd')}\n`
+      }
+      return `${c('31', 'Unknown: user ' + userSub)}\n`
+    }
+
+    case 'coupon': {
+      if (!isSuperAdmin) return `${c('31', 'Permission denied')}\n`
+      const couponSub = args[0]
+      if (couponSub === 'list') {
+        const coupons = db.prepare('SELECT * FROM gsws_coupons ORDER BY created_at DESC LIMIT 20').all() as any[]
+        if (!coupons.length) return `${c('33', 'No coupons')}\n`
+        return '\n' + coupons.map((cp: any) => `  ${cp.active ? c('32', cp.code) : c('31', cp.code)}  £${cp.amount.toFixed(2)}  used:${cp.used_count}/${cp.max_uses || '∞'}  exp:${cp.expires_at || 'never'}`).join('\n') + '\n\n'
+      }
+      if (couponSub === 'create') {
+        const couponCode = args[1]?.toUpperCase(); const couponAmount = parseFloat(args[2])
+        if (!couponCode || isNaN(couponAmount)) return `${c('31', 'Usage: coupon create <code> <amount>')}\n`
+        try {
+          db.prepare('INSERT INTO gsws_coupons (code, amount, currency, active) VALUES (?, ?, ?, 1)').run(couponCode, couponAmount, 'GBP')
+          return `${c('32', '✓ Coupon ' + couponCode + ' created — £' + couponAmount.toFixed(2))}\n`
+        } catch { return `${c('31', 'Coupon code ' + couponCode + ' already exists')}\n` }
+      }
+      return `${c('31', 'Unknown: coupon ' + couponSub)}\n`
+    }
+
       return `${c('31', `Command not found: ${cmd}`)}. Type ${c('1', 'help')} for available commands.\n`
   }
 }
