@@ -20,6 +20,7 @@ export default function VPSDetailPage() {
   const [imageSearch, setImageSearch] = useState('')
   const [imageFilter, setImageFilter] = useState('all')
   const [firewall, setFirewall] = useState<any>(null)
+  const [dnsZones, setDnsZones] = useState<any[]>([])
 
   useEffect(() => {
     loadVPS()
@@ -28,6 +29,8 @@ export default function VPSDetailPage() {
   useEffect(() => {
     if (tab === 'Snapshots') loadSnapshots()
     if (tab === 'Images') loadImages()
+    if (tab === 'Firewall') loadFirewall()
+    if (tab === 'DNS') loadDnsZones()
   }, [tab])
 
   async function loadVPS() {
@@ -46,6 +49,22 @@ export default function VPSDetailPage() {
       const res = await fetch(`/api/compute/vps/${id}/snapshots`)
       const data = await res.json()
       setSnapshots(data.snapshots || [])
+    } catch {}
+  }
+
+  async function loadFirewall() {
+    try {
+      const res = await fetch(`/api/compute/vps/${id}/firewall`)
+      const data = await res.json()
+      setFirewall(data.firewall || null)
+    } catch {}
+  }
+
+  async function loadDnsZones() {
+    try {
+      const res = await fetch(`/api/compute/vps/${id}/dns`)
+      const data = await res.json()
+      setDnsZones(data.zones || [])
     } catch {}
   }
 
@@ -354,14 +373,43 @@ export default function VPSDetailPage() {
       {tab === 'Firewall' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <p style={{ fontSize: '13px', color: '#9a9a9a' }}>Firewall rules control inbound and outbound traffic to your VPS.</p>
-          <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', padding: '48px', textAlign: 'center' }}>
-            <p style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a', marginBottom: '6px' }}>No firewall configured</p>
-            <p style={{ fontSize: '13px', color: '#9a9a9a', marginBottom: '16px' }}>Create a firewall to control traffic to this instance</p>
-            <button onClick={() => doAction('create_firewall')} disabled={!!actionLoading}
-              style={{ height: '36px', padding: '0 16px', background: '#1a6ef5', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>
-              + Create Firewall
-            </button>
-          </div>
+          {firewall ? (
+            <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', padding: '20px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                <div>
+                  <p style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a' }}>{firewall.name}</p>
+                  <span style={{ padding: '2px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 600, background: firewall.status === 'active' ? '#eaf3de' : '#f3f4f6', color: firewall.status === 'active' ? '#3b6d11' : '#666' }}>
+                    {firewall.status}
+                  </span>
+                </div>
+                <span style={{ fontSize: '11px', color: '#9a9a9a', fontFamily: 'monospace' }}>{firewall.firewallId}</span>
+              </div>
+              {firewall.rules?.inbound?.length > 0 || firewall.rules?.outbound?.length > 0 ? (
+                <div>
+                  <p style={{ fontSize: '12px', fontWeight: 600, color: '#0a0a0a', marginBottom: '8px' }}>Rules</p>
+                  {[...(firewall.rules?.inbound || []), ...(firewall.rules?.outbound || [])].map((r: any, i: number) => (
+                    <div key={i} style={{ display: 'flex', gap: '12px', padding: '8px 0', borderBottom: '1px solid #f0f0f0', fontSize: '12px' }}>
+                      <span style={{ fontWeight: 600, color: r.type === 'inbound' ? '#3b6d11' : '#854d0e' }}>{r.type || 'rule'}</span>
+                      <span>{r.protocol}</span>
+                      <span>{r.port || 'all'}</span>
+                      <span style={{ color: '#9a9a9a' }}>{r.source || r.destination || '0.0.0.0/0'}</span>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p style={{ fontSize: '13px', color: '#9a9a9a' }}>No rules configured — all traffic allowed.</p>
+              )}
+            </div>
+          ) : (
+            <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', padding: '48px', textAlign: 'center' }}>
+              <p style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a', marginBottom: '6px' }}>No firewall configured</p>
+              <p style={{ fontSize: '13px', color: '#9a9a9a', marginBottom: '16px' }}>Create a firewall to control traffic to this instance</p>
+              <button onClick={() => doAction('create_firewall').then(() => loadFirewall())} disabled={!!actionLoading}
+                style={{ height: '36px', padding: '0 16px', background: '#1a6ef5', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>
+                {actionLoading === 'create_firewall' ? 'Creating...' : '+ Create Firewall'}
+              </button>
+            </div>
+          )}
         </div>
       )}
 
@@ -369,8 +417,21 @@ export default function VPSDetailPage() {
       {tab === 'DNS' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <p style={{ fontSize: '13px', color: '#9a9a9a' }}>Manage DNS zones for your VPS IP address <strong style={{ fontFamily: 'monospace' }}>{ip}</strong></p>
+          {dnsZones.length > 0 && (
+            <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', overflow: 'hidden' }}>
+              {dnsZones.map((z: any) => (
+                <div key={z.name} style={{ padding: '14px 16px', borderBottom: '1px solid #f0f0f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div>
+                    <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a' }}>{z.name}</p>
+                    <p style={{ fontSize: '11px', color: '#9a9a9a' }}>{z.records?.length || 0} records</p>
+                  </div>
+                  <span style={{ padding: '2px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 600, background: '#eaf3de', color: '#3b6d11' }}>active</span>
+                </div>
+              ))}
+            </div>
+          )}
           <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', padding: '24px' }}>
-            <p style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a', marginBottom: '6px' }}>No DNS zones configured</p>
+            <p style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a', marginBottom: '6px' }}>{dnsZones.length > 0 ? 'Add another DNS zone' : 'No DNS zones configured'}</p>
             <p style={{ fontSize: '13px', color: '#9a9a9a', marginBottom: '16px' }}>Enter a domain name to create a DNS zone pointing to this VPS</p>
             <div style={{ display: 'flex', gap: '8px', maxWidth: '480px' }}>
               <input id="dns-zone-name" placeholder="e.g. example.com"
