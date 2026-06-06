@@ -437,7 +437,7 @@ export default function VPSPage() {
             <span style={{ color: '#4ade80' }}>£{totalIncVat.toFixed(2)}</span>
           </div>
         </div>
-        <button onClick={handleOrder} disabled={ordering || available === false}
+        <button onClick={() => handleOrder()} disabled={ordering || available === false}
           style={{ width: '100%', height: '46px', background: ordering ? '#374151' : available === false ? '#374151' : '#1a6ef5', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: 700, cursor: ordering || available === false ? 'not-allowed' : 'pointer' }}>
           {ordering ? 'Provisioning your VPS...' : `Order ${plan.label} — £${totalIncVat.toFixed(2)} inc VAT`}
         </button>
