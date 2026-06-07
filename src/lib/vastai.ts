@@ -72,3 +72,31 @@ export async function startInstance(instanceId: string) {
   const res = await client.put(`/instances/${instanceId}/`, { state: 'running' })
   return res.data
 }
+
+export async function createInstance(offerId: number, options: {
+  imageId?: string
+  env?: Record<string, string>
+  diskGb?: number
+  jupyterLabToken?: string
+}) {
+  const res = await client.put(`/asks/${offerId}/`, {
+    image: options.imageId || 'pytorch/pytorch:latest',
+    env: options.env || {},
+    disk: options.diskGb || 20,
+    jupyter_token: options.jupyterLabToken || '',
+    label: 'sws-gpu',
+  })
+  return res.data
+}
+
+export const TEMPLATE_IMAGES: Record<string, string> = {
+  bare: 'ubuntu:22.04',
+  pytorch: 'pytorch/pytorch:2.1.0-cuda12.1-cudnn8-runtime',
+  tensorflow: 'tensorflow/tensorflow:2.14.0-gpu',
+  jupyter: 'jupyter/tensorflow-notebook:cuda12-python-3.11',
+  ollama: 'ollama/ollama:latest',
+  vllm: 'vllm/vllm-openai:latest',
+  stablediffusion: 'universecoder/sd-auto:latest',
+  comfyui: 'yanwk/comfyui-boot:latest',
+  cudadev: 'nvidia/cuda:12.2.0-devel-ubuntu22.04',
+}

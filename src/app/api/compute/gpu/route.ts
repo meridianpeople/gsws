@@ -1,15 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { checkSpendPin } from '@/lib/spendPin'
 import { getGswsSession } from '@/lib/session'
-import { searchOffers } from '@/lib/vastai'
+import { searchOffers, createInstance, TEMPLATE_IMAGES } from '@/lib/vastai'
 import db from '@/lib/db'
 
 export async function GET(req: NextRequest) {
   const user = await getGswsSession(req)
   if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
 
-  const tier = req.nextUrl.searchParams.get('tier') || 'budget'
-
+  const tier = req.nextUrl.searchParams.get('tier')
+  if (tier) {
   try {
     const offers = await searchOffers(tier)
     const catalogue = db.prepare(`
@@ -89,6 +89,22 @@ export async function POST(req: NextRequest) {
   // Notification
   db.prepare(`INSERT INTO gsws_notifications (user_id, type, title, message) VALUES (?, 'system', 'GPU Compute Order Confirmed', ?)`).run(
     user.id, `Your ${tier} GPU order (${billing_period}) has been confirmed. Order #${orderId}. Our team will provision your instance shortly.`
+
+  // Attempt to provision on Vast.ai
+  if (offer_id) {
+    try {
+      const imageId = TEMPLATE_IMAGES[template || 'pytorch'] || TEMPLATE_IMAGES.pytorch
+      const vastResult = await createInstance(Number(offer_id), { imageId, diskGb: 20 })
+      const vastInstanceId = vastResult?.new_contract || vastResult?.id
+      if (vastInstanceId) {
+        db.prepare("UPDATE gsws_compute_orders SET provider_instance_id = ?, status = 'active', updated_at = datetime('now') WHERE id = ?")
+          .run(String(vastInstanceId), orderId)
+      }
+    } catch (provErr: any) {
+      console.error('Vast.ai provision error:', provErr.message)
+      // Order stays pending — support will provision manually
+    }
+  }
   )
 
   // Audit
