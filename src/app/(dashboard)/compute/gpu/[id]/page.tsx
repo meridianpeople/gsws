@@ -55,9 +55,9 @@ export default function GPUDetailPage() {
   const isStopped = order.status === 'stopped'
   const gpu = instance?.gpu_name || order.tier
   const vram = instance ? `${Math.round((instance.gpu_mem_bw || instance.gpu_ram || 16000) / 1000)}GB` : '—'
-  const cpuUtil = instance?.cpu_util ? `${(instance.cpu_util * 100).toFixed(1)}%` : '—'
-  const gpuUtil = instance?.gpu_util !== undefined ? `${instance.gpu_util}%` : '—'
-  const gpuTemp = instance?.gpu_temp !== undefined ? `${instance.gpu_temp}°C` : '—'
+  const cpuUtil = instance?.cpu_util !== undefined ? `${(instance.cpu_util * 100).toFixed(1)}%` : '—'
+  const gpuUtil = instance?.gpu_util !== undefined ? `${(instance.gpu_util * 100).toFixed(1)}%` : '—'
+  const gpuTemp = instance?.gpu_temp ? `${instance.gpu_temp.toFixed(0)}°C` : '—'
   const expiresAt = order.expires_at ? new Date(order.expires_at) : null
   const hoursLeft = expiresAt ? Math.max(0, (expiresAt.getTime() - Date.now()) / 3600000) : 0
 
@@ -108,8 +108,8 @@ export default function GPUDetailPage() {
       {/* Stats grid */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
         {[
-          { label: 'GPU', value: instance?.gpu_name?.split(' ').slice(-2).join(' ') || order.tier },
-          { label: 'VRAM', value: instance?.gpu_ram ? `${Math.round(instance.gpu_ram / 1000)}GB` : '16GB' },
+          { label: 'GPU', value: instance?.gpu_name || order.tier },
+          { label: 'VRAM', value: instance?.gpu_ram ? `${Math.round(instance.gpu_ram / 1024)}GB` : '16GB' },
           { label: 'CPU', value: instance?.cpu_cores ? `${instance.cpu_cores} cores` : '—' },
           { label: 'RAM', value: instance?.cpu_ram ? `${Math.round(instance.cpu_ram / 1024)}GB` : '—' },
           { label: 'GPU UTIL', value: gpuUtil },

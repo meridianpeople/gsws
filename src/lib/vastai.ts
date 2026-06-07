@@ -49,8 +49,10 @@ export async function searchOffers(tier: string, limit = 5) {
 }
 
 export async function getInstance(instanceId: string) {
-  const res = await client.get(`/instances/${instanceId}/`)
-  return res.data?.instances?.[0] || null
+  const res = await client.get(`/instances/${instanceId}/?owner=me`)
+  // Single instance endpoint returns object, not array
+  const inst = res.data?.instances
+  return (Array.isArray(inst) ? inst[0] : inst) || null
 }
 
 export async function listInstances() {
