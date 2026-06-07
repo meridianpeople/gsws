@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { checkSpendPin } from '@/lib/spendPin'
 import { getGswsSession } from '@/lib/session'
-import { searchOffers, createInstance, TEMPLATE_IMAGES } from '@/lib/vastai'
+import { searchOffers, createInstance, getInstance, TEMPLATE_IMAGES } from '@/lib/vastai'
 import db from '@/lib/db'
 
 export async function GET(req: NextRequest) {
