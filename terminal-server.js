@@ -113,6 +113,20 @@ async function getHostingCredentials(packageId, userId) {
   return { host, port: 22, username, domain: pkg.domain_name }
 }
 
+async function getGpuCredentials(orderId, userId) {
+  const Database = require('better-sqlite3')
+  const db = new Database(path.join(__dirname, 'data/gsws.db'))
+  const order = db.prepare("SELECT * FROM gsws_compute_orders WHERE id = ? AND user_id = ? AND resource_type = 'gpu'").get(orderId, userId)
+  db.close()
+  if (!order) throw new Error('Access denied')
+
+  const host = order.ssh_host
+  const port = order.ssh_port || 22
+  if (!host) throw new Error('GPU instance SSH not ready yet — please wait a few minutes and try again')
+
+  return { host, port, username: order.ssh_user || 'root', domain: `GPU #${orderId}` }
+}
+
 async function getVpsCredentials(orderId, userId) {
   const Database = require('better-sqlite3')
   const db = new Database(path.join(__dirname, 'data/gsws.db'))
@@ -150,7 +164,7 @@ const wss = new WebSocketServer({ server })
 wss.on('connection', async (ws, req) => {
   const url = new URL(req.url, `http://localhost:${PORT}`)
   const packageId = url.searchParams.get('packageId')
-  const type = url.searchParams.get('type') || 'hosting'
+  const type = url.searchParams.get('type') || 'hosting' // cli, hosting, vps, gpu
   const orderId = url.searchParams.get('orderId')
 
   const send = (data) => ws.readyState === ws.OPEN && ws.send(data)
@@ -176,6 +190,7 @@ wss.on('connection', async (ws, req) => {
   let credentials
   try {
     if (type === 'vps') credentials = await getVpsCredentials(orderId, session.user_id)
+    if (type === 'gpu') credentials = await getGpuCredentials(orderId, session.user_id)
     else credentials = await getHostingCredentials(packageId, session.user_id)
   } catch (err) {
     sendCtrl(`Error: ${err.message}`)

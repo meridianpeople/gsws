@@ -78,6 +78,7 @@ export async function createInstance(offerId: number, options: {
   env?: Record<string, string>
   diskGb?: number
   jupyterLabToken?: string
+  sshKey?: string
 }) {
   const res = await client.put(`/asks/${offerId}/`, {
     image: options.imageId || 'pytorch/pytorch:latest',
@@ -85,6 +86,10 @@ export async function createInstance(offerId: number, options: {
     disk: options.diskGb || 20,
     jupyter_token: options.jupyterLabToken || '',
     label: 'sws-gpu',
+    ssh: true,
+    direct: true,
+    runtype: 'ssh',
+    use_jupyter_lab: false,
   })
   return res.data
 }

@@ -5,7 +5,7 @@ import { useEffect, useRef, useState, useCallback } from 'react'
 interface Service {
   id: string
   name: string
-  type: 'cli' | 'hosting' | 'vps'
+  type: 'cli' | 'hosting' | 'vps' | 'gpu'
   packageId?: string
   orderId?: string
 }
@@ -47,6 +47,10 @@ export default function TerminalPage() {
         const vps = await fetch('/api/compute/vps').then(r => r.json())
         for (const v of vps.orders || []) {
           if (v.status === 'active') svcs.push({ id: `vps_${v.id}`, name: v.service_key, type: 'vps', orderId: String(v.id) })
+        }
+        const gpu = await fetch('/api/compute/gpu').then(r => r.json())
+        for (const g of gpu.orders || []) {
+          if (g.status === 'active' && g.ssh_host) svcs.push({ id: `gpu_${g.id}`, name: `GPU #${g.id} · ${g.tier}`, type: 'gpu', orderId: String(g.id) })
         }
       } catch {}
       setServices(svcs)
@@ -184,6 +188,7 @@ export default function TerminalPage() {
 
     if (service.type === 'hosting') wsUrl += `&packageId=${service.packageId}&type=hosting`
     else if (service.type === 'vps') wsUrl += `&orderId=${service.orderId}&type=vps`
+    else if (service.type === 'gpu') wsUrl += `&orderId=${service.orderId}&type=gpu`
 
     const ws = new WebSocket(wsUrl)
     wsRef.current = ws
@@ -270,10 +275,10 @@ export default function TerminalPage() {
                     onMouseEnter={e => (e.currentTarget.style.background = '#f9fafb')}
                     onMouseLeave={e => (e.currentTarget.style.background = selectedService?.id === svc.id ? '#f3f4f6' : 'transparent')}
                   >
-                    <span style={{ color: svc.type === 'cli' ? '#6366f1' : svc.type === 'vps' ? '#f59e0b' : '#10b981' }}>{svcIcon(svc.type)}</span>
+                    <span style={{ color: svc.type === 'cli' ? '#6366f1' : svc.type === 'vps' ? '#f59e0b' : svc.type === 'gpu' ? '#ef4444' : '#10b981' }}>{svcIcon(svc.type)}</span>
                     <div>
                       <div style={{ fontWeight: 500 }}>{svc.name}</div>
-                      <div style={{ fontSize: '10px', color: '#999', textTransform: 'uppercase' }}>{svc.type === 'cli' ? 'SWS Commands' : svc.type === 'vps' ? 'VPS Shell' : 'Hosting Shell'}</div>
+                      <div style={{ fontSize: '10px', color: '#999', textTransform: 'uppercase' }}>{svc.type === 'cli' ? 'SWS Commands' : svc.type === 'vps' ? 'VPS Shell' : svc.type === 'gpu' ? 'GPU Shell' : 'Hosting Shell'}</div>
                     </div>
                   </div>
                 ))}

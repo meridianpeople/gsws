@@ -101,6 +101,30 @@ export async function POST(req: NextRequest) {
       if (vastInstanceId) {
         db.prepare("UPDATE gsws_compute_orders SET provider_instance_id = ?, status = 'active', updated_at = datetime('now') WHERE id = ?")
           .run(String(vastInstanceId), orderId)
+
+        // Add SSH key to instance and store connection details
+        try {
+          const pubKey = process.env.SWS_SSH_PUBLIC_KEY ? require('fs').readFileSync(process.env.SWS_SSH_PUBLIC_KEY_PATH || '/home/ovie/.ssh/sws_terminal.pub', 'utf8').trim() : ''
+          if (pubKey) {
+            const axios = require('axios')
+            await axios.post(`https://console.vast.ai/api/v0/instances/${vastInstanceId}/ssh/`, 
+              { ssh_key: pubKey },
+              { headers: { Authorization: `Bearer ${process.env.VASTAI_API_KEY}`, 'Content-Type': 'application/json' } }
+            )
+          }
+          // Poll for SSH details (with delay for boot)
+          setTimeout(async () => {
+            try {
+              const inst = await getInstance(String(vastInstanceId))
+              if (inst?.ssh_host && inst?.ssh_port) {
+                db.prepare("UPDATE gsws_compute_orders SET ssh_host = ?, ssh_port = ?, ssh_user = 'root', updated_at = datetime('now') WHERE id = ?")
+                  .run(inst.ssh_host, inst.ssh_port, orderId)
+              }
+            } catch {}
+          }, 30000)
+        } catch (keyErr: any) {
+          console.error('SSH key add error:', keyErr.message)
+        }
       }
     } catch (provErr: any) {
       console.error('Vast.ai provision error:', provErr.message)
