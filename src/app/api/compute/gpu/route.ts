@@ -90,6 +90,7 @@ export async function POST(req: NextRequest) {
   // Notification
   db.prepare(`INSERT INTO gsws_notifications (user_id, type, title, message) VALUES (?, 'system', 'GPU Compute Order Confirmed', ?)`).run(
     user.id, `Your ${tier} GPU order (${billing_period}) has been confirmed. Order #${orderId}. Our team will provision your instance shortly.`
+  )
 
   // Attempt to provision on Vast.ai
   if (offer_id) {
