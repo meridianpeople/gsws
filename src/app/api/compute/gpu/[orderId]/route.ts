@@ -31,8 +31,33 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ ord
 
   try {
     switch (action) {
-      case 'start':   await startInstance(order.provider_instance_id); break
-      case 'stop':    await stopInstance(order.provider_instance_id); break
+      case 'stop':    await stopInstance(order.provider_instance_id)
+        db.prepare("UPDATE gsws_compute_orders SET status = 'stopped', updated_at = datetime('now') WHERE id = ?").run(order.id)
+        break
+      case 'start':   await startInstance(order.provider_instance_id)
+        db.prepare("UPDATE gsws_compute_orders SET status = 'active', updated_at = datetime('now') WHERE id = ?").run(order.id)
+        break
+      case 'reboot':
+        await stopInstance(order.provider_instance_id)
+        await new Promise(r => setTimeout(r, 3000))
+        await startInstance(order.provider_instance_id)
+        break
+      case 'reinstall': {
+        await destroyInstance(order.provider_instance_id)
+        const vastailibModule = await import('@/lib/vastai')
+        const template = (order.notes || '').split(':')[1]?.split(':')[0] || 'pytorch'
+        const imageId = vastailibModule.TEMPLATE_IMAGES[template] || vastailibModule.TEMPLATE_IMAGES.pytorch
+        const offers = await vastailibModule.searchOffers(order.tier)
+        if (offers.length > 0) {
+          const result = await vastailibModule.createInstance(offers[0].id, { imageId, diskGb: 20 })
+          const newId = result?.new_contract || result?.id
+          if (newId) {
+            db.prepare("UPDATE gsws_compute_orders SET provider_instance_id = ?, ssh_host = NULL, ssh_port = NULL, status = 'active', updated_at = datetime('now') WHERE id = ?")
+              .run(String(newId), order.id)
+          }
+        }
+        break
+      }
       case 'rename': {
         const { label } = await req.json().catch(() => ({})) || {}
         const body = JSON.stringify({ label: label || '' })
