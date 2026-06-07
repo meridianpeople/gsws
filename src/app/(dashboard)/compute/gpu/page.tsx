@@ -104,7 +104,7 @@ export default function GPUPage() {
             const hoursLeft = expiresAt ? Math.max(0, (expiresAt.getTime() - Date.now()) / 3600000) : 0
 
             return (
-              <div key={o.id} className="gpu-row" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '11px', padding: '16px 20px', display: 'grid', gridTemplateColumns: '2fr 120px 160px 100px 120px', gap: '16px', alignItems: 'center', transition: 'border-color 0.15s, box-shadow 0.15s' }}>
+              <div key={o.id} className="gpu-row" onClick={() => window.location.href=`/compute/gpu/${o.id}`} style={{ cursor: 'pointer', background: '#fff', border: '1px solid #ebebeb', borderRadius: '11px', padding: '16px 20px', display: 'grid', gridTemplateColumns: '2fr 120px 160px 100px 120px', gap: '16px', alignItems: 'center', transition: 'border-color 0.15s, box-shadow 0.15s' }}>
                 {/* Name */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <div style={{ width: '36px', height: '36px', background: isActive ? '#f0fdf4' : isPending ? '#fffbeb' : '#f7f7f7', borderRadius: '9px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: isActive ? '#15803d' : isPending ? '#b45309' : '#9a9a9a', flexShrink: 0 }}>
