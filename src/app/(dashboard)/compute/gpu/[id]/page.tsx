@@ -11,7 +11,7 @@ function IconReboot() { return <svg width="13" height="13" viewBox="0 0 24 24" f
 function IconTrash() { return <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/></svg> }
 
 export default function GPUDetailPage() {
-  const { id } = useParams()
+  const { id } = useParams() as { id: string }
   const [order, setOrder] = useState<any>(null)
   const [instance, setInstance] = useState<any>(null)
   const [loading, setLoading] = useState(true)
