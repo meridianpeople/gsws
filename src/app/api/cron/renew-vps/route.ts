@@ -21,8 +21,8 @@ export async function POST(req: NextRequest) {
     WHERE r.resource_type = 'vps'
     AND r.auto_renew = 1
     AND r.status = 'active'
-    AND r.expires_at <= ?
-    AND r.expires_at >= date('now')
+    AND datetime(replace(r.expires_at, 'T', ' ')) <= ?
+    AND datetime(replace(r.expires_at, 'T', ' ')) >= date('now')
   `).all(in3Days) as any[]
 
   const results = []
