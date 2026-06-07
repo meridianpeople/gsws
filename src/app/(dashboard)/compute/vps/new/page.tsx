@@ -1,6 +1,7 @@
 'use client'
 import Link from 'next/link'
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import ConfirmModal from '@/components/ui/ConfirmModal'
 
 const PLANS = [
@@ -49,6 +50,7 @@ export default function VPSPage() {
   const [ordering, setOrdering]               = useState(false)
   const [confirmAction, setConfirmAction] = useState<{type: string, id: string, label: string} | null>(null)
   const [error, setError]                     = useState('')
+  const router = useRouter()
   const [success, setSuccess]                 = useState('')
   const [orders, setOrders]                   = useState<any[]>([])
   const [available, setAvailable]             = useState<boolean | null>(null)
@@ -181,6 +183,7 @@ export default function VPSPage() {
       const data = await res.json()
       if (!res.ok) { setError(data.error); return }
       setSuccess(data.message)
+      setTimeout(() => router.push('/compute/vps'), 2000)
       loadOrders()
     } catch { setError('Order failed') }
     finally { setOrdering(false) }

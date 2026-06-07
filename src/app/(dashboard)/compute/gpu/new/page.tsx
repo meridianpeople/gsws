@@ -126,16 +126,22 @@ export default function GPUComputePage() {
     setShowOrderModal(false)
     setOrdering(true); setError(''); setSuccess('')
     try {
+      console.log('Placing GPU order...', { tier: selectedTier, billing_period: selectedPeriod })
       const res = await fetch('/api/compute/gpu', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', ...(pin ? { 'x-spend-pin': pin } : {}) },
         body: JSON.stringify({ tier: selectedTier, billing_period: selectedPeriod, managed_level: selectedManaged, template: selectedTemplate, custom_image: customImage, offer_id: selectedOffer?.id }),
       })
+      console.log('Response status:', res.status)
       const data = await res.json()
-      if (!res.ok) { setError(data.error); return }
-      setSuccess(`Order #${data.orderId} confirmed! £${data.priceIncVat.toFixed(2)} charged.`)
+      console.log('Response data:', data)
+      if (!res.ok) { setError(data.error || 'Order failed'); return }
+      setSuccess(`Order #${data.orderId} confirmed! £${data.priceIncVat?.toFixed(2)} charged.`)
       setTimeout(() => router.push('/compute/gpu'), 2000)
-    } catch { setError('Order failed') }
+    } catch (err: any) { 
+      console.error('Order error:', err)
+      setError('Order failed: ' + err.message) 
+    }
     finally { setOrdering(false) }
   }
 

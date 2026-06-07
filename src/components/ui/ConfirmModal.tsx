@@ -164,7 +164,7 @@ export default function ConfirmModal({
         {/* Terms */}
         {terms && (
           <p style={{ fontSize: '11px', color: '#9a9a9a', marginBottom: '16px', lineHeight: 1.5 }}>
-            {terms} By confirming, you agree to our <Link href="/terms" style={{ color: '#1a6ef5' }}>Terms of Service</Link>.
+            {terms} By confirming, you agree to our <Link href="/terms" target="_blank" style={{ color: '#1a6ef5' }}>Terms of Service</Link>.
           </p>
         )}
 
