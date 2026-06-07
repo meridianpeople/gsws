@@ -68,6 +68,10 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ ord
         )
         break
       }
+      case 'destroy':
+        await destroyInstance(order.provider_instance_id)
+        db.prepare("UPDATE gsws_compute_orders SET status = 'cancelled', updated_at = datetime('now') WHERE id = ?").run(order.id)
+        break
       default: return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
     }
     db.prepare(`INSERT INTO gsws_audit_log (user_id, action, resource_type, resource_name, detail) VALUES (?, ?, 'gpu', ?, ?)`).run(
