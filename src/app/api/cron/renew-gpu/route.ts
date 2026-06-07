@@ -1,11 +1,40 @@
 import { NextRequest, NextResponse } from 'next/server'
 import db from '@/lib/db'
-import { destroyInstance } from '@/lib/vastai'
+import { destroyInstance, getInstance } from '@/lib/vastai'
 
 export async function POST(req: NextRequest) {
   const auth = req.headers.get('x-cron-secret')
   if (auth !== process.env.CRON_SECRET) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+  }
+
+  // Poll for SSH details on active orders missing them
+  const missingSsh = db.prepare(`
+    SELECT * FROM gsws_compute_orders
+    WHERE resource_type = 'gpu' AND status = 'active'
+    AND provider_instance_id IS NOT NULL
+    AND (ssh_host IS NULL OR ssh_host = '')
+  `).all() as any[]
+
+  for (const order of missingSsh) {
+    try {
+      const inst = await getInstance(order.provider_instance_id)
+      if (inst?.ssh_host && inst?.ssh_port) {
+        db.prepare("UPDATE gsws_compute_orders SET ssh_host = ?, ssh_port = ?, ssh_user = 'root', updated_at = datetime('now') WHERE id = ?")
+          .run(inst.ssh_host, inst.ssh_port, order.id)
+
+        // Also inject SSH key
+        try {
+          const fs = await import('fs')
+          const pubKey = fs.readFileSync('/home/ovie/.ssh/sws_terminal.pub', 'utf8').trim()
+          const axios = (await import('axios')).default
+          await axios.post(`https://console.vast.ai/api/v0/instances/${order.provider_instance_id}/ssh/`,
+            { ssh_key: pubKey },
+            { headers: { Authorization: `Bearer ${process.env.VASTAI_API_KEY}`, 'Content-Type': 'application/json' } }
+          )
+        } catch {}
+      }
+    } catch {}
   }
 
   const expired = db.prepare(`
