@@ -82,6 +82,9 @@ export async function createInstance(offerId: number, options: {
   jupyterLabToken?: string
   sshKey?: string
 }) {
+  const fs = await import('fs')
+  const pubKey = fs.readFileSync(process.env.SWS_SSH_PUBLIC_KEY_PATH || '/home/ovie/.ssh/sws_terminal.pub', 'utf8').trim()
+
   const res = await client.put(`/asks/${offerId}/`, {
     image: options.imageId || 'pytorch/pytorch:latest',
     env: options.env || {},
@@ -92,6 +95,7 @@ export async function createInstance(offerId: number, options: {
     direct: true,
     runtype: 'ssh',
     use_jupyter_lab: false,
+    ssh_key: pubKey,
   })
   return res.data
 }
