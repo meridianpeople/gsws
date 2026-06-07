@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { checkSpendPin } from '@/lib/spendPin'
 import { getGswsSession } from '@/lib/session'
-import { searchOffers, createInstance, getInstance, TEMPLATE_IMAGES } from '@/lib/vastai'
+import { searchOffers, createInstance, getInstance, waitForRunningAndInjectKey, TEMPLATE_IMAGES } from '@/lib/vastai'
 import db from '@/lib/db'
 
 export async function GET(req: NextRequest) {
@@ -99,32 +99,20 @@ export async function POST(req: NextRequest) {
       const vastResult = await createInstance(Number(offer_id), { imageId, diskGb: 20 })
       const vastInstanceId = vastResult?.new_contract || vastResult?.id
       if (vastInstanceId) {
+        // Store instance ID immediately as pending
         db.prepare("UPDATE gsws_compute_orders SET provider_instance_id = ?, status = 'active', updated_at = datetime('now') WHERE id = ?")
           .run(String(vastInstanceId), orderId)
 
-        // Add SSH key to instance and store connection details
-        try {
-          const pubKey = process.env.SWS_SSH_PUBLIC_KEY ? require('fs').readFileSync(process.env.SWS_SSH_PUBLIC_KEY_PATH || '/home/ovie/.ssh/sws_terminal.pub', 'utf8').trim() : ''
-          if (pubKey) {
-            const axios = require('axios')
-            await axios.post(`https://console.vast.ai/api/v0/instances/${vastInstanceId}/ssh/`, 
-              { ssh_key: pubKey },
-              { headers: { Authorization: `Bearer ${process.env.VASTAI_API_KEY}`, 'Content-Type': 'application/json' } }
-            )
+        // Poll in background — wait for running state, then inject SSH key
+        waitForRunningAndInjectKey(String(vastInstanceId)).then(sshDetails => {
+          if (sshDetails) {
+            db.prepare("UPDATE gsws_compute_orders SET ssh_host = ?, ssh_port = ?, ssh_user = 'root', updated_at = datetime('now') WHERE id = ?")
+              .run(sshDetails.ssh_host, sshDetails.ssh_port, orderId)
+            console.log(`GPU order ${orderId}: SSH ready at ${sshDetails.ssh_host}:${sshDetails.ssh_port}`)
+          } else {
+            console.error(`GPU order ${orderId}: SSH setup failed`)
           }
-          // Poll for SSH details (with delay for boot)
-          setTimeout(async () => {
-            try {
-              const inst = await getInstance(String(vastInstanceId))
-              if (inst?.ssh_host && inst?.ssh_port) {
-                db.prepare("UPDATE gsws_compute_orders SET ssh_host = ?, ssh_port = ?, ssh_user = 'root', updated_at = datetime('now') WHERE id = ?")
-                  .run(inst.ssh_host, inst.ssh_port, orderId)
-              }
-            } catch {}
-          }, 30000)
-        } catch (keyErr: any) {
-          console.error('SSH key add error:', keyErr.message)
-        }
+        }).catch(err => console.error('SSH setup error:', err))
       }
     } catch (provErr: any) {
       console.error('Vast.ai provision error:', provErr.message)

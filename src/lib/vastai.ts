@@ -82,9 +82,6 @@ export async function createInstance(offerId: number, options: {
   jupyterLabToken?: string
   sshKey?: string
 }) {
-  const fs = await import('fs')
-  const pubKey = fs.readFileSync(process.env.SWS_SSH_PUBLIC_KEY_PATH || '/home/ovie/.ssh/sws_terminal.pub', 'utf8').trim()
-
   const res = await client.put(`/asks/${offerId}/`, {
     image: options.imageId || 'pytorch/pytorch:latest',
     env: options.env || {},
@@ -95,7 +92,6 @@ export async function createInstance(offerId: number, options: {
     direct: true,
     runtype: 'ssh',
     use_jupyter_lab: false,
-    ssh_key: pubKey,
   })
   return res.data
 }
@@ -110,4 +106,46 @@ export const TEMPLATE_IMAGES: Record<string, string> = {
   stablediffusion: 'universecoder/sd-auto:latest',
   comfyui: 'yanwk/comfyui-boot:latest',
   cudadev: 'nvidia/cuda:12.2.0-devel-ubuntu22.04',
+}
+
+export async function waitForRunningAndInjectKey(instanceId: string, maxWaitMs = 300000): Promise<{ ssh_host: string; ssh_port: number } | null> {
+  const fs = await import('fs')
+  const pubKey = fs.readFileSync(process.env.SWS_SSH_PUBLIC_KEY_PATH || '/home/ovie/.ssh/sws_terminal.pub', 'utf8').trim()
+  const pollInterval = 10000 // 10 seconds
+  const maxAttempts = maxWaitMs / pollInterval
+
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    await new Promise(r => setTimeout(r, pollInterval))
+    try {
+      const inst = await getInstance(instanceId)
+      const status = inst?.actual_status || inst?.cur_state
+
+      // Bail if instance is in a terminal bad state
+      if (['exited', 'unknown', 'offline'].includes(status)) {
+        console.error(`Instance ${instanceId} entered terminal state: ${status}`)
+        return null
+      }
+
+      // Once running, inject SSH key
+      if (status === 'running') {
+        console.log(`Instance ${instanceId} is running, injecting SSH key...`)
+        try {
+          await client.post(`/instances/${instanceId}/ssh/`, { ssh_key: pubKey })
+          console.log(`SSH key injected to ${instanceId}`)
+        } catch (e: any) {
+          // Key already associated is fine
+          if (!e?.response?.data?.msg?.includes('already')) {
+            console.error('SSH key injection error:', e?.response?.data || e.message)
+          }
+        }
+
+        if (inst?.ssh_host && inst?.ssh_port) {
+          return { ssh_host: inst.ssh_host, ssh_port: inst.ssh_port }
+        }
+      }
+    } catch (err) {
+      console.error(`Poll attempt ${attempt} failed:`, err)
+    }
+  }
+  return null
 }
