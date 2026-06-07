@@ -18,6 +18,8 @@ export default function GPUDetailPage() {
   const [actionLoading, setActionLoading] = useState('')
   const [error, setError] = useState('')
   const [confirm, setConfirm] = useState('')
+  const [renaming, setRenaming] = useState(false)
+  const [newName, setNewName] = useState('')
 
   useEffect(() => { loadData() }, [])
 
@@ -48,6 +50,21 @@ export default function GPUDetailPage() {
     finally { setActionLoading(''); setConfirm('') }
   }
 
+  async function doRename() {
+    if (!newName.trim()) return
+    setActionLoading('rename')
+    try {
+      await fetch(`/api/compute/gpu/${id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'rename', label: newName.trim() })
+      })
+      setRenaming(false)
+      await loadData()
+    } catch {}
+    setActionLoading('')
+  }
+
   if (loading) return <div style={{ padding: '48px', textAlign: 'center', color: '#9a9a9a', fontFamily: 'DM Sans' }}>Loading...</div>
   if (!order) return <div style={{ padding: '48px', textAlign: 'center', color: '#9a9a9a' }}>Instance not found</div>
 
@@ -57,12 +74,12 @@ export default function GPUDetailPage() {
   const vram = instance ? `${Math.round((instance.gpu_mem_bw || instance.gpu_ram || 16000) / 1000)}GB` : '—'
   const cpuUtil = instance?.cpu_util !== undefined ? `${(instance.cpu_util * 100).toFixed(1)}%` : '—'
   const gpuUtil = instance?.gpu_util !== undefined ? `${(instance.gpu_util * 100).toFixed(1)}%` : '—'
-  const gpuTemp = instance?.gpu_temp ? `${instance.gpu_temp.toFixed(0)}°C` : '—'
+  const gpuTemp = (instance?.gpu_temp !== undefined && instance?.gpu_temp !== null) ? `${Number(instance.gpu_temp).toFixed(0)}°C` : '—'
   const expiresAt = order.expires_at ? new Date(order.expires_at) : null
   const hoursLeft = expiresAt ? Math.max(0, (expiresAt.getTime() - Date.now()) / 3600000) : 0
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', fontFamily: "'DM Sans', sans-serif", maxWidth: '900px' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', fontFamily: "'DM Sans', sans-serif" }}>
       <style>{`@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Mono:wght@400;500&display=swap');`}</style>
 
       {/* Breadcrumb + header */}
@@ -80,9 +97,22 @@ export default function GPUDetailPage() {
               <IconGPU />
             </div>
             <div>
-              <h1 style={{ fontSize: '18px', fontWeight: 700, margin: 0, letterSpacing: '-0.02em' }}>
-                {instance?.gpu_name || `${order.tier} GPU`}
-              </h1>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                {renaming ? (
+                  <>
+                    <input value={newName} onChange={e => setNewName(e.target.value)} onKeyDown={e => e.key === 'Enter' && doRename()}
+                      autoFocus style={{ fontSize: '16px', fontWeight: 700, background: '#1a1a1a', border: '1px solid #333', borderRadius: '6px', padding: '4px 10px', color: '#fff', fontFamily: 'inherit', width: '200px' }} />
+                    <button onClick={doRename} style={{ fontSize: '11px', padding: '4px 10px', background: '#1a6ef5', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer' }}>Save</button>
+                    <button onClick={() => setRenaming(false)} style={{ fontSize: '11px', padding: '4px 10px', background: '#333', color: '#fff', border: 'none', borderRadius: '6px', cursor: 'pointer' }}>Cancel</button>
+                  </>
+                ) : (
+                  <>
+                    <h1 style={{ fontSize: '18px', fontWeight: 700, margin: 0, letterSpacing: '-0.02em' }}>{instance?.gpu_name || `${order.tier} GPU`}</h1>
+                    <button onClick={() => { setNewName(instance?.label || ''); setRenaming(true) }}
+                      style={{ background: 'none', border: '1px solid #333', borderRadius: '5px', padding: '2px 8px', color: '#9a9a9a', fontSize: '11px', cursor: 'pointer' }}>✏ Rename</button>
+                  </>
+                )}
+              </div>
               <p style={{ fontSize: '12px', color: '#9a9a9a', marginTop: '3px', fontFamily: "'DM Mono', monospace" }}>
                 #{order.provider_instance_id} · {order.ssh_host}:{order.ssh_port}
               </p>
@@ -169,7 +199,7 @@ export default function GPUDetailPage() {
           </code>
           {order.ssh_host && (
             <p style={{ fontSize: '11px', color: '#9a9a9a', marginTop: '6px' }}>
-              IP: {instance?.public_ipaddr || '—'} · Instance: #{order.provider_instance_id}
+              IP: {instance?.public_ipaddr || '—'} · Port: {order.ssh_port}
             </p>
           )}
         </div>

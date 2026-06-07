@@ -33,6 +33,16 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ ord
     switch (action) {
       case 'start':   await startInstance(order.provider_instance_id); break
       case 'stop':    await stopInstance(order.provider_instance_id); break
+      case 'rename': {
+        const { label } = await req.json().catch(() => ({})) || {}
+        const body = JSON.stringify({ label: label || '' })
+        const axios = (await import('axios')).default
+        await axios.put(`https://console.vast.ai/api/v0/instances/${order.provider_instance_id}/`,
+          { label },
+          { headers: { Authorization: `Bearer ${process.env.VASTAI_API_KEY}`, 'Content-Type': 'application/json' } }
+        )
+        break
+      }
       default: return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
     }
     db.prepare(`INSERT INTO gsws_audit_log (user_id, action, resource_type, resource_name, detail) VALUES (?, ?, 'gpu', ?, ?)`).run(
