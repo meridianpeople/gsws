@@ -25,9 +25,11 @@ export async function searchOffers(tier: string, limit = 5) {
   const query = {
     verified: { eq: true },
     rentable: { eq: true },
+    reliability: { gte: 0.95 },
     gpu_ram: { gte: filters.min_vram, lte: filters.max_vram },
     dph_base: { lte: filters.max_price_per_hr },
     disk_space: { gte: 50 },
+    num_gpus: { eq: 1 },
   }
 
   const res = await client.get(`/bundles/?q=${encodeURIComponent(JSON.stringify(query))}`)
