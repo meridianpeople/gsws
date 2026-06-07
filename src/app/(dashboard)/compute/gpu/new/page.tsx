@@ -1,5 +1,6 @@
 'use client'
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import ConfirmModal from '@/components/ui/ConfirmModal'
 
 const TIERS = [
@@ -50,6 +51,7 @@ export default function GPUComputePage() {
   const [offers, setOffers] = useState<any[]>([])
   const [loadingOffers, setLoadingOffers] = useState(false)
   const [ordering, setOrdering] = useState(false)
+  const router = useRouter()
   const [showOrderModal, setShowOrderModal] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
@@ -131,7 +133,8 @@ export default function GPUComputePage() {
       })
       const data = await res.json()
       if (!res.ok) { setError(data.error); return }
-      setSuccess(`Order #${data.orderId} confirmed! £${data.priceIncVat.toFixed(2)} charged. Our team will provision your instance shortly.`)
+      setSuccess(`Order #${data.orderId} confirmed! £${data.priceIncVat.toFixed(2)} charged.`)
+      setTimeout(() => router.push('/compute/gpu'), 2000)
     } catch { setError('Order failed') }
     finally { setOrdering(false) }
   }
