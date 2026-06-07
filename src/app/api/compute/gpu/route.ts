@@ -107,7 +107,6 @@ export async function POST(req: NextRequest) {
       // Order stays pending — support will provision manually
     }
   }
-  )
 
   // Audit
   db.prepare(`INSERT INTO gsws_audit_log (user_id, action, resource_type, resource_name, detail) VALUES (?, 'gpu_order', 'compute', ?, ?)`).run(
