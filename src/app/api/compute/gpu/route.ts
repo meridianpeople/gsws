@@ -10,16 +10,17 @@ export async function GET(req: NextRequest) {
 
   const tier = req.nextUrl.searchParams.get('tier')
   if (tier) {
-  try {
-    const offers = await searchOffers(tier)
-    const catalogue = db.prepare(`
-      SELECT * FROM gsws_service_catalogue WHERE service_type = 'gpu' AND service_key LIKE ?
-    `).all(`gpu_${tier}_%`) as any[]
-
-    return NextResponse.json({ offers, pricing: catalogue })
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 })
+    try {
+      const offers = await searchOffers(tier)
+      const catalogue = db.prepare(`SELECT * FROM gsws_service_catalogue WHERE service_type = 'gpu' AND service_key LIKE ?`).all(`gpu_${tier}_%`) as any[]
+      return NextResponse.json({ offers, pricing: catalogue })
+    } catch (err: any) {
+      return NextResponse.json({ error: err.message }, { status: 500 })
+    }
   }
+
+  const orders = db.prepare(`SELECT * FROM gsws_compute_orders WHERE user_id = ? AND resource_type = 'gpu' ORDER BY created_at DESC`).all(user.id) as any[]
+  return NextResponse.json({ orders })
 }
 
 export async function POST(req: NextRequest) {
