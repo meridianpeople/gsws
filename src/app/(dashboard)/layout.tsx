@@ -5,7 +5,7 @@ import MainContent from './MainContent'
 import IdleTimeout from '@/components/layout/IdleTimeout'
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ minHeight: '100vh', background: '#f5f5f5' }}>
+    <div style={{ minHeight: '100vh', background: '#0a0a0a' }}>
       <Topbar />
       <Sidebar />
       <LoadingSpinner />
