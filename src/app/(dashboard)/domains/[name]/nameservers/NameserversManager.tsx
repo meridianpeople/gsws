@@ -59,12 +59,12 @@ export default function NameserversManager({ domainName, paramName }: { domainNa
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', maxWidth: '700px' }}>
       <div>
-        <div style={{ fontSize: '12px', color: '#9a9a9a', marginBottom: '4px' }}>
+        <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>
           <Link href="/domains" style={{ color: '#1a6ef5' }}>Domains</Link> ›{' '}
           <Link href={`/domains/${paramName}`} style={{ color: '#1a6ef5' }}>{domainName}</Link> › Nameservers
         </div>
-        <h1 style={{ fontSize: '20px', fontWeight: 600, color: '#0a0a0a' }}>Nameservers</h1>
-        <p style={{ fontSize: '13px', color: '#9a9a9a', marginTop: '3px' }}>
+        <h1 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text-primary)' }}>Nameservers</h1>
+        <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '3px' }}>
           Control where DNS for <strong>{domainName}</strong> is managed.
         </p>
       </div>
@@ -74,16 +74,16 @@ export default function NameserversManager({ domainName, paramName }: { domainNa
 
       {/* Mode selector */}
       <div className="gsws-card">
-        <h2 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '16px' }}>Nameserver configuration</h2>
+        <h2 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '16px' }}>Nameserver configuration</h2>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '20px' }}>
           <div onClick={() => setMode('geig')}
             style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', padding: '14px 16px', borderRadius: '8px', cursor: 'pointer', border: `1.5px solid ${mode === 'geig' ? '#1a6ef5' : '#ebebeb'}`, background: mode === 'geig' ? '#e8f0fe' : '#fff' }}>
             <div style={{ width: '18px', height: '18px', borderRadius: '50%', border: `2px solid ${mode === 'geig' ? '#1a6ef5' : '#d4d4d4'}`, background: mode === 'geig' ? '#1a6ef5' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '1px' }}>
-              {mode === 'geig' && <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#fff' }} />}
+              {mode === 'geig' && <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--card-bg)' }} />}
             </div>
             <div>
-              <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a' }}>GeiG SWS nameservers (recommended)</p>
-              <p style={{ fontSize: '12px', color: '#9a9a9a', marginTop: '2px' }}>Use GeiG's default nameservers. DNS records are managed in this control panel.</p>
+              <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>GeiG SWS nameservers (recommended)</p>
+              <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>Use GeiG's default nameservers. DNS records are managed in this control panel.</p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginTop: '10px' }}>
                 {DEFAULT_NS.map((ns, i) => (
                   <span key={i} style={{ fontSize: '12px', fontFamily: 'ui-monospace, monospace', color: '#5a5a5a' }}>
@@ -97,16 +97,16 @@ export default function NameserversManager({ domainName, paramName }: { domainNa
           <div onClick={() => setMode('custom')}
             style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', padding: '14px 16px', borderRadius: '8px', cursor: 'pointer', border: `1.5px solid ${mode === 'custom' ? '#1a6ef5' : '#ebebeb'}`, background: mode === 'custom' ? '#e8f0fe' : '#fff' }}>
             <div style={{ width: '18px', height: '18px', borderRadius: '50%', border: `2px solid ${mode === 'custom' ? '#1a6ef5' : '#d4d4d4'}`, background: mode === 'custom' ? '#1a6ef5' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '1px' }}>
-              {mode === 'custom' && <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#fff' }} />}
+              {mode === 'custom' && <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--card-bg)' }} />}
             </div>
             <div style={{ flex: 1 }}>
-              <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a' }}>Custom nameservers</p>
-              <p style={{ fontSize: '12px', color: '#9a9a9a', marginTop: '2px' }}>Use your own nameservers (e.g. Cloudflare, Route53). DNS records will be managed externally.</p>
+              <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>Custom nameservers</p>
+              <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>Use your own nameservers (e.g. Cloudflare, Route53). DNS records will be managed externally.</p>
               {mode === 'custom' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginTop: '12px' }}>
                   {custom.map((ns, i) => (
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span style={{ fontSize: '11px', color: '#9a9a9a', width: '28px', flexShrink: 0 }}>NS{i + 1}</span>
+                      <span style={{ fontSize: '11px', color: 'var(--text-secondary)', width: '28px', flexShrink: 0 }}>NS{i + 1}</span>
                       <input
                         value={ns}
                         onChange={e => {
@@ -115,11 +115,11 @@ export default function NameserversManager({ domainName, paramName }: { domainNa
                           setCustom(updated)
                         }}
                         placeholder={`ns${i + 1}.example.com`}
-                        style={{ flex: 1, height: '34px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', fontFamily: 'ui-monospace, monospace', padding: '0 10px', background: '#fff', color: '#0a0a0a' }}
+                        style={{ flex: 1, height: '34px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', fontFamily: 'ui-monospace, monospace', padding: '0 10px', background: 'var(--card-bg)', color: 'var(--text-primary)' }}
                       />
                       {custom.length > 2 && (
                         <button onClick={() => setCustom(c => c.filter((_, j) => j !== i))}
-                          style={{ width: '28px', height: '28px', border: '1px solid #f5c1c1', borderRadius: '4px', background: '#fff', color: '#a32d2d', cursor: 'pointer', fontSize: '14px', flexShrink: 0 }}>
+                          style={{ width: '28px', height: '28px', border: '1px solid #f5c1c1', borderRadius: '4px', background: 'var(--card-bg)', color: '#a32d2d', cursor: 'pointer', fontSize: '14px', flexShrink: 0 }}>
                           ×
                         </button>
                       )}
@@ -127,7 +127,7 @@ export default function NameserversManager({ domainName, paramName }: { domainNa
                   ))}
                   {custom.length < 6 && (
                     <button onClick={() => setCustom(c => [...c, ''])}
-                      style={{ alignSelf: 'flex-start', height: '28px', padding: '0 12px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '12px', color: '#1a6ef5', background: '#fff', cursor: 'pointer', fontFamily: 'inherit' }}>
+                      style={{ alignSelf: 'flex-start', height: '28px', padding: '0 12px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '12px', color: '#1a6ef5', background: 'var(--card-bg)', cursor: 'pointer', fontFamily: 'inherit' }}>
                       + Add nameserver
                     </button>
                   )}
@@ -151,12 +151,12 @@ export default function NameserversManager({ domainName, paramName }: { domainNa
 
       {/* Current */}
       <div className="gsws-card">
-        <h2 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '12px' }}>Current nameservers</h2>
+        <h2 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '12px' }}>Current nameservers</h2>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
           {loading ? (
-            <p style={{ fontSize: '12px', color: '#9a9a9a' }}>Loading…</p>
+            <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Loading…</p>
           ) : nameservers.map((ns, i) => (
-            <div key={i} style={{ padding: '8px 12px', background: '#f7f7f7', borderRadius: '6px', fontFamily: 'ui-monospace, monospace', fontSize: '12px', color: '#0a0a0a' }}>
+            <div key={i} style={{ padding: '8px 12px', background: 'var(--card-bg-elevated)', borderRadius: '6px', fontFamily: 'ui-monospace, monospace', fontSize: '12px', color: 'var(--text-primary)' }}>
               NS{i + 1}: {ns}
             </div>
           ))}

@@ -17,13 +17,13 @@ export default async function DomainsPage() {
 
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
         <div>
-          <h1 style={{ fontSize: '20px', fontWeight: 600, color: '#0a0a0a' }}>Domains</h1>
-          <p style={{ fontSize: '13px', color: '#9a9a9a', marginTop: '3px' }}>
+          <h1 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text-primary)' }}>Domains</h1>
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '3px' }}>
             Add a domain before creating any hosting package or service.
           </p>
         </div>
         <div style={{ display: 'flex', gap: '10px' }}>
-          <Link href="/domains/transfer" style={{ display: 'inline-flex', alignItems: 'center', height: '38px', padding: '0 16px', border: '1px solid #d4d4d4', borderRadius: '8px', fontSize: '13px', color: '#0a0a0a', textDecoration: 'none', background: '#fff' }}>
+          <Link href="/domains/transfer" style={{ display: 'inline-flex', alignItems: 'center', height: '38px', padding: '0 16px', border: '1px solid var(--card-border-hover)', borderRadius: '8px', fontSize: '13px', color: 'var(--text-primary)', textDecoration: 'none', background: 'var(--card-bg)' }}>
             Transfer in
           </Link>
           <Link href="/domains/search"
@@ -58,9 +58,9 @@ export default async function DomainsPage() {
       )}
 
       {domains.length > 0 && (
-        <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', overflow: 'hidden' }}>
-          <div style={{ padding: '14px 20px', borderBottom: '1px solid #ebebeb', background: '#f7f7f7' }}>
-            <h2 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a' }}>
+        <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '10px', overflow: 'hidden' }}>
+          <div style={{ padding: '14px 20px', borderBottom: '1px solid var(--card-border)', background: 'var(--card-bg-elevated)' }}>
+            <h2 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>
               {domains.length} domain{domains.length !== 1 ? 's' : ''}
             </h2>
           </div>
@@ -78,7 +78,7 @@ export default async function DomainsPage() {
             <tbody>
               {domains.map((d: any) => (
                 <tr key={d.name}>
-                  <td style={{ fontWeight: 600, color: '#0a0a0a' }}>
+                  <td style={{ fontWeight: 600, color: 'var(--text-primary)' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#9a9a9a" strokeWidth="2">
                         <circle cx="12" cy="12" r="10"/>
@@ -88,7 +88,7 @@ export default async function DomainsPage() {
                       <span style={{ fontFamily: 'ui-monospace, monospace', fontSize: '13px' }}>{d.name}</span>
                     </div>
                   </td>
-                  <td style={{ fontSize: '12px', color: '#9a9a9a' }}>
+                  <td style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
                     {new Date(d.registered_at).toLocaleDateString('en-GB')}
                   </td>
                   <td>
@@ -109,7 +109,7 @@ export default async function DomainsPage() {
                   </td>
                   <td>
                     <Link href={`/domains/${d.name}`}
-                      style={{ padding: '0 12px', height: '26px', display: 'inline-flex', alignItems: 'center', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '12px', color: '#0a0a0a', textDecoration: 'none', background: '#fff' }}>
+                      style={{ padding: '0 12px', height: '26px', display: 'inline-flex', alignItems: 'center', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '12px', color: 'var(--text-primary)', textDecoration: 'none', background: 'var(--card-bg)' }}>
                       Manage
                     </Link>
                   </td>

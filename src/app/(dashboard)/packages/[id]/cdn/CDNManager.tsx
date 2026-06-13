@@ -200,16 +200,16 @@ export default function CDNManager({ packageId, domainName, cdnOptions, cdnStats
           { label: 'Features on', value: `${enabledCount}/${options.length}`, icon: '⚡' },
           { label: 'Blocked countries', value: String(blockedCountries.length), icon: '🚫' },
         ].map(s => (
-          <div key={s.label} style={{ padding: '12px 16px', borderRadius: '10px', background: '#fff', border: '1px solid #ebebeb' }}>
+          <div key={s.label} style={{ padding: '12px 16px', borderRadius: '10px', background: 'var(--card-bg)', border: '1px solid var(--card-border)' }}>
             <p style={{ fontSize: '18px', marginBottom: '4px' }}>{s.icon}</p>
-            <p style={{ fontSize: '18px', fontWeight: 700, color: '#0a0a0a', letterSpacing: '-0.5px' }}>{s.value}</p>
-            <p style={{ fontSize: '11px', color: '#9a9a9a', marginTop: '2px' }}>{s.label}</p>
+            <p style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.5px' }}>{s.value}</p>
+            <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '2px' }}>{s.label}</p>
           </div>
         ))}
       </div>
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: '2px', borderBottom: '1px solid #ebebeb', overflowX: 'auto' }}>
+      <div style={{ display: 'flex', gap: '2px', borderBottom: '1px solid var(--card-border)', overflowX: 'auto' }}>
         {[
           { key: 'caching', label: '💾 Edge caching' },
           { key: 'optimisation', label: `⚡ Web optimisation (${enabledCount} on)` },
@@ -230,17 +230,17 @@ export default function CDNManager({ packageId, domainName, cdnOptions, cdnStats
 
           {/* Purge cache */}
           <div className="gsws-card">
-            <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#0a0a0a', marginBottom: '6px' }}>🗑️ Purge cache</h3>
-            <p style={{ fontSize: '12px', color: '#9a9a9a', marginBottom: '14px' }}>Clear cached files and force edge servers to fetch fresh copies from your site.</p>
+            <h3 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '6px' }}>🗑️ Purge cache</h3>
+            <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '14px' }}>Clear cached files and force edge servers to fetch fresh copies from your site.</p>
             <div style={{ padding: '10px 14px', background: '#faeeda', borderRadius: '6px', fontSize: '12px', color: '#854f0b', marginBottom: '14px' }}>
               ⚠️ Purging cache may temporarily slow your website while it rebuilds.
             </div>
             <div style={{ display: 'flex', gap: '10px', alignItems: 'flex-end', marginBottom: '12px' }}>
               <div style={{ flex: 1 }}>
-                <label style={{ fontSize: '11px', color: '#9a9a9a', display: 'block', marginBottom: '4px' }}>Purge specific URL (optional)</label>
+                <label style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Purge specific URL (optional)</label>
                 <input value={purgeUrl} onChange={e => setPurgeUrl(e.target.value)}
                   placeholder={`https://${domainName}/path/to/file.css`}
-                  style={{ width: '100%', height: '34px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', fontFamily: 'ui-monospace, monospace', padding: '0 10px', boxSizing: 'border-box' }} />
+                  style={{ width: '100%', height: '34px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', fontFamily: 'ui-monospace, monospace', padding: '0 10px', boxSizing: 'border-box' }} />
               </div>
               <button onClick={handlePurgeUrl} disabled={purging || !purgeUrl}
                 style={{ height: '34px', padding: '0 16px', background: '#1a6ef5', color: '#fff', border: 'none', borderRadius: '6px', fontSize: '12px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', flexShrink: 0, opacity: !purgeUrl ? 0.5 : 1 }}>
@@ -255,8 +255,8 @@ export default function CDNManager({ packageId, domainName, cdnOptions, cdnStats
 
           {/* Custom cache settings */}
           <div className="gsws-card">
-            <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#0a0a0a', marginBottom: '6px' }}>⚙️ Custom cache settings</h3>
-            <p style={{ fontSize: '12px', color: '#9a9a9a', marginBottom: '16px' }}>Control how long different file types are cached at the edge.</p>
+            <h3 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '6px' }}>⚙️ Custom cache settings</h3>
+            <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '16px' }}>Control how long different file types are cached at the edge.</p>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '16px' }}>
               {[
                 { key: 'images', label: '🖼️ Image cache', desc: 'PNG, JPG, GIF, WebP etc.' },
@@ -264,10 +264,10 @@ export default function CDNManager({ packageId, domainName, cdnOptions, cdnStats
                 { key: 'javascript', label: '⚡ JavaScript cache', desc: 'JS files and scripts' },
               ].map(item => (
                 <div key={item.key}>
-                  <label style={{ fontSize: '12px', fontWeight: 600, color: '#0a0a0a', display: 'block', marginBottom: '2px' }}>{item.label}</label>
-                  <p style={{ fontSize: '11px', color: '#9a9a9a', marginBottom: '6px' }}>{item.desc}</p>
+                  <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-primary)', display: 'block', marginBottom: '2px' }}>{item.label}</label>
+                  <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '6px' }}>{item.desc}</p>
                   <select value={cache[item.key] || 'A86400'} onChange={e => setCache((c: any) => ({ ...c, [item.key]: e.target.value }))}
-                    style={{ width: '100%', height: '34px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', fontFamily: 'inherit', padding: '0 8px' }}>
+                    style={{ width: '100%', height: '34px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', fontFamily: 'inherit', padding: '0 8px' }}>
                     {CACHE_DURATIONS.map(d => <option key={d.value} value={d.value}>{d.label}</option>)}
                   </select>
                 </div>
@@ -293,7 +293,7 @@ export default function CDNManager({ packageId, domainName, cdnOptions, cdnStats
             const clsIcons: Record<string, string> = { html: '📄', css: '🎨', javascript: '⚡', images: '🖼️' }
             return (
               <div key={cls} className="gsws-card">
-                <h3 style={{ fontSize: '13px', fontWeight: 700, color: '#0a0a0a', marginBottom: '12px', textTransform: 'capitalize' }}>
+                <h3 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '12px', textTransform: 'capitalize' }}>
                   {clsIcons[cls]} {cls} optimisations
                 </h3>
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
@@ -304,13 +304,13 @@ export default function CDNManager({ packageId, domainName, cdnOptions, cdnStats
                       <div key={feature.CdnFeatureId} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 12px', background: isEnabled ? '#f0f9e8' : '#f7f7f7', border: `1px solid ${isEnabled ? '#c0dd97' : '#ebebeb'}`, borderRadius: '6px' }}>
                         <div style={{ flex: 1, marginRight: '12px' }}>
                           <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                            <span style={{ fontSize: '12px', fontWeight: 600, color: '#0a0a0a', fontFamily: 'ui-monospace, monospace' }}>{feature.Feature}</span>
+                            <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-primary)', fontFamily: 'ui-monospace, monospace' }}>{feature.Feature}</span>
                             <span style={{ padding: '1px 6px', borderRadius: '10px', fontSize: '10px', fontWeight: 500, background: rc.bg, color: rc.color }}>{feature.RiskLevel}</span>
                           </div>
                         </div>
                         <div onClick={() => handleToggleFeature(feature)}
                           style={{ width: '40px', height: '22px', borderRadius: '11px', background: isEnabled ? '#1a6ef5' : '#d4d4d4', position: 'relative', cursor: saving === feature.CdnFeatureId ? 'wait' : 'pointer', transition: 'background 0.2s', flexShrink: 0, opacity: saving === feature.CdnFeatureId ? 0.5 : 1 }}>
-                          <div style={{ position: 'absolute', top: '2px', left: isEnabled ? '20px' : '2px', width: '18px', height: '18px', borderRadius: '50%', background: '#fff', transition: 'left 0.2s', boxShadow: '0 1px 3px rgba(0,0,0,0.2)' }} />
+                          <div style={{ position: 'absolute', top: '2px', left: isEnabled ? '20px' : '2px', width: '18px', height: '18px', borderRadius: '50%', background: 'var(--card-bg)', transition: 'left 0.2s', boxShadow: '0 1px 3px rgba(0,0,0,0.2)' }} />
                         </div>
                       </div>
                     )
@@ -326,12 +326,12 @@ export default function CDNManager({ packageId, domainName, cdnOptions, cdnStats
       {tab === 'security' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <div className="gsws-card">
-            <h3 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '14px' }}>
+            <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '14px' }}>
               Active security headers ({cdnHeaders.length})
             </h3>
             {cdnHeaders.length === 0 ? (
-              <div style={{ padding: '24px', textAlign: 'center', border: '1px dashed #d4d4d4', borderRadius: '8px' }}>
-                <p style={{ fontSize: '13px', color: '#9a9a9a' }}>No security headers configured yet.</p>
+              <div style={{ padding: '24px', textAlign: 'center', border: '1px dashed var(--card-border-hover)', borderRadius: '8px' }}>
+                <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>No security headers configured yet.</p>
               </div>
             ) : (
               <table className="gsws-table">
@@ -341,7 +341,7 @@ export default function CDNManager({ packageId, domainName, cdnOptions, cdnStats
                     <tr key={i}>
                       <td style={{ fontFamily: 'ui-monospace, monospace', fontSize: '12px', fontWeight: 600 }}>{h.header || h.name}</td>
                       <td style={{ fontFamily: 'ui-monospace, monospace', fontSize: '11px', color: '#5a5a5a' }}>{h.value}</td>
-                      <td><button style={{ padding: '0 8px', height: '22px', border: '1px solid #f5c1c1', borderRadius: '4px', fontSize: '11px', color: '#a32d2d', background: '#fff', cursor: 'pointer', fontFamily: 'inherit' }}>Delete</button></td>
+                      <td><button style={{ padding: '0 8px', height: '22px', border: '1px solid #f5c1c1', borderRadius: '4px', fontSize: '11px', color: '#a32d2d', background: 'var(--card-bg)', cursor: 'pointer', fontFamily: 'inherit' }}>Delete</button></td>
                     </tr>
                   ))}
                 </tbody>
@@ -350,7 +350,7 @@ export default function CDNManager({ packageId, domainName, cdnOptions, cdnStats
           </div>
 
           <div className="gsws-card">
-            <h3 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '12px' }}>Recommended security headers</h3>
+            <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '12px' }}>Recommended security headers</h3>
             {[
               { header: 'X-Frame-Options', value: 'SAMEORIGIN', desc: 'Prevents clickjacking' },
               { header: 'X-Content-Type-Options', value: 'nosniff', desc: 'Prevents MIME sniffing' },
@@ -358,10 +358,10 @@ export default function CDNManager({ packageId, domainName, cdnOptions, cdnStats
               { header: 'Referrer-Policy', value: 'strict-origin-when-cross-origin', desc: 'Controls referrer data' },
               { header: 'Strict-Transport-Security', value: 'max-age=31536000; includeSubDomains', desc: 'Forces HTTPS' },
             ].map(r => (
-              <div key={r.header} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid #ebebeb', fontSize: '12px', gap: '8px' }}>
+              <div key={r.header} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid var(--card-border)', fontSize: '12px', gap: '8px' }}>
                 <div style={{ flex: 1 }}>
-                  <span style={{ fontFamily: 'ui-monospace, monospace', fontWeight: 600, color: '#0a0a0a' }}>{r.header}</span>
-                  <p style={{ fontSize: '11px', color: '#9a9a9a', marginTop: '1px' }}>{r.desc}</p>
+                  <span style={{ fontFamily: 'ui-monospace, monospace', fontWeight: 600, color: 'var(--text-primary)' }}>{r.header}</span>
+                  <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '1px' }}>{r.desc}</p>
                 </div>
                 <span style={{ fontFamily: 'ui-monospace, monospace', color: '#5a5a5a', fontSize: '11px', flexShrink: 0 }}>{r.value}</span>
                 <button onClick={async () => {
@@ -385,8 +385,8 @@ export default function CDNManager({ packageId, domainName, cdnOptions, cdnStats
 
           {/* Block by country */}
           <div className="gsws-card">
-            <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#0a0a0a', marginBottom: '6px' }}>🌍 Block by country</h3>
-            <p style={{ fontSize: '12px', color: '#9a9a9a', marginBottom: '14px' }}>Block or allow visitors based on their country using GeoIP data.</p>
+            <h3 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '6px' }}>🌍 Block by country</h3>
+            <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '14px' }}>Block or allow visitors based on their country using GeoIP data.</p>
 
             <div style={{ display: 'flex', gap: '16px', marginBottom: '14px' }}>
               {[
@@ -397,11 +397,11 @@ export default function CDNManager({ packageId, domainName, cdnOptions, cdnStats
                   style={{ flex: 1, padding: '10px 14px', borderRadius: '8px', cursor: 'pointer', border: `1.5px solid ${blockType === opt.value ? '#1a6ef5' : '#ebebeb'}`, background: blockType === opt.value ? '#e8f0fe' : '#fff' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                     <div style={{ width: '14px', height: '14px', borderRadius: '50%', border: `2px solid ${blockType === opt.value ? '#1a6ef5' : '#d4d4d4'}`, background: blockType === opt.value ? '#1a6ef5' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                      {blockType === opt.value && <div style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#fff' }} />}
+                      {blockType === opt.value && <div style={{ width: '5px', height: '5px', borderRadius: '50%', background: 'var(--card-bg)' }} />}
                     </div>
                     <div>
-                      <p style={{ fontSize: '12px', fontWeight: 600, color: '#0a0a0a' }}>{opt.label}</p>
-                      <p style={{ fontSize: '11px', color: '#9a9a9a' }}>{opt.desc}</p>
+                      <p style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-primary)' }}>{opt.label}</p>
+                      <p style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{opt.desc}</p>
                     </div>
                   </div>
                 </div>
@@ -410,7 +410,7 @@ export default function CDNManager({ packageId, domainName, cdnOptions, cdnStats
 
             <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
               <select value={newCountry} onChange={e => setNewCountry(e.target.value)}
-                style={{ flex: 1, height: '34px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', fontFamily: 'inherit', padding: '0 8px' }}>
+                style={{ flex: 1, height: '34px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', fontFamily: 'inherit', padding: '0 8px' }}>
                 <option value="">Select country…</option>
                 {Object.entries(COUNTRIES).filter(([code]) => !blockedCountries.includes(code)).map(([code, name]) => (
                   <option key={code} value={code}>{name} ({code})</option>
@@ -434,7 +434,7 @@ export default function CDNManager({ packageId, domainName, cdnOptions, cdnStats
                 ))}
               </div>
             ) : (
-              <p style={{ fontSize: '12px', color: '#9a9a9a', marginBottom: '12px' }}>No countries selected.</p>
+              <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '12px' }}>No countries selected.</p>
             )}
 
             <button onClick={handleSaveCountries} disabled={savingBlock}
@@ -445,15 +445,15 @@ export default function CDNManager({ packageId, domainName, cdnOptions, cdnStats
 
           {/* Block by IP */}
           <div className="gsws-card">
-            <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#0a0a0a', marginBottom: '6px' }}>🔒 Block by IP address</h3>
-            <p style={{ fontSize: '12px', color: '#9a9a9a', marginBottom: '14px' }}>
+            <h3 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '6px' }}>🔒 Block by IP address</h3>
+            <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '14px' }}>
               Block IPv4, IPv6 addresses or CIDR ranges (e.g. 192.168.0.0/24).
             </p>
 
             <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
               <input value={newIp} onChange={e => setNewIp(e.target.value)}
                 placeholder="e.g. 192.168.0.1 or 192.168.0.0/24"
-                style={{ flex: 1, height: '34px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', fontFamily: 'ui-monospace, monospace', padding: '0 10px' }} />
+                style={{ flex: 1, height: '34px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', fontFamily: 'ui-monospace, monospace', padding: '0 10px' }} />
               <button onClick={() => { if (newIp) { setBlockedIps(ips => [...ips, newIp]); setNewIp('') } }}
                 disabled={!newIp}
                 style={{ height: '34px', padding: '0 16px', background: '#a32d2d', color: '#fff', border: 'none', borderRadius: '6px', fontSize: '12px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', opacity: !newIp ? 0.5 : 1 }}>
@@ -462,7 +462,7 @@ export default function CDNManager({ packageId, domainName, cdnOptions, cdnStats
             </div>
 
             {blockedIps.length === 0 ? (
-              <p style={{ fontSize: '12px', color: '#9a9a9a', marginBottom: '12px' }}>No IP addresses blocked.</p>
+              <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '12px' }}>No IP addresses blocked.</p>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', marginBottom: '12px' }}>
                 {blockedIps.map((ip: string, i: number) => (
@@ -488,7 +488,7 @@ export default function CDNManager({ packageId, domainName, cdnOptions, cdnStats
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           {Object.keys(last24Hits).length > 0 ? (
             <div className="gsws-card">
-              <h3 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '14px' }}>CDN hits — last 24 hours</h3>
+              <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '14px' }}>CDN hits — last 24 hours</h3>
               <div style={{ display: 'flex', alignItems: 'flex-end', gap: '3px', height: '80px', marginBottom: '6px' }}>
                 {Object.entries(last24Hits).map(([time, hits]: any) => {
                   const maxHits = Math.max(...Object.values(last24Hits) as number[])
@@ -501,7 +501,7 @@ export default function CDNManager({ packageId, domainName, cdnOptions, cdnStats
                   )
                 })}
               </div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: '#9a9a9a' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '10px', color: 'var(--text-secondary)' }}>
                 <span>24h ago</span>
                 <span style={{ fontWeight: 600, color: '#1a6ef5' }}>{totalHits24h.toLocaleString()} total hits</span>
                 <span>now</span>
@@ -510,14 +510,14 @@ export default function CDNManager({ packageId, domainName, cdnOptions, cdnStats
           ) : (
             <div className="gsws-card" style={{ textAlign: 'center', padding: '40px' }}>
               <p style={{ fontSize: '32px', marginBottom: '10px' }}>📊</p>
-              <p style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a' }}>No CDN traffic yet</p>
-              <p style={{ fontSize: '13px', color: '#9a9a9a', marginTop: '4px' }}>CDN statistics will appear once traffic flows through the network.</p>
+              <p style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)' }}>No CDN traffic yet</p>
+              <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '4px' }}>CDN statistics will appear once traffic flows through the network.</p>
             </div>
           )}
 
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
             <div className="gsws-card">
-              <h3 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '12px' }}>24h summary</h3>
+              <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '12px' }}>24h summary</h3>
               {[
                 ['Total hits', totalHits24h.toLocaleString()],
                 ['Bandwidth served', `${(totalBW24h / 1024 / 1024).toFixed(2)} MB`],
@@ -525,23 +525,23 @@ export default function CDNManager({ packageId, domainName, cdnOptions, cdnStats
                 ['Countries blocked', String(blockedCountries.length)],
                 ['IPs blocked', String(blockedIps.length)],
               ].map(([label, value]) => (
-                <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid #ebebeb', fontSize: '12px' }}>
-                  <span style={{ color: '#9a9a9a' }}>{label}</span>
-                  <span style={{ fontWeight: 600, color: '#0a0a0a' }}>{value}</span>
+                <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--card-border)', fontSize: '12px' }}>
+                  <span style={{ color: 'var(--text-secondary)' }}>{label}</span>
+                  <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{value}</span>
                 </div>
               ))}
             </div>
 
             <div className="gsws-card">
-              <h3 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '12px' }}>Cache settings</h3>
+              <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '12px' }}>Cache settings</h3>
               {[
                 ['Images', CACHE_DURATIONS.find(d => d.value === cache.images)?.label || '1 day'],
                 ['CSS', CACHE_DURATIONS.find(d => d.value === cache.css)?.label || '1 day'],
                 ['JavaScript', CACHE_DURATIONS.find(d => d.value === cache.javascript)?.label || '1 day'],
               ].map(([label, value]) => (
-                <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid #ebebeb', fontSize: '12px' }}>
-                  <span style={{ color: '#9a9a9a' }}>{label}</span>
-                  <span style={{ fontWeight: 600, color: '#0a0a0a' }}>{value}</span>
+                <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--card-border)', fontSize: '12px' }}>
+                  <span style={{ color: 'var(--text-secondary)' }}>{label}</span>
+                  <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{value}</span>
                 </div>
               ))}
             </div>

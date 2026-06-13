@@ -52,8 +52,8 @@ export default function MssqlManager({ packageId, initialDatabases, creditBalanc
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
         <div>
-          <h2 style={{ fontSize: '16px', fontWeight: 600, color: '#0a0a0a' }}>MSSQL database</h2>
-          <p style={{ fontSize: '12px', color: '#9a9a9a', marginTop: '3px' }}>
+          <h2 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text-primary)' }}>MSSQL database</h2>
+          <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '3px' }}>
             {hasSlot ? `${databases.length} database assigned` : 'No MSSQL database provisioned'} · Windows Hosting
           </p>
         </div>
@@ -88,20 +88,20 @@ export default function MssqlManager({ packageId, initialDatabases, creditBalanc
 
       {/* Table or empty state */}
       {hasSlot ? (
-        <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', overflow: 'hidden' }}>
+        <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '10px', overflow: 'hidden' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
             <thead>
-              <tr style={{ borderBottom: '1px solid #ebebeb', background: '#f7f7f7' }}>
+              <tr style={{ borderBottom: '1px solid var(--card-border)', background: 'var(--card-bg-elevated)' }}>
                 {['MSSQL ID', 'Package', 'Status'].map(h => (
-                  <th key={h} style={{ padding: '10px 16px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: '#9a9a9a', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{h}</th>
+                  <th key={h} style={{ padding: '10px 16px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {databases.map((m: any) => (
                 <tr key={m.id} style={{ borderBottom: '1px solid #f0f0f0' }}>
-                  <td style={{ padding: '12px 16px', fontWeight: 600, color: '#0a0a0a', fontFamily: 'monospace' }}>{m.id}</td>
-                  <td style={{ padding: '12px 16px', color: '#666' }}>{m.packageName || '—'}</td>
+                  <td style={{ padding: '12px 16px', fontWeight: 600, color: 'var(--text-primary)', fontFamily: 'monospace' }}>{m.id}</td>
+                  <td style={{ padding: '12px 16px', color: 'var(--text-secondary)' }}>{m.packageName || '—'}</td>
                   <td style={{ padding: '12px 16px' }}>
                     <span style={{ padding: '2px 8px', borderRadius: '20px', fontSize: '11px', fontWeight: 500, background: '#eaf3de', color: '#3b6d11' }}>Active</span>
                   </td>
@@ -111,19 +111,19 @@ export default function MssqlManager({ packageId, initialDatabases, creditBalanc
           </table>
         </div>
       ) : (
-        <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', padding: '48px', textAlign: 'center' }}>
+        <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '10px', padding: '48px', textAlign: 'center' }}>
           <div style={{ width: '44px', height: '44px', background: '#f0f0f0', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px' }}>
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9a9a9a" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
               <ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/>
             </svg>
           </div>
-          <p style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a', marginBottom: '6px' }}>No MSSQL database</p>
-          <p style={{ fontSize: '13px', color: '#9a9a9a', marginBottom: '4px' }}>Windows hosting packages require a separate MSSQL database add-on.</p>
-          <p style={{ fontSize: '12px', color: '#9a9a9a' }}>£{PRICE.toFixed(2)}/year (inc. VAT) · Your balance: £{balance.toFixed(2)}</p>
+          <p style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '6px' }}>No MSSQL database</p>
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '4px' }}>Windows hosting packages require a separate MSSQL database add-on.</p>
+          <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>£{PRICE.toFixed(2)}/year (inc. VAT) · Your balance: £{balance.toFixed(2)}</p>
         </div>
       )}
 
-      <div style={{ padding: '12px 16px', background: '#f7f7f7', borderRadius: '8px', fontSize: '12px', color: '#666' }}>
+      <div style={{ padding: '12px 16px', background: 'var(--card-bg-elevated)', borderRadius: '8px', fontSize: '12px', color: 'var(--text-secondary)' }}>
         <strong>Note:</strong> MSSQL databases are billed annually at £{PRICE.toFixed(2)} inc. VAT. MySQL is not available on Windows hosting — use MSSQL for all database needs on this package.
       </div>
 

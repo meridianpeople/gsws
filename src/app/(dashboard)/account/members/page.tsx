@@ -58,11 +58,11 @@ export default function MembersPage() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', maxWidth: '800px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div>
-          <div style={{ fontSize: '12px', color: '#9a9a9a', marginBottom: '4px' }}>
+          <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>
             <Link href="/account/profile" style={{ color: '#1a6ef5' }}>Account</Link> › Team members
           </div>
-          <h1 style={{ fontSize: '20px', fontWeight: 600, color: '#0a0a0a' }}>Team members</h1>
-          <p style={{ fontSize: '13px', color: '#9a9a9a', marginTop: '3px' }}>Invite team members to access your hosting account.</p>
+          <h1 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text-primary)' }}>Team members</h1>
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '3px' }}>Invite team members to access your hosting account.</p>
         </div>
         <button onClick={() => setShowInvite(s => !s)}
           style={{ height: '36px', padding: '0 16px', background: '#1a6ef5', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
@@ -76,18 +76,18 @@ export default function MembersPage() {
       {/* Invite form */}
       {showInvite && (
         <div className="gsws-card" style={{ border: '1.5px solid #1a6ef5' }}>
-          <h3 style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a', marginBottom: '14px' }}>Invite a team member</h3>
+          <h3 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '14px' }}>Invite a team member</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '16px' }}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
               <div>
                 <label style={{ fontSize: '11px', fontWeight: 600, color: '#5a5a5a', display: 'block', marginBottom: '4px' }}>Email address *</label>
                 <input value={inviteEmail} onChange={e => setInviteEmail(e.target.value)} type="email" placeholder="colleague@example.com"
-                  style={{ width: '100%', height: '34px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', padding: '0 10px', fontFamily: 'inherit', boxSizing: 'border-box' }} />
+                  style={{ width: '100%', height: '34px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', padding: '0 10px', fontFamily: 'inherit', boxSizing: 'border-box' }} />
               </div>
               <div>
                 <label style={{ fontSize: '11px', fontWeight: 600, color: '#5a5a5a', display: 'block', marginBottom: '4px' }}>Full name</label>
                 <input value={inviteName} onChange={e => setInviteName(e.target.value)} placeholder="John Smith"
-                  style={{ width: '100%', height: '34px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', padding: '0 10px', fontFamily: 'inherit', boxSizing: 'border-box' }} />
+                  style={{ width: '100%', height: '34px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', padding: '0 10px', fontFamily: 'inherit', boxSizing: 'border-box' }} />
               </div>
             </div>
             <div>
@@ -96,8 +96,8 @@ export default function MembersPage() {
                 {Object.entries(ROLE_INFO).map(([role, info]) => (
                   <div key={role} onClick={() => setInviteRole(role)}
                     style={{ padding: '12px', borderRadius: '8px', cursor: 'pointer', border: `2px solid ${inviteRole === role ? info.color : '#ebebeb'}`, background: inviteRole === role ? info.bg : '#fff' }}>
-                    <p style={{ fontSize: '12px', fontWeight: 700, color: '#0a0a0a', marginBottom: '4px' }}>{info.label}</p>
-                    <p style={{ fontSize: '11px', color: '#9a9a9a', lineHeight: 1.4 }}>{info.desc}</p>
+                    <p style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '4px' }}>{info.label}</p>
+                    <p style={{ fontSize: '11px', color: 'var(--text-secondary)', lineHeight: 1.4 }}>{info.desc}</p>
                   </div>
                 ))}
               </div>
@@ -109,7 +109,7 @@ export default function MembersPage() {
               {inviting ? 'Sending…' : 'Send invitation'}
             </button>
             <button onClick={() => setShowInvite(false)}
-              style={{ height: '34px', padding: '0 14px', background: '#fff', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', cursor: 'pointer', fontFamily: 'inherit' }}>
+              style={{ height: '34px', padding: '0 14px', background: 'var(--card-bg)', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', cursor: 'pointer', fontFamily: 'inherit' }}>
               Cancel
             </button>
           </div>
@@ -128,12 +128,12 @@ export default function MembersPage() {
 
       {/* Members list */}
       {loading ? (
-        <div className="gsws-card" style={{ textAlign: 'center', padding: '40px', color: '#9a9a9a', fontSize: '13px' }}>Loading…</div>
+        <div className="gsws-card" style={{ textAlign: 'center', padding: '40px', color: 'var(--text-secondary)', fontSize: '13px' }}>Loading…</div>
       ) : members.length === 0 ? (
         <div className="gsws-card" style={{ textAlign: 'center', padding: '48px' }}>
           <p style={{ fontSize: '32px', marginBottom: '10px' }}>👥</p>
-          <p style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a' }}>No team members yet</p>
-          <p style={{ fontSize: '13px', color: '#9a9a9a', marginTop: '4px' }}>Invite colleagues to collaborate on your account.</p>
+          <p style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)' }}>No team members yet</p>
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '4px' }}>Invite colleagues to collaborate on your account.</p>
         </div>
       ) : (
         <div className="gsws-card" style={{ padding: 0, overflow: 'hidden' }}>
@@ -147,12 +147,12 @@ export default function MembersPage() {
                 return (
                   <tr key={m.id}>
                     <td>
-                      <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a' }}>{m.name || m.user_name || 'Invited user'}</p>
-                      <p style={{ fontSize: '11px', color: '#9a9a9a' }}>{m.email}</p>
+                      <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>{m.name || m.user_name || 'Invited user'}</p>
+                      <p style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{m.email}</p>
                     </td>
                     <td>
                       <select value={m.role} onChange={e => handleRoleChange(m.id, e.target.value)}
-                        style={{ height: '28px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '12px', padding: '0 6px', fontFamily: 'inherit', background: info.bg, color: info.color, fontWeight: 600 }}>
+                        style={{ height: '28px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '12px', padding: '0 6px', fontFamily: 'inherit', background: info.bg, color: info.color, fontWeight: 600 }}>
                         {Object.entries(ROLE_INFO).map(([r, ri]) => <option key={r} value={r}>{ri.label}</option>)}
                       </select>
                     </td>
@@ -161,12 +161,12 @@ export default function MembersPage() {
                         {m.status === 'pending' ? '⏳ Pending' : m.status === 'active' ? '✓ Active' : '✗ Suspended'}
                       </span>
                     </td>
-                    <td style={{ fontSize: '12px', color: '#9a9a9a' }}>
+                    <td style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
                       {m.accepted_at ? new Date(m.accepted_at).toLocaleDateString('en-GB') : `Invited ${new Date(m.invited_at).toLocaleDateString('en-GB')}`}
                     </td>
                     <td>
                       <button onClick={() => handleRemove(m.id, m.email)}
-                        style={{ padding: '0 10px', height: '26px', border: '1px solid #f5c1c1', borderRadius: '4px', fontSize: '11px', color: '#a32d2d', background: '#fff', cursor: 'pointer', fontFamily: 'inherit' }}>
+                        style={{ padding: '0 10px', height: '26px', border: '1px solid #f5c1c1', borderRadius: '4px', fontSize: '11px', color: '#a32d2d', background: 'var(--card-bg)', cursor: 'pointer', fontFamily: 'inherit' }}>
                         Remove
                       </button>
                     </td>
@@ -178,7 +178,7 @@ export default function MembersPage() {
         </div>
       )}
 
-      <div style={{ padding: '12px 16px', background: '#f7f7f7', borderRadius: '8px', fontSize: '12px', color: '#9a9a9a' }}>
+      <div style={{ padding: '12px 16px', background: 'var(--card-bg-elevated)', borderRadius: '8px', fontSize: '12px', color: 'var(--text-secondary)' }}>
         ℹ️ Invited members will receive an email with a link to join your account. Members with Admin role can manage packages and invite others. Billing role can view statements and top up credit.
       </div>
     </div>

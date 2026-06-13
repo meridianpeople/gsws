@@ -60,7 +60,7 @@ export default function ManagedPage() {
     } catch { setError('An error occurred') } finally { setCancelling(false) }
   }
 
-  if (loading) return <div style={{ padding: '40px', color: '#666' }}>Loading...</div>
+  if (loading) return <div style={{ padding: '40px', color: 'var(--text-secondary)' }}>Loading...</div>
 
   const features = [
     ['✅', 'Replaces your £6/mo standard billing'],
@@ -76,17 +76,17 @@ export default function ManagedPage() {
     <div style={{ maxWidth: '640px' }}>
       <div style={{ marginBottom: '28px' }}>
         <h1 style={{ fontSize: '20px', fontWeight: 700, color: '#111', margin: 0 }}>Managed Hosting</h1>
-        <p style={{ fontSize: '13px', color: '#666', marginTop: '4px' }}>Let our team handle everything for {packageName}</p>
+        <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '4px' }}>Let our team handle everything for {packageName}</p>
       </div>
       {error && <div style={{ padding: '12px 16px', borderRadius: '8px', background: '#fef2f2', border: '1px solid #fca5a5', color: '#991b1b', fontSize: '13px', marginBottom: '16px' }}>{error}</div>}
       {success && <div style={{ padding: '12px 16px', borderRadius: '8px', background: '#f0fdf4', border: '1px solid #86efac', color: '#166534', fontSize: '13px', marginBottom: '16px' }}>{success}</div>}
       {!managed ? (
-        <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '28px' }}>
+        <div style={{ background: 'var(--card-bg)', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '28px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px' }}>
             <div style={{ width: '44px', height: '44px', borderRadius: '10px', background: '#0a1628', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px' }}>🛡️</div>
             <div>
               <div style={{ fontSize: '18px', fontWeight: 700, color: '#111' }}>Managed Hosting</div>
-              <div style={{ fontSize: '13px', color: '#666' }}>£420/yr ex VAT · £504/yr inc VAT</div>
+              <div style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>£420/yr ex VAT · £504/yr inc VAT</div>
             </div>
           </div>
           <div style={{ display: 'grid', gap: '10px', marginBottom: '24px' }}>
@@ -99,7 +99,7 @@ export default function ManagedPage() {
           <div style={{ padding: '16px', background: '#f8fafc', borderRadius: '8px', marginBottom: '20px', border: '1px solid #e5e7eb' }}>
             {[['Managed Hosting (annual)', '£420.00'], ['VAT (20%)', '£84.00']].map(([label, val]) => (
               <div key={label} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', marginBottom: '6px' }}>
-                <span style={{ color: '#666' }}>{label}</span><span>{val}</span>
+                <span style={{ color: 'var(--text-secondary)' }}>{label}</span><span>{val}</span>
               </div>
             ))}
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', fontWeight: 700, borderTop: '1px solid #e5e7eb', paddingTop: '8px', marginTop: '4px' }}>
@@ -112,12 +112,12 @@ export default function ManagedPage() {
           </button>
         </div>
       ) : (
-        <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '28px' }}>
+        <div style={{ background: 'var(--card-bg)', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '28px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
             <div style={{ width: '44px', height: '44px', borderRadius: '10px', background: '#f0fdf4', border: '1px solid #86efac', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px' }}>🛡️</div>
             <div>
               <div style={{ fontSize: '16px', fontWeight: 700, color: '#111' }}>Managed Hosting {managed.status === 'cancelling' ? '(Cancelling)' : 'Active'}</div>
-              <div style={{ fontSize: '13px', color: '#666' }}>Renews {managed.renews_at} · £{managed.annual_price_inc_vat?.toFixed(2)} inc VAT</div>
+              <div style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>Renews {managed.renews_at} · £{managed.annual_price_inc_vat?.toFixed(2)} inc VAT</div>
             </div>
             <span style={{ marginLeft: 'auto', padding: '4px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 700, background: managed.status === 'cancelling' ? '#fef3c7' : '#dcfce7', color: managed.status === 'cancelling' ? '#92400e' : '#166534' }}>
               {managed.status === 'cancelling' ? 'Cancelling' : 'Active'}

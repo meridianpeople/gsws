@@ -64,20 +64,20 @@ export default function SecurityPage() {
     finally { setSaving(false) }
   }
 
-  if (loading) return <div style={{ color: '#9a9a9a', fontSize: '13px' }}>Loading...</div>
+  if (loading) return <div style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>Loading...</div>
 
   return (
     <div style={{ maxWidth: '560px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
       <div>
-        <h1 style={{ fontSize: '20px', fontWeight: 600, color: '#0a0a0a' }}>Security</h1>
-        <p style={{ fontSize: '13px', color: '#9a9a9a', marginTop: '3px' }}>Manage your account security settings</p>
+        <h1 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text-primary)' }}>Security</h1>
+        <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '3px' }}>Manage your account security settings</p>
       </div>
 
       {error && <div style={{ padding: '12px 16px', background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: '8px', fontSize: '13px', color: '#991b1b' }}>{error}</div>}
       {success && <div style={{ padding: '12px 16px', background: '#f0fdf4', border: '1px solid #86efac', borderRadius: '8px', fontSize: '13px', color: '#166534' }}>{success}</div>}
 
       {/* Spend PIN card */}
-      <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '12px', padding: '24px' }}>
+      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '12px', padding: '24px' }}>
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '16px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <div style={{ width: '36px', height: '36px', background: pinEnabled ? '#eaf3de' : '#f3f4f6', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -86,8 +86,8 @@ export default function SecurityPage() {
               </svg>
             </div>
             <div>
-              <p style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a' }}>Spend PIN</p>
-              <p style={{ fontSize: '12px', color: '#9a9a9a', marginTop: '2px' }}>
+              <p style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)' }}>Spend PIN</p>
+              <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>
                 {pinEnabled ? `Required for purchases above £${threshold.toFixed(2)}` : 'Not enabled'}
               </p>
             </div>
@@ -123,36 +123,36 @@ export default function SecurityPage() {
 
         {/* Set PIN form */}
         {showSetPin && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', borderTop: '1px solid #ebebeb', paddingTop: '16px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', borderTop: '1px solid var(--card-border)', paddingTop: '16px' }}>
             {pinEnabled && (
               <div>
                 <label style={{ fontSize: '12px', fontWeight: 500, color: '#5a5a5a', display: 'block', marginBottom: '4px' }}>Current PIN</label>
                 <input type="password" inputMode="numeric" maxLength={6} value={currentPin} onChange={e => setCurrentPin(e.target.value.replace(/\D/g, ''))}
                   placeholder="••••"
-                  style={{ width: '100%', height: '38px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '16px', padding: '0 12px', letterSpacing: '4px', fontFamily: 'monospace', boxSizing: 'border-box' }} />
+                  style={{ width: '100%', height: '38px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '16px', padding: '0 12px', letterSpacing: '4px', fontFamily: 'monospace', boxSizing: 'border-box' }} />
               </div>
             )}
             <div>
               <label style={{ fontSize: '12px', fontWeight: 500, color: '#5a5a5a', display: 'block', marginBottom: '4px' }}>New PIN (4-6 digits)</label>
               <input type="password" inputMode="numeric" maxLength={6} value={newPin} onChange={e => setNewPin(e.target.value.replace(/\D/g, ''))}
                 placeholder="••••"
-                style={{ width: '100%', height: '38px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '16px', padding: '0 12px', letterSpacing: '4px', fontFamily: 'monospace', boxSizing: 'border-box' }} />
+                style={{ width: '100%', height: '38px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '16px', padding: '0 12px', letterSpacing: '4px', fontFamily: 'monospace', boxSizing: 'border-box' }} />
             </div>
             <div>
               <label style={{ fontSize: '12px', fontWeight: 500, color: '#5a5a5a', display: 'block', marginBottom: '4px' }}>Confirm new PIN</label>
               <input type="password" inputMode="numeric" maxLength={6} value={confirmPin} onChange={e => setConfirmPin(e.target.value.replace(/\D/g, ''))}
                 placeholder="••••"
-                style={{ width: '100%', height: '38px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '16px', padding: '0 12px', letterSpacing: '4px', fontFamily: 'monospace', boxSizing: 'border-box' }} />
+                style={{ width: '100%', height: '38px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '16px', padding: '0 12px', letterSpacing: '4px', fontFamily: 'monospace', boxSizing: 'border-box' }} />
             </div>
             <div>
               <label style={{ fontSize: '12px', fontWeight: 500, color: '#5a5a5a', display: 'block', marginBottom: '4px' }}>Spend threshold (£)</label>
               <input type="number" min="1" step="1" value={threshold} onChange={e => setThreshold(Number(e.target.value))}
-                style={{ width: '100%', height: '38px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '14px', padding: '0 12px', boxSizing: 'border-box' }} />
-              <p style={{ fontSize: '11px', color: '#9a9a9a', marginTop: '4px' }}>PIN will be required for purchases above this amount</p>
+                style={{ width: '100%', height: '38px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '14px', padding: '0 12px', boxSizing: 'border-box' }} />
+              <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '4px' }}>PIN will be required for purchases above this amount</p>
             </div>
             <div style={{ display: 'flex', gap: '8px' }}>
               <button onClick={() => { setShowSetPin(false); setNewPin(''); setConfirmPin(''); setCurrentPin(''); setError('') }}
-                style={{ flex: 1, height: '36px', background: '#f7f7f7', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', fontWeight: 500, cursor: 'pointer', color: '#5a5a5a' }}>
+                style={{ flex: 1, height: '36px', background: 'var(--card-bg-elevated)', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', fontWeight: 500, cursor: 'pointer', color: '#5a5a5a' }}>
                 Cancel
               </button>
               <button onClick={handleSetPin} disabled={saving}
@@ -165,16 +165,16 @@ export default function SecurityPage() {
 
         {/* Remove PIN form */}
         {showRemovePin && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', borderTop: '1px solid #ebebeb', paddingTop: '16px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', borderTop: '1px solid var(--card-border)', paddingTop: '16px' }}>
             <div>
               <label style={{ fontSize: '12px', fontWeight: 500, color: '#5a5a5a', display: 'block', marginBottom: '4px' }}>Enter current PIN to remove</label>
               <input type="password" inputMode="numeric" maxLength={6} value={currentPin} onChange={e => setCurrentPin(e.target.value.replace(/\D/g, ''))}
                 placeholder="••••"
-                style={{ width: '100%', height: '38px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '16px', padding: '0 12px', letterSpacing: '4px', fontFamily: 'monospace', boxSizing: 'border-box' }} />
+                style={{ width: '100%', height: '38px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '16px', padding: '0 12px', letterSpacing: '4px', fontFamily: 'monospace', boxSizing: 'border-box' }} />
             </div>
             <div style={{ display: 'flex', gap: '8px' }}>
               <button onClick={() => { setShowRemovePin(false); setCurrentPin(''); setError('') }}
-                style={{ flex: 1, height: '36px', background: '#f7f7f7', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', cursor: 'pointer', color: '#5a5a5a' }}>
+                style={{ flex: 1, height: '36px', background: 'var(--card-bg-elevated)', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', cursor: 'pointer', color: '#5a5a5a' }}>
                 Cancel
               </button>
               <button onClick={handleRemovePin} disabled={saving}

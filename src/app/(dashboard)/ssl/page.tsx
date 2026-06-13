@@ -11,18 +11,18 @@ export default async function SslPage() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       <div>
-        <h1 style={{ fontSize: '20px', fontWeight: 600, color: '#0a0a0a' }}>Ssl</h1>
-        <p style={{ fontSize: '12px', color: '#9a9a9a', marginTop: '3px' }}>Manage ssl for your hosting packages</p>
+        <h1 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text-primary)' }}>Ssl</h1>
+        <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '3px' }}>Manage ssl for your hosting packages</p>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
         {packages.map((pkg: any) => (
           <Link key={pkg.id} href={`/packages/${pkg.twentyi_package_id}/ssl`}
-            style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', textDecoration: 'none' }}>
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '14px 20px', background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '10px', textDecoration: 'none' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <span style={{ fontSize: '16px' }}>🔒
 🗄️
 🛡️</span>
-              <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', fontFamily: 'ui-monospace, monospace' }}>{pkg.domain_name}</p>
+              <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', fontFamily: 'ui-monospace, monospace' }}>{pkg.domain_name}</p>
             </div>
             <span style={{ fontSize: '12px', color: '#1a6ef5', fontWeight: 500 }}>Manage ssl →</span>
           </Link>
@@ -32,7 +32,7 @@ export default async function SslPage() {
             <p style={{ fontSize: '32px', marginBottom: '12px' }}>🔒
 🗄️
 🛡️</p>
-            <p style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a' }}>No hosting packages</p>
+            <p style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)' }}>No hosting packages</p>
           </div>
         )}
       </div>

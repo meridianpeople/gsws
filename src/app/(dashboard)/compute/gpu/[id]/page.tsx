@@ -82,8 +82,8 @@ export default function GPUDetailPage() {
     setActionLoading('')
   }
 
-  if (loading) return <div style={{ padding: '48px', textAlign: 'center', color: '#9a9a9a' }}>Loading...</div>
-  if (!order) return <div style={{ padding: '48px', textAlign: 'center', color: '#9a9a9a' }}>Instance not found</div>
+  if (loading) return <div style={{ padding: '48px', textAlign: 'center', color: 'var(--text-secondary)' }}>Loading...</div>
+  if (!order) return <div style={{ padding: '48px', textAlign: 'center', color: 'var(--text-secondary)' }}>Instance not found</div>
 
   const isActive = order.status === 'active'
   const gpuName = instance?.gpu_name || order.tier
@@ -121,9 +121,9 @@ export default function GPUDetailPage() {
 
       {/* Breadcrumb */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-        <Link href="/compute/gpu" style={{ fontSize: '13px', color: '#9a9a9a', textDecoration: 'none' }}>GPU Compute</Link>
-        <span style={{ color: '#9a9a9a' }}>›</span>
-        <span style={{ fontSize: '13px', color: '#0a0a0a' }}>#{order.id} · {order.tier}</span>
+        <Link href="/compute/gpu" style={{ fontSize: '13px', color: 'var(--text-secondary)', textDecoration: 'none' }}>GPU Compute</Link>
+        <span style={{ color: 'var(--text-secondary)' }}>›</span>
+        <span style={{ fontSize: '13px', color: 'var(--text-primary)' }}>#{order.id} · {order.tier}</span>
       </div>
 
       {/* Dark hero */}
@@ -146,12 +146,12 @@ export default function GPUDetailPage() {
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <h1 style={{ fontSize: '18px', fontWeight: 700, margin: 0, letterSpacing: '-0.02em' }}>{gpuName}</h1>
                 <button onClick={() => { setNewName(instance?.label || gpuName); setRenaming(true) }}
-                  style={{ background: 'none', border: '1px solid #333', borderRadius: '5px', padding: '2px 8px', color: '#9a9a9a', fontSize: '10px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  style={{ background: 'none', border: '1px solid #333', borderRadius: '5px', padding: '2px 8px', color: 'var(--text-secondary)', fontSize: '10px', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '4px' }}>
                   <IcoPencil /> Rename
                 </button>
               </div>
             )}
-            <p style={{ fontSize: '11px', color: '#9a9a9a', marginTop: '3px', fontFamily: "'DM Mono', monospace" }}>
+            <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '3px', fontFamily: "'DM Mono', monospace" }}>
               Instance #{order.provider_instance_id} · Port {order.ssh_port}
             </p>
           </div>
@@ -176,29 +176,29 @@ export default function GPUDetailPage() {
       {/* Stats */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
         {statItems.map(({ label, value }) => (
-          <div key={label} style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', padding: '14px 16px' }}>
-            <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#9a9a9a', marginBottom: '6px' }}>{label}</p>
-            <p style={{ fontSize: '16px', fontWeight: 700, color: '#0a0a0a', fontFamily: "'DM Mono', monospace" }}>{value}</p>
+          <div key={label} style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '10px', padding: '14px 16px' }}>
+            <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-secondary)', marginBottom: '6px' }}>{label}</p>
+            <p style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)', fontFamily: "'DM Mono', monospace" }}>{value}</p>
           </div>
         ))}
       </div>
 
       {/* Billing */}
-      <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', padding: '18px 20px' }}>
-        <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#9a9a9a', marginBottom: '14px' }}>Billing</p>
+      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '10px', padding: '18px 20px' }}>
+        <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-secondary)', marginBottom: '14px' }}>Billing</p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '16px' }}>
           {billingItems.map(({ label, value }) => (
             <div key={label}>
-              <p style={{ fontSize: '10px', color: '#9a9a9a', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 600 }}>{label}</p>
-              <p style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a' }}>{value}</p>
+              <p style={{ fontSize: '10px', color: 'var(--text-secondary)', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.06em', fontWeight: 600 }}>{label}</p>
+              <p style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)' }}>{value}</p>
             </div>
           ))}
         </div>
       </div>
 
       {/* Actions */}
-      <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', padding: '18px 20px' }}>
-        <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#9a9a9a', marginBottom: '14px' }}>Actions</p>
+      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '10px', padding: '18px 20px' }}>
+        <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-secondary)', marginBottom: '14px' }}>Actions</p>
         <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
           {isActive && (
             <button onClick={() => doAction('stop')} disabled={!!actionLoading}
@@ -228,13 +228,13 @@ export default function GPUDetailPage() {
             {actionLoading === 'reinstall' ? 'Reinstalling...' : 'Reinstall'}
           </button>
           <button onClick={fetchLogs}
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', height: '34px', padding: '0 14px', background: '#f7f7f7', color: '#333', border: '1px solid #e5e5e5', borderRadius: '8px', fontSize: '12px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', height: '34px', padding: '0 14px', background: 'var(--card-bg-elevated)', color: '#333', border: '1px solid #e5e5e5', borderRadius: '8px', fontSize: '12px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
             Logs
           </button>
           {confirmDestroy && (
             <button onClick={() => setConfirmDestroy(false)}
-              style={{ height: '34px', padding: '0 14px', background: '#f7f7f7', color: '#666', border: '1px solid #e5e5e5', borderRadius: '8px', fontSize: '12px', cursor: 'pointer', fontFamily: 'inherit' }}>
+              style={{ height: '34px', padding: '0 14px', background: 'var(--card-bg-elevated)', color: 'var(--text-secondary)', border: '1px solid #e5e5e5', borderRadius: '8px', fontSize: '12px', cursor: 'pointer', fontFamily: 'inherit' }}>
               Cancel
             </button>
           )}
@@ -245,19 +245,19 @@ export default function GPUDetailPage() {
       {showLogs && (
         <div style={{ background: '#0a0a0a', borderRadius: '10px', padding: '16px 20px' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '12px' }}>
-            <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#9a9a9a' }}>Instance Logs</p>
+            <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-secondary)' }}>Instance Logs</p>
             <div style={{ display: 'flex', gap: '8px' }}>
               <button onClick={() => doAction('reinstall')} disabled={!!actionLoading}
             style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', height: '34px', padding: '0 14px', background: '#f5f3ff', color: '#6d28d9', border: '1px solid #ddd6fe', borderRadius: '8px', fontSize: '12px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
             {actionLoading === 'reinstall' ? 'Reinstalling...' : 'Reinstall'}
           </button>
-          <button onClick={fetchLogs} style={{ fontSize: '11px', padding: '3px 10px', background: '#1a1a1a', color: '#9a9a9a', border: '1px solid #333', borderRadius: '5px', cursor: 'pointer' }}>Refresh</button>
-              <button onClick={() => setShowLogs(false)} style={{ fontSize: '11px', padding: '3px 10px', background: '#1a1a1a', color: '#9a9a9a', border: '1px solid #333', borderRadius: '5px', cursor: 'pointer' }}>Close</button>
+          <button onClick={fetchLogs} style={{ fontSize: '11px', padding: '3px 10px', background: '#1a1a1a', color: 'var(--text-secondary)', border: '1px solid #333', borderRadius: '5px', cursor: 'pointer' }}>Refresh</button>
+              <button onClick={() => setShowLogs(false)} style={{ fontSize: '11px', padding: '3px 10px', background: '#1a1a1a', color: 'var(--text-secondary)', border: '1px solid #333', borderRadius: '5px', cursor: 'pointer' }}>Close</button>
             </div>
           </div>
           {loadingLogs ? (
-            <p style={{ color: '#9a9a9a', fontSize: '12px' }}>Fetching logs...</p>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '12px' }}>Fetching logs...</p>
           ) : (
             <pre style={{ color: '#4ade80', fontSize: '11px', fontFamily: "'DM Mono', monospace", overflowX: 'auto', whiteSpace: 'pre-wrap', maxHeight: '400px', overflowY: 'auto', margin: 0 }}>{logs}</pre>
           )}
@@ -267,11 +267,11 @@ export default function GPUDetailPage() {
       {/* SSH */}
       {order.ssh_host && (
         <div style={{ background: '#0a0a0a', borderRadius: '10px', padding: '16px 20px' }}>
-          <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#9a9a9a', marginBottom: '8px' }}>SSH Connection</p>
+          <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-secondary)', marginBottom: '8px' }}>SSH Connection</p>
           <code style={{ fontSize: '13px', color: '#4ade80', fontFamily: "'DM Mono', monospace" }}>
             ssh -p {order.ssh_port} root@{instance?.public_ipaddr || order.ssh_host}
           </code>
-          <p style={{ fontSize: '11px', color: '#9a9a9a', marginTop: '6px' }}>
+          <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '6px' }}>
             IP: {instance?.public_ipaddr || '—'} · Port: {order.ssh_port}
           </p>
         </div>

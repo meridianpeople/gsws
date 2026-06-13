@@ -25,9 +25,9 @@ export default function GPUPage() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
         <div>
-          <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#9a9a9a', marginBottom: '6px' }}>Compute</p>
-          <h1 style={{ fontSize: '22px', fontWeight: 700, color: '#0a0a0a', letterSpacing: '-0.02em', margin: 0 }}>GPU Compute</h1>
-          <p style={{ fontSize: '13px', color: '#9a9a9a', marginTop: '4px' }}>High-performance GPU instances — hourly, daily, weekly, monthly or annual</p>
+          <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-secondary)', marginBottom: '6px' }}>Compute</p>
+          <h1 style={{ fontSize: '22px', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.02em', margin: 0 }}>GPU Compute</h1>
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '4px' }}>High-performance GPU instances — hourly, daily, weekly, monthly or annual</p>
         </div>
         <Link href="/compute/gpu/new" style={{ display: 'inline-flex', alignItems: 'center', gap: '7px', height: '38px', padding: '0 18px', background: '#0a0a0a', color: '#fff', borderRadius: '9px', fontSize: '13px', fontWeight: 600, textDecoration: 'none' }}>
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -43,9 +43,9 @@ export default function GPUPage() {
             { label: 'ACTIVE', value: active },
             { label: 'HOURLY SPEND', value: `£${orders.filter(o => o.status === 'active' && o.billing_period === 'hourly').reduce((s, o) => s + (o.price_inc_vat || 0), 0).toFixed(3)}/hr` },
           ].map(({ label, value }) => (
-            <div key={label} style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', padding: '16px 20px' }}>
-              <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#9a9a9a', marginBottom: '8px' }}>{label}</p>
-              <p style={{ fontSize: '24px', fontWeight: 700, color: '#0a0a0a', letterSpacing: '-0.02em' }}>{value}</p>
+            <div key={label} style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '10px', padding: '16px 20px' }}>
+              <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-secondary)', marginBottom: '8px' }}>{label}</p>
+              <p style={{ fontSize: '24px', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>{value}</p>
             </div>
           ))}
         </div>
@@ -63,15 +63,15 @@ export default function GPUPage() {
             { label: 'Elite', vram: '140GB+', desc: 'H200 · B200 · B300', from: '£15.26/hr', color: '#10b981', bg: '#f0fdf4' },
           ].map(t => (
             <Link key={t.label} href="/compute/gpu/new" style={{ textDecoration: 'none' }}>
-              <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '11px', padding: '16px 18px', transition: 'border-color 0.15s', cursor: 'pointer' }}
+              <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '11px', padding: '16px 18px', transition: 'border-color 0.15s', cursor: 'pointer' }}
                 onMouseEnter={e => (e.currentTarget.style.borderColor = '#0a0a0a')}
                 onMouseLeave={e => (e.currentTarget.style.borderColor = '#ebebeb')}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
                   <div style={{ width: '32px', height: '32px', background: t.bg, borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: t.color }}><IconGPU /></div>
                   <span style={{ padding: '2px 8px', borderRadius: '4px', fontSize: '10px', fontWeight: 700, background: t.bg, color: t.color }}>{t.vram}</span>
                 </div>
-                <p style={{ fontSize: '13px', fontWeight: 700, color: '#0a0a0a', marginBottom: '2px' }}>{t.label}</p>
-                <p style={{ fontSize: '11px', color: '#9a9a9a', marginBottom: '8px' }}>{t.desc}</p>
+                <p style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '2px' }}>{t.label}</p>
+                <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '8px' }}>{t.desc}</p>
                 <p style={{ fontSize: '12px', fontWeight: 600, color: t.color }}>from {t.from}</p>
               </div>
             </Link>
@@ -83,13 +83,13 @@ export default function GPUPage() {
       {loading ? (
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '120px', gap: '10px' }}>
           <div style={{ width: '16px', height: '16px', border: '2px solid #e5e5e5', borderTopColor: '#0a0a0a', borderRadius: '50%', animation: 'spin 0.6s linear infinite' }} />
-          <span style={{ fontSize: '13px', color: '#9a9a9a' }}>Loading...</span>
+          <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>Loading...</span>
         </div>
       ) : orders.length === 0 ? (
-        <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '14px', padding: '48px', textAlign: 'center' }}>
-          <div style={{ width: '48px', height: '48px', background: '#f7f7f7', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', color: '#9a9a9a' }}><IconGPU /></div>
-          <p style={{ fontSize: '15px', fontWeight: 700, color: '#0a0a0a', marginBottom: '6px', letterSpacing: '-0.01em' }}>No GPU instances</p>
-          <p style={{ fontSize: '13px', color: '#9a9a9a', marginBottom: '24px' }}>Deploy a GPU instance in minutes — choose your class, node and billing period.</p>
+        <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '14px', padding: '48px', textAlign: 'center' }}>
+          <div style={{ width: '48px', height: '48px', background: 'var(--card-bg-elevated)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', color: 'var(--text-secondary)' }}><IconGPU /></div>
+          <p style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '6px', letterSpacing: '-0.01em' }}>No GPU instances</p>
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '24px' }}>Deploy a GPU instance in minutes — choose your class, node and billing period.</p>
           <Link href="/compute/gpu/new" style={{ display: 'inline-flex', height: '38px', alignItems: 'center', padding: '0 20px', background: '#0a0a0a', color: '#fff', borderRadius: '9px', fontSize: '13px', fontWeight: 600, textDecoration: 'none' }}>
             Order your first GPU
           </Link>
@@ -104,21 +104,21 @@ export default function GPUPage() {
             const hoursLeft = expiresAt ? Math.max(0, (expiresAt.getTime() - Date.now()) / 3600000) : 0
 
             return (
-              <div key={o.id} className="gpu-row" onClick={() => window.location.href=`/compute/gpu/${o.id}`} style={{ cursor: 'pointer', background: '#fff', border: '1px solid #ebebeb', borderRadius: '11px', padding: '16px 20px', display: 'grid', gridTemplateColumns: '2fr 120px 160px 100px 120px', gap: '16px', alignItems: 'center', transition: 'border-color 0.15s, box-shadow 0.15s' }}>
+              <div key={o.id} className="gpu-row" onClick={() => window.location.href=`/compute/gpu/${o.id}`} style={{ cursor: 'pointer', background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '11px', padding: '16px 20px', display: 'grid', gridTemplateColumns: '2fr 120px 160px 100px 120px', gap: '16px', alignItems: 'center', transition: 'border-color 0.15s, box-shadow 0.15s' }}>
                 {/* Name */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                   <div style={{ width: '36px', height: '36px', background: isActive ? '#f0fdf4' : isPending ? '#fffbeb' : '#f7f7f7', borderRadius: '9px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: isActive ? '#15803d' : isPending ? '#b45309' : '#9a9a9a', flexShrink: 0 }}>
                     <IconGPU />
                   </div>
                   <div>
-                    <p style={{ fontSize: '13px', fontWeight: 700, color: '#0a0a0a', marginBottom: '2px' }}>#{o.id} · {o.tier}</p>
-                    <p style={{ fontSize: '11px', color: '#9a9a9a' }}>{o.billing_period} · {o.notes?.replace('template:', '')?.split(':')[0] || ''}</p>
+                    <p style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '2px' }}>#{o.id} · {o.tier}</p>
+                    <p style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{o.billing_period} · {o.notes?.replace('template:', '')?.split(':')[0] || ''}</p>
                   </div>
                 </div>
 
                 {/* Status */}
                 <div>
-                  <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#9a9a9a', marginBottom: '3px' }}>Status</p>
+                  <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-secondary)', marginBottom: '3px' }}>Status</p>
                   <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '2px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 600,
                     background: isActive ? '#f0fdf4' : isPending ? '#fffbeb' : isSuspended ? '#fef2f2' : '#f7f7f7',
                     color: isActive ? '#15803d' : isPending ? '#b45309' : isSuspended ? '#dc2626' : '#666' }}>
@@ -129,7 +129,7 @@ export default function GPUPage() {
 
                 {/* Expiry */}
                 <div>
-                  <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#9a9a9a', marginBottom: '3px' }}>Expires</p>
+                  <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-secondary)', marginBottom: '3px' }}>Expires</p>
                   <p style={{ fontSize: '12px', color: hoursLeft < 2 ? '#dc2626' : '#333', fontFamily: "'DM Mono', monospace" }}>
                     {expiresAt ? expiresAt.toLocaleString('en-GB', { dateStyle: 'short', timeStyle: 'short' }) : '—'}
                   </p>
@@ -138,14 +138,14 @@ export default function GPUPage() {
 
                 {/* Price */}
                 <div>
-                  <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#9a9a9a', marginBottom: '3px' }}>Rate</p>
+                  <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-secondary)', marginBottom: '3px' }}>Rate</p>
                   <p style={{ fontSize: '12px', fontWeight: 600, color: '#333' }}>£{o.price_inc_vat?.toFixed(2)}/{o.billing_period === 'hourly' ? 'hr' : o.billing_period}</p>
                 </div>
 
                 {/* Instance ID */}
                 <div>
-                  <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#9a9a9a', marginBottom: '3px' }}>Instance</p>
-                  <p style={{ fontSize: '11px', color: '#666', fontFamily: "'DM Mono', monospace" }}>
+                  <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-secondary)', marginBottom: '3px' }}>Instance</p>
+                  <p style={{ fontSize: '11px', color: 'var(--text-secondary)', fontFamily: "'DM Mono', monospace" }}>
                     {o.provider_instance_id ? `#${o.provider_instance_id}` : <span style={{ color: '#f59e0b' }}>Provisioning...</span>}
                   </p>
                 </div>

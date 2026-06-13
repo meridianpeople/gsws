@@ -14,17 +14,17 @@ export default async function PrivacyPage({ params }: { params: Promise<{ name: 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', maxWidth: '700px' }}>
       <div>
-        <div style={{ fontSize: '12px', color: '#9a9a9a', marginBottom: '4px' }}>
+        <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>
           <Link href="/domains" style={{ color: '#1a6ef5' }}>Domains</Link> ›{' '}
           <Link href={`/domains/${name}`} style={{ color: '#1a6ef5' }}>{domainName}</Link> › WHOIS privacy
         </div>
-        <h1 style={{ fontSize: '20px', fontWeight: 600, color: '#0a0a0a' }}>WHOIS privacy</h1>
+        <h1 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text-primary)' }}>WHOIS privacy</h1>
       </div>
       <div className="gsws-card">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
           <div>
-            <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a' }}>Privacy protection</p>
-            <p style={{ fontSize: '12px', color: '#9a9a9a', marginTop: '2px' }}>Your personal details are hidden from the public WHOIS database.</p>
+            <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>Privacy protection</p>
+            <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>Your personal details are hidden from the public WHOIS database.</p>
           </div>
           <span style={{ padding: '4px 14px', borderRadius: '20px', fontSize: '12px', fontWeight: 600, background: '#eaf3de', color: '#3b6d11' }}>Active</span>
         </div>

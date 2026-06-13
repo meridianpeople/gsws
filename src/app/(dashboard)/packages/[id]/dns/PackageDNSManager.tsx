@@ -142,8 +142,8 @@ export default function PackageDNSManager({
       <div className="gsws-card">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
           <div>
-            <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#0a0a0a' }}>🌐 Nameservers</h3>
-            <p style={{ fontSize: '12px', color: '#9a9a9a', marginTop: '2px' }}>
+            <h3 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>🌐 Nameservers</h3>
+            <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>
               Controls where DNS for {domainName} is managed
             </p>
           </div>
@@ -160,11 +160,11 @@ export default function PackageDNSManager({
           <div onClick={() => setNsMode('geig')}
             style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', padding: '12px 16px', borderRadius: '8px', cursor: 'pointer', border: `1.5px solid ${nsMode === 'geig' ? '#1a6ef5' : '#ebebeb'}`, background: nsMode === 'geig' ? '#e8f0fe' : '#fff' }}>
             <div style={{ width: '16px', height: '16px', borderRadius: '50%', border: `2px solid ${nsMode === 'geig' ? '#1a6ef5' : '#d4d4d4'}`, background: nsMode === 'geig' ? '#1a6ef5' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '1px' }}>
-              {nsMode === 'geig' && <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#fff' }} />}
+              {nsMode === 'geig' && <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--card-bg)' }} />}
             </div>
             <div style={{ flex: 1 }}>
-              <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a' }}>GeiG SWS nameservers <span style={{ fontSize: '11px', fontWeight: 400, color: '#3b6d11' }}>(recommended)</span></p>
-              <p style={{ fontSize: '11px', color: '#9a9a9a', marginTop: '2px' }}>DNS records managed here in GSWS control panel</p>
+              <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>GeiG SWS nameservers <span style={{ fontSize: '11px', fontWeight: 400, color: '#3b6d11' }}>(recommended)</span></p>
+              <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '2px' }}>DNS records managed here in GSWS control panel</p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '8px' }}>
                 {GEIG_NS.map((ns, i) => (
                   <span key={ns} style={{ fontSize: '11px', fontFamily: 'ui-monospace, monospace', color: '#5a5a5a' }}>NS{i + 1}: {ns}</span>
@@ -177,30 +177,30 @@ export default function PackageDNSManager({
           <div onClick={() => setNsMode('custom')}
             style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', padding: '12px 16px', borderRadius: '8px', cursor: 'pointer', border: `1.5px solid ${nsMode === 'custom' ? '#1a6ef5' : '#ebebeb'}`, background: nsMode === 'custom' ? '#e8f0fe' : '#fff' }}>
             <div style={{ width: '16px', height: '16px', borderRadius: '50%', border: `2px solid ${nsMode === 'custom' ? '#1a6ef5' : '#d4d4d4'}`, background: nsMode === 'custom' ? '#1a6ef5' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '1px' }}>
-              {nsMode === 'custom' && <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#fff' }} />}
+              {nsMode === 'custom' && <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--card-bg)' }} />}
             </div>
             <div style={{ flex: 1 }}>
-              <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a' }}>Custom nameservers</p>
-              <p style={{ fontSize: '11px', color: '#9a9a9a', marginTop: '2px' }}>Use Cloudflare, Route53 or your own DNS provider</p>
+              <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>Custom nameservers</p>
+              <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '2px' }}>Use Cloudflare, Route53 or your own DNS provider</p>
               {nsMode === 'custom' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginTop: '10px' }}>
                   {customNS.map((ns, i) => (
                     <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <span style={{ fontSize: '11px', color: '#9a9a9a', width: '28px', flexShrink: 0 }}>NS{i + 1}</span>
+                      <span style={{ fontSize: '11px', color: 'var(--text-secondary)', width: '28px', flexShrink: 0 }}>NS{i + 1}</span>
                       <input value={ns}
                         onChange={e => { const u = [...customNS]; u[i] = e.target.value; setCustomNS(u) }}
                         placeholder={`ns${i + 1}.example.com`}
-                        style={{ flex: 1, height: '32px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '12px', fontFamily: 'ui-monospace, monospace', padding: '0 10px' }}
+                        style={{ flex: 1, height: '32px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '12px', fontFamily: 'ui-monospace, monospace', padding: '0 10px' }}
                       />
                       {customNS.length > 2 && (
                         <button onClick={() => setCustomNS(c => c.filter((_, j) => j !== i))}
-                          style={{ width: '26px', height: '26px', border: '1px solid #f5c1c1', borderRadius: '4px', background: '#fff', color: '#a32d2d', cursor: 'pointer', fontSize: '14px' }}>×</button>
+                          style={{ width: '26px', height: '26px', border: '1px solid #f5c1c1', borderRadius: '4px', background: 'var(--card-bg)', color: '#a32d2d', cursor: 'pointer', fontSize: '14px' }}>×</button>
                       )}
                     </div>
                   ))}
                   {customNS.length < 6 && (
                     <button onClick={() => setCustomNS(c => [...c, ''])}
-                      style={{ alignSelf: 'flex-start', height: '26px', padding: '0 10px', border: '1px solid #d4d4d4', borderRadius: '4px', fontSize: '11px', color: '#1a6ef5', background: '#fff', cursor: 'pointer', fontFamily: 'inherit' }}>
+                      style={{ alignSelf: 'flex-start', height: '26px', padding: '0 10px', border: '1px solid var(--card-border-hover)', borderRadius: '4px', fontSize: '11px', color: '#1a6ef5', background: 'var(--card-bg)', cursor: 'pointer', fontFamily: 'inherit' }}>
                       + Add nameserver
                     </button>
                   )}
@@ -226,8 +226,8 @@ export default function PackageDNSManager({
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div>
-            <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#0a0a0a' }}>📋 DNS records</h3>
-            <p style={{ fontSize: '12px', color: '#9a9a9a', marginTop: '2px' }}>
+            <h3 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>📋 DNS records</h3>
+            <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>
               {nsMode === 'custom' ? 'DNS records are managed externally via your custom nameservers' : `${records.length} records for ${domainName}`}
             </p>
           </div>
@@ -242,7 +242,7 @@ export default function PackageDNSManager({
 
         {showAdd && (
           <div className="gsws-card" style={{ border: '2px solid #1a6ef5' }}>
-            <h3 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '14px' }}>
+            <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '14px' }}>
               {editingRecord ? '✏️ Edit record' : '+ New DNS record'}
             </h3>
             {editingRecord && (
@@ -252,30 +252,30 @@ export default function PackageDNSManager({
             )}
             <div style={{ display: 'grid', gridTemplateColumns: '120px 1fr 1fr 100px', gap: '10px', marginBottom: '12px' }}>
               <div>
-                <label style={{ fontSize: '11px', color: '#9a9a9a', display: 'block', marginBottom: '4px' }}>Type</label>
+                <label style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Type</label>
                 <select value={newRecord.type} onChange={e => setNewRecord(r => ({ ...r, type: e.target.value }))}
-                  style={{ width: '100%', height: '34px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', fontFamily: 'inherit', padding: '0 8px' }}>
+                  style={{ width: '100%', height: '34px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', fontFamily: 'inherit', padding: '0 8px' }}>
                   {RECORD_TYPES.map(t => <option key={t}>{t}</option>)}
                 </select>
               </div>
               <div>
-                <label style={{ fontSize: '11px', color: '#9a9a9a', display: 'block', marginBottom: '4px' }}>Host</label>
+                <label style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Host</label>
                 <input value={newRecord.host} onChange={e => setNewRecord(r => ({ ...r, host: e.target.value }))}
                   placeholder="@ or subdomain"
-                  style={{ width: '100%', height: '34px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', fontFamily: 'ui-monospace, monospace', padding: '0 10px', boxSizing: 'border-box' }} />
+                  style={{ width: '100%', height: '34px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', fontFamily: 'ui-monospace, monospace', padding: '0 10px', boxSizing: 'border-box' }} />
               </div>
               <div>
-                <label style={{ fontSize: '11px', color: '#9a9a9a', display: 'block', marginBottom: '4px' }}>
+                <label style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>
                   {newRecord.type === 'A' ? 'IP address' : newRecord.type === 'MX' ? 'Mail server' : newRecord.type === 'TXT' ? 'Text value' : 'Value'}
                 </label>
                 <input value={newRecord.data} onChange={e => setNewRecord(r => ({ ...r, data: e.target.value }))}
                   placeholder={newRecord.type === 'A' ? '1.2.3.4' : ''}
-                  style={{ width: '100%', height: '34px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', fontFamily: 'ui-monospace, monospace', padding: '0 10px', boxSizing: 'border-box' }} />
+                  style={{ width: '100%', height: '34px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', fontFamily: 'ui-monospace, monospace', padding: '0 10px', boxSizing: 'border-box' }} />
               </div>
               <div>
-                <label style={{ fontSize: '11px', color: '#9a9a9a', display: 'block', marginBottom: '4px' }}>TTL</label>
+                <label style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>TTL</label>
                 <select value={newRecord.ttl} onChange={e => setNewRecord(r => ({ ...r, ttl: Number(e.target.value) }))}
-                  style={{ width: '100%', height: '34px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', fontFamily: 'inherit', padding: '0 8px' }}>
+                  style={{ width: '100%', height: '34px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', fontFamily: 'inherit', padding: '0 8px' }}>
                   <option value={300}>5 min</option>
                   <option value={3600}>1 hour</option>
                   <option value={86400}>1 day</option>
@@ -284,10 +284,10 @@ export default function PackageDNSManager({
             </div>
             {newRecord.type === 'MX' && (
               <div style={{ marginBottom: '12px' }}>
-                <label style={{ fontSize: '11px', color: '#9a9a9a', display: 'block', marginBottom: '4px' }}>Priority</label>
+                <label style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Priority</label>
                 <input type="number" value={newRecord.priority} onChange={e => setNewRecord(r => ({ ...r, priority: e.target.value }))}
                   placeholder="10"
-                  style={{ width: '100px', height: '34px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', padding: '0 10px', fontFamily: 'inherit' }} />
+                  style={{ width: '100px', height: '34px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', padding: '0 10px', fontFamily: 'inherit' }} />
               </div>
             )}
             <div style={{ display: 'flex', gap: '8px' }}>
@@ -296,16 +296,16 @@ export default function PackageDNSManager({
                 {saving ? 'Saving…' : editingRecord ? 'Update record' : 'Add record'}
               </button>
               <button onClick={() => { setShowAdd(false); setEditingRecord(null); setNewRecord({ type: 'A', host: '', data: '', ttl: 3600, priority: '' }) }}
-                style={{ height: '32px', padding: '0 14px', background: '#fff', color: '#0a0a0a', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '12px', cursor: 'pointer', fontFamily: 'inherit' }}>
+                style={{ height: '32px', padding: '0 14px', background: 'var(--card-bg)', color: 'var(--text-primary)', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '12px', cursor: 'pointer', fontFamily: 'inherit' }}>
                 Cancel
               </button>
             </div>
           </div>
         )}
 
-        <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', overflow: 'hidden' }}>
+        <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '10px', overflow: 'hidden' }}>
           {records.length === 0 ? (
-            <div style={{ padding: '40px', textAlign: 'center', color: '#9a9a9a', fontSize: '13px' }}>No DNS records found.</div>
+            <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-secondary)', fontSize: '13px' }}>No DNS records found.</div>
           ) : (
             <table className="gsws-table">
               <thead>
@@ -317,19 +317,19 @@ export default function PackageDNSManager({
                   return (
                     <tr key={r.ref || i}>
                       <td><span style={{ padding: '2px 7px', borderRadius: '4px', fontSize: '11px', fontWeight: 700, fontFamily: 'ui-monospace, monospace', background: tc.bg, color: tc.color }}>{r.type}</span></td>
-                      <td style={{ fontFamily: 'ui-monospace, monospace', fontSize: '12px', color: '#0a0a0a' }}>{r.host}</td>
+                      <td style={{ fontFamily: 'ui-monospace, monospace', fontSize: '12px', color: 'var(--text-primary)' }}>{r.host}</td>
                       <td style={{ fontFamily: 'ui-monospace, monospace', fontSize: '12px', color: '#5a5a5a', maxWidth: '240px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.data}</td>
-                      <td style={{ fontSize: '12px', color: '#9a9a9a' }}>{r.ttl}s</td>
-                      <td style={{ fontSize: '12px', color: '#9a9a9a' }}>{r.priority || '—'}</td>
+                      <td style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{r.ttl}s</td>
+                      <td style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{r.priority || '—'}</td>
                       <td>
                         <div style={{ display: 'flex', gap: '4px' }}>
                           {r.ref && <>
                             <button onClick={() => handleEdit(r)}
-                              style={{ padding: '0 10px', height: '24px', border: '1px solid #d4d4d4', borderRadius: '4px', fontSize: '11px', color: '#0a0a0a', background: '#fff', cursor: 'pointer', fontFamily: 'inherit' }}>
+                              style={{ padding: '0 10px', height: '24px', border: '1px solid var(--card-border-hover)', borderRadius: '4px', fontSize: '11px', color: 'var(--text-primary)', background: 'var(--card-bg)', cursor: 'pointer', fontFamily: 'inherit' }}>
                               Edit
                             </button>
                             <button onClick={() => handleDelete(r)} disabled={deleting === r.ref}
-                              style={{ padding: '0 10px', height: '24px', border: '1px solid #f5c1c1', borderRadius: '4px', fontSize: '11px', color: '#a32d2d', background: '#fff', cursor: 'pointer', fontFamily: 'inherit' }}>
+                              style={{ padding: '0 10px', height: '24px', border: '1px solid #f5c1c1', borderRadius: '4px', fontSize: '11px', color: '#a32d2d', background: 'var(--card-bg)', cursor: 'pointer', fontFamily: 'inherit' }}>
                               {deleting === r.ref ? '…' : 'Delete'}
                             </button>
                           </>}

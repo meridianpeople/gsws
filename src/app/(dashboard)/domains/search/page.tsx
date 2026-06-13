@@ -101,13 +101,13 @@ export default function DomainSearchPage() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: '#9a9a9a', marginBottom: '4px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>
             <Link href="/domains" style={{ color: '#1a6ef5' }}>Domains</Link>
             <span>›</span>
             <span>Search & register</span>
           </div>
-          <h1 style={{ fontSize: '20px', fontWeight: 600, color: '#0a0a0a', letterSpacing: '-0.3px' }}>Find a domain</h1>
-          <p style={{ fontSize: '13px', color: '#9a9a9a', marginTop: '3px' }}>
+          <h1 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text-primary)', letterSpacing: '-0.3px' }}>Find a domain</h1>
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '3px' }}>
             Search for an available domain. You need one before creating any hosting package.
           </p>
           {balance !== null && (
@@ -139,7 +139,7 @@ export default function DomainSearchPage() {
                 style={{
                   width: '100%', height: '52px', paddingLeft: '46px', paddingRight: '16px',
                   border: '1.5px solid #d4d4d4', borderRadius: '8px', fontSize: '15px',
-                  fontFamily: 'inherit', color: '#0a0a0a', background: '#fff', outline: 'none',
+                  fontFamily: 'inherit', color: 'var(--text-primary)', background: 'var(--card-bg)', outline: 'none',
                 }}
                 onFocus={e => e.target.style.borderColor = '#1a6ef5'}
                 onBlur={e => e.target.style.borderColor = '#d4d4d4'}
@@ -162,7 +162,7 @@ export default function DomainSearchPage() {
 
         {/* TLD pills */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '14px', flexWrap: 'wrap' }}>
-          <span style={{ fontSize: '11px', color: '#9a9a9a', fontWeight: 500 }}>Quick add:</span>
+          <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontWeight: 500 }}>Quick add:</span>
           {POPULAR_TLDS.map(tld => (
             <button key={tld}
               onClick={() => {
@@ -171,7 +171,7 @@ export default function DomainSearchPage() {
               }}
               style={{
                 padding: '3px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 500,
-                background: '#ebebeb', color: '#5a5a5a', border: '1px solid #d4d4d4',
+                background: '#ebebeb', color: '#5a5a5a', border: '1px solid var(--card-border-hover)',
                 cursor: 'pointer', fontFamily: 'inherit',
               }}>
               {tld}
@@ -206,7 +206,7 @@ export default function DomainSearchPage() {
       {/* Searching spinner */}
       {searching && (
         <div className="gsws-card" style={{ textAlign: 'center', padding: '40px' }}>
-          <p style={{ fontSize: '13px', color: '#9a9a9a' }}>Searching across {POPULAR_TLDS.length} domain extensions…</p>
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>Searching across {POPULAR_TLDS.length} domain extensions…</p>
         </div>
       )}
 
@@ -214,10 +214,10 @@ export default function DomainSearchPage() {
       {searched && !searching && (
         <div className="gsws-card" style={{ padding: 0, overflow: 'hidden' }}>
           {/* Header */}
-          <div style={{ padding: '14px 20px', borderBottom: '1px solid #ebebeb', background: '#f7f7f7' }}>
-            <h2 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a' }}>
+          <div style={{ padding: '14px 20px', borderBottom: '1px solid var(--card-border)', background: 'var(--card-bg-elevated)' }}>
+            <h2 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>
               {available.length} available · {unavailable.length} taken
-              {query && <span style={{ color: '#9a9a9a', fontWeight: 400 }}> for "{query.split('.')[0]}"</span>}
+              {query && <span style={{ color: 'var(--text-secondary)', fontWeight: 400 }}> for "{query.split('.')[0]}"</span>}
             </h2>
           </div>
 
@@ -227,12 +227,12 @@ export default function DomainSearchPage() {
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               padding: '14px 20px',
               borderBottom: i < results.length - 1 ? '1px solid #ebebeb' : 'none',
-              background: '#fff',
+              background: 'var(--card-bg)',
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#3b6d11', flexShrink: 0 }} />
                 <div>
-                  <span style={{ fontSize: '15px', fontWeight: 700, color: '#0a0a0a', fontFamily: 'ui-monospace, monospace' }}>
+                  <span style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)', fontFamily: 'ui-monospace, monospace' }}>
                     {result.name}
                   </span>
                   {result.premium && (
@@ -270,7 +270,7 @@ export default function DomainSearchPage() {
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               padding: '12px 20px',
               borderBottom: i < unavailable.length - 1 ? '1px solid #ebebeb' : 'none',
-              background: '#f7f7f7',
+              background: 'var(--card-bg-elevated)',
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                 <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#d4d4d4', flexShrink: 0 }} />
@@ -278,7 +278,7 @@ export default function DomainSearchPage() {
                   {result.name}
                 </span>
               </div>
-              <span style={{ fontSize: '12px', color: '#9a9a9a', fontStyle: 'italic' }}>Taken</span>
+              <span style={{ fontSize: '12px', color: 'var(--text-secondary)', fontStyle: 'italic' }}>Taken</span>
             </div>
           ))}
         </div>
@@ -287,8 +287,8 @@ export default function DomainSearchPage() {
       {/* No results */}
       {searched && !searching && results.length === 0 && !error && (
         <div className="gsws-card" style={{ textAlign: 'center', padding: '48px' }}>
-          <p style={{ fontSize: '13px', color: '#9a9a9a' }}>
-            No results for <strong style={{ color: '#0a0a0a' }}>{query}</strong>. Try a different name.
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
+            No results for <strong style={{ color: 'var(--text-primary)' }}>{query}</strong>. Try a different name.
           </p>
         </div>
       )}
@@ -307,8 +307,8 @@ export default function DomainSearchPage() {
                   <path d={f.icon}/>
                 </svg>
               </div>
-              <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a' }}>{f.title}</p>
-              <p style={{ fontSize: '12px', color: '#9a9a9a' }}>{f.desc}</p>
+              <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>{f.title}</p>
+              <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{f.desc}</p>
             </div>
           ))}
         </div>
@@ -316,15 +316,15 @@ export default function DomainSearchPage() {
       {/* Registration Modal */}
       {modalDomain && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-          <div style={{ background: '#fff', borderRadius: '12px', width: '100%', maxWidth: '520px', padding: '28px', boxShadow: '0 20px 60px rgba(0,0,0,0.2)' }}>
+          <div style={{ background: 'var(--card-bg)', borderRadius: '12px', width: '100%', maxWidth: '520px', padding: '28px', boxShadow: '0 20px 60px rgba(0,0,0,0.2)' }}>
             {/* Header */}
             <div style={{ marginBottom: '20px' }}>
-              <h2 style={{ fontSize: '17px', fontWeight: 700, color: '#0a0a0a', marginBottom: '4px' }}>Register domain</h2>
+              <h2 style={{ fontSize: '17px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '4px' }}>Register domain</h2>
               <p style={{ fontSize: '13px', fontFamily: 'ui-monospace, monospace', color: '#1a6ef5', fontWeight: 600 }}>{modalDomain.name}</p>
             </div>
 
             {/* Price summary */}
-            <div style={{ background: '#f7f7f7', borderRadius: '8px', padding: '14px 16px', marginBottom: '20px' }}>
+            <div style={{ background: 'var(--card-bg-elevated)', borderRadius: '8px', padding: '14px 16px', marginBottom: '20px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
                 <span style={{ fontSize: '13px', color: '#5a5a5a' }}>Domain registration (1 year)</span>
                 <span style={{ fontSize: '13px', fontWeight: 600 }}>£{modalDomain.price?.toFixed(2)}</span>
@@ -347,19 +347,19 @@ export default function DomainSearchPage() {
                 <span style={{ fontSize: '13px', fontWeight: 700 }}>Total charged from credit</span>
                 <span style={{ fontSize: '14px', fontWeight: 700, color: '#1a6ef5' }}>£{(((modalDomain.price || 0) + (addPrivacy ? 5 : 0)) * 1.20).toFixed(2)}</span>
               </div>
-              <div style={{ marginTop: '6px', fontSize: '11px', color: '#9a9a9a' }}>
+              <div style={{ marginTop: '6px', fontSize: '11px', color: 'var(--text-secondary)' }}>
                 Your balance after: £{((balance || 0) - (((modalDomain.price || 0) + (addPrivacy ? 5 : 0)) * 1.20)).toFixed(2)}
               </div>
             </div>
 
             {/* Privacy option */}
-            <div style={{ marginBottom: '14px', border: '1px solid #ebebeb', borderRadius: '8px', padding: '14px' }}>
+            <div style={{ marginBottom: '14px', border: '1px solid var(--card-border)', borderRadius: '8px', padding: '14px' }}>
               <label style={{ display: 'flex', alignItems: 'flex-start', gap: '10px', cursor: 'pointer' }}>
                 <input type="checkbox" checked={addPrivacy} onChange={e => setAddPrivacy(e.target.checked)}
                   style={{ marginTop: '2px', flexShrink: 0 }} />
                 <div style={{ flex: 1 }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a' }}>🔒 WHOIS Privacy Protection</p>
+                    <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>🔒 WHOIS Privacy Protection</p>
                     <span style={{ fontSize: '12px', fontWeight: 700, color: '#1a6ef5' }}>£5.00/yr</span>
                   </div>
                   <p style={{ fontSize: '11px', color: '#5a5a5a', marginTop: '6px', lineHeight: '1.6' }}>
@@ -373,7 +373,7 @@ export default function DomainSearchPage() {
                     <li>Legitimate contact emails are still forwarded to you</li>
                     <li>GDPR-compliant privacy across all TLDs regardless of jurisdiction</li>
                   </ul>
-                  <p style={{ fontSize: '10px', color: '#9a9a9a', marginTop: '6px' }}>
+                  <p style={{ fontSize: '10px', color: 'var(--text-secondary)', marginTop: '6px' }}>
                     89% of domain registrations now use privacy protection. Recommended for all registrants.
                   </p>
                 </div>
@@ -386,23 +386,23 @@ export default function DomainSearchPage() {
                 <input type="checkbox" checked={differentEntity} onChange={e => setDifferentEntity(e.target.checked)}
                   style={{ marginTop: '2px', flexShrink: 0 }} />
                 <div>
-                  <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a' }}>Register for a different legal entity</p>
-                  <p style={{ fontSize: '11px', color: '#9a9a9a', marginTop: '2px' }}>Register this domain on behalf of a company or individual other than yourself</p>
+                  <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>Register for a different legal entity</p>
+                  <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '2px' }}>Register this domain on behalf of a company or individual other than yourself</p>
                 </div>
               </label>
             </div>
 
             {differentEntity && (
-              <div style={{ background: '#f7f7f7', borderRadius: '8px', padding: '14px', marginBottom: '14px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
+              <div style={{ background: 'var(--card-bg-elevated)', borderRadius: '8px', padding: '14px', marginBottom: '14px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 <div>
                   <label style={{ fontSize: '11px', fontWeight: 500, color: '#5a5a5a', display: 'block', marginBottom: '4px' }}>Legal entity / company name</label>
                   <input value={entityName} onChange={e => setEntityName(e.target.value)} placeholder="Acme Ltd"
-                    style={{ width: '100%', height: '32px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', padding: '0 10px', fontFamily: 'inherit', boxSizing: 'border-box' }} />
+                    style={{ width: '100%', height: '32px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', padding: '0 10px', fontFamily: 'inherit', boxSizing: 'border-box' }} />
                 </div>
                 <div>
                   <label style={{ fontSize: '11px', fontWeight: 500, color: '#5a5a5a', display: 'block', marginBottom: '4px' }}>Registrant email address</label>
                   <input value={entityEmail} onChange={e => setEntityEmail(e.target.value)} placeholder="admin@acme.com" type="email"
-                    style={{ width: '100%', height: '32px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', padding: '0 10px', fontFamily: 'inherit', boxSizing: 'border-box' }} />
+                    style={{ width: '100%', height: '32px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', padding: '0 10px', fontFamily: 'inherit', boxSizing: 'border-box' }} />
                 </div>
               </div>
             )}
@@ -432,7 +432,7 @@ export default function DomainSearchPage() {
                 Confirm & Register {modalDomain.name}
               </button>
               <button onClick={() => setModalDomain(null)}
-                style={{ height: '40px', padding: '0 20px', background: '#fff', border: '1px solid #d4d4d4', borderRadius: '8px', fontSize: '13px', cursor: 'pointer', fontFamily: 'inherit', color: '#5a5a5a' }}>
+                style={{ height: '40px', padding: '0 20px', background: 'var(--card-bg)', border: '1px solid var(--card-border-hover)', borderRadius: '8px', fontSize: '13px', cursor: 'pointer', fontFamily: 'inherit', color: '#5a5a5a' }}>
                 Cancel
               </button>
             </div>

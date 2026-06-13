@@ -20,8 +20,8 @@ export default async function AppPoolPage({ params }: { params: Promise<{ id: st
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       <div>
-        <h2 style={{ fontSize: '16px', fontWeight: 600, color: '#0a0a0a' }}>Windows App Pool</h2>
-        <p style={{ fontSize: '12px', color: '#9a9a9a', marginTop: '3px' }}>IIS Application Pool configuration for {pkg.domain_name}</p>
+        <h2 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text-primary)' }}>Windows App Pool</h2>
+        <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '3px' }}>IIS Application Pool configuration for {pkg.domain_name}</p>
       </div>
       <AppPoolManager packageId={id} domainName={pkg.domain_name} config={config} />
     </div>

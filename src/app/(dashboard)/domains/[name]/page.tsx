@@ -57,10 +57,10 @@ export default async function DomainManagePage({ params }: { params: Promise<{ n
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
         <div>
-          <div style={{ fontSize: '12px', color: '#9a9a9a', marginBottom: '4px' }}>
+          <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>
             <Link href="/domains" style={{ color: '#1a6ef5' }}>Domains</Link> › {domainName}
           </div>
-          <h1 style={{ fontSize: '20px', fontWeight: 600, color: '#0a0a0a', fontFamily: 'ui-monospace, monospace' }}>{domainName}</h1>
+          <h1 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text-primary)', fontFamily: 'ui-monospace, monospace' }}>{domainName}</h1>
         </div>
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
           <span style={{ padding: '4px 12px', borderRadius: '20px', fontSize: '12px', fontWeight: 500, background: '#eaf3de', color: '#3b6d11' }}>Active</span>
@@ -76,7 +76,7 @@ export default async function DomainManagePage({ params }: { params: Promise<{ n
       {/* Domain info */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
         <div className="gsws-card">
-          <h2 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '14px' }}>Domain info</h2>
+          <h2 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '14px' }}>Domain info</h2>
           {[
             ['Domain name', domainName],
             ['Registered', new Date(owned.registered_at).toLocaleDateString('en-GB')],
@@ -85,24 +85,24 @@ export default async function DomainManagePage({ params }: { params: Promise<{ n
             ['Privacy', 'Protected'],
             ['Hosting', owned.twentyi_package_id ? 'Active package' : 'No hosting yet'],
           ].map(([label, value]) => (
-            <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '7px 0', borderBottom: '1px solid #ebebeb', fontSize: '12.5px' }}>
-              <span style={{ color: '#9a9a9a' }}>{label}</span>
-              <span style={{ fontWeight: 500, color: '#0a0a0a' }}>{value}</span>
+            <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '7px 0', borderBottom: '1px solid var(--card-border)', fontSize: '12.5px' }}>
+              <span style={{ color: 'var(--text-secondary)' }}>{label}</span>
+              <span style={{ fontWeight: 500, color: 'var(--text-primary)' }}>{value}</span>
             </div>
           ))}
         </div>
 
         <div className="gsws-card">
-          <h2 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '14px' }}>Renewal info</h2>
+          <h2 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '14px' }}>Renewal info</h2>
           {[
             ['Renewal action', domainInfo?.preferredRenewalAction || '—'],
             ['Renewal period', domainInfo?.preferredRenewalMonths ? `${domainInfo.preferredRenewalMonths} months` : '—'],
             ['Grace period', domainInfo?.renewalConstraint?.gracePeriod ? `${domainInfo.renewalConstraint.gracePeriod} days` : '—'],
             ['Redemption', domainInfo?.renewalConstraint?.redemptionPeriod ? `${domainInfo.renewalConstraint.redemptionPeriod} days` : '—'],
           ].map(([label, value]) => (
-            <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '7px 0', borderBottom: '1px solid #ebebeb', fontSize: '12.5px' }}>
-              <span style={{ color: '#9a9a9a' }}>{label}</span>
-              <span style={{ fontWeight: 500, color: '#0a0a0a' }}>{value}</span>
+            <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '7px 0', borderBottom: '1px solid var(--card-border)', fontSize: '12.5px' }}>
+              <span style={{ color: 'var(--text-secondary)' }}>{label}</span>
+              <span style={{ fontWeight: 500, color: 'var(--text-primary)' }}>{value}</span>
             </div>
           ))}
           <div style={{ marginTop: '16px' }}>
@@ -115,16 +115,16 @@ export default async function DomainManagePage({ params }: { params: Promise<{ n
 
       {/* Management tools */}
       <div className="gsws-card">
-        <h2 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '16px' }}>Domain management</h2>
+        <h2 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '16px' }}>Domain management</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
           {tools.map(t => (
             <Link key={t.label} href={t.href}
-              style={{ display: 'flex', flexDirection: 'column', gap: '8px', padding: '14px 16px', background: '#f7f7f7', borderRadius: '8px', border: '1px solid #ebebeb', textDecoration: 'none', transition: 'border-color 0.15s' }}>
+              style={{ display: 'flex', flexDirection: 'column', gap: '8px', padding: '14px 16px', background: 'var(--card-bg-elevated)', borderRadius: '8px', border: '1px solid var(--card-border)', textDecoration: 'none', transition: 'border-color 0.15s' }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9a9a9a" strokeWidth="1.5">
                 <path d={t.icon}/>
               </svg>
-              <p style={{ fontSize: '12.5px', fontWeight: 600, color: '#0a0a0a' }}>{t.label}</p>
-              <p style={{ fontSize: '11px', color: '#9a9a9a' }}>{t.desc}</p>
+              <p style={{ fontSize: '12.5px', fontWeight: 600, color: 'var(--text-primary)' }}>{t.label}</p>
+              <p style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{t.desc}</p>
             </Link>
           ))}
         </div>

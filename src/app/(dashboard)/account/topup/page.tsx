@@ -74,18 +74,18 @@ export default function TopupPage() {
   }
 
   if (loading) return (
-    <div style={{ padding: '48px', textAlign: 'center', color: '#9a9a9a', fontSize: '13px' }}>Loading…</div>
+    <div style={{ padding: '48px', textAlign: 'center', color: 'var(--text-secondary)', fontSize: '13px' }}>Loading…</div>
   )
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', maxWidth: '700px' }}>
 
       <div>
-        <div style={{ fontSize: '12px', color: '#9a9a9a', marginBottom: '4px' }}>
+        <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>
           <Link href="/account/profile" style={{ color: '#1a6ef5' }}>Account</Link> › Top up credit
         </div>
-        <h1 style={{ fontSize: '20px', fontWeight: 600, color: '#0a0a0a' }}>Top up account credit</h1>
-        <p style={{ fontSize: '13px', color: '#9a9a9a', marginTop: '3px' }}>
+        <h1 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text-primary)' }}>Top up account credit</h1>
+        <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '3px' }}>
           Credit is used to register domains and purchase hosting services.
         </p>
       </div>
@@ -139,7 +139,7 @@ export default function TopupPage() {
 
       {/* Amount grid */}
       <div className="gsws-card">
-        <h2 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '16px' }}>Select amount</h2>
+        <h2 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '16px' }}>Select amount</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px', marginBottom: '24px' }}>
           {TOPUP_AMOUNTS.map(opt => (
             <div key={opt.amount} onClick={() => setSelected(opt.amount)}
@@ -155,7 +155,7 @@ export default function TopupPage() {
                 </div>
               )}
               <p style={{ fontSize: '22px', fontWeight: 800, color: selected === opt.amount ? '#1a6ef5' : '#0a0a0a', letterSpacing: '-0.5px', marginBottom: '4px' }}>{opt.label}</p>
-              <p style={{ fontSize: '11px', color: '#9a9a9a' }}>{opt.desc}</p>
+              <p style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{opt.desc}</p>
               {selected === opt.amount && (
                 <div style={{ position: 'absolute', top: '8px', right: '8px' }}>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#1a6ef5" strokeWidth="2.5">
@@ -169,11 +169,11 @@ export default function TopupPage() {
 
         {/* Payment methods */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
-          <span style={{ fontSize: '11px', color: '#9a9a9a', fontWeight: 500 }}>Pay with:</span>
+          <span style={{ fontSize: '11px', color: 'var(--text-secondary)', fontWeight: 500 }}>Pay with:</span>
           {['Visa', 'Mastercard', 'Amex', 'PayPal'].map(pm => (
-            <span key={pm} style={{ padding: '3px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 600, background: '#f7f7f7', border: '1px solid #ebebeb', color: '#5a5a5a' }}>{pm}</span>
+            <span key={pm} style={{ padding: '3px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: 600, background: 'var(--card-bg-elevated)', border: '1px solid var(--card-border)', color: '#5a5a5a' }}>{pm}</span>
           ))}
-          <span style={{ fontSize: '11px', color: '#9a9a9a', marginLeft: '4px' }}>& more via Stripe</span>
+          <span style={{ fontSize: '11px', color: 'var(--text-secondary)', marginLeft: '4px' }}>& more via Stripe</span>
         </div>
 
         <button onClick={handleCheckout} disabled={paying}
@@ -206,13 +206,13 @@ export default function TopupPage() {
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#9a9a9a" strokeWidth="2">
             <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
           </svg>
-          <p style={{ fontSize: '11px', color: '#9a9a9a' }}>
+          <p style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
             Secured by Stripe · 256-bit SSL encryption
           </p>
         </div>
       </div>
 
-      <p style={{ fontSize: '11px', color: '#9a9a9a', textAlign: 'center', lineHeight: 1.6 }}>
+      <p style={{ fontSize: '11px', color: 'var(--text-secondary)', textAlign: 'center', lineHeight: 1.6 }}>
         Credit is non-refundable and expires after 12 months of account inactivity.
         For billing queries contact <a href="mailto:support@geig.co.uk" style={{ color: '#1a6ef5' }}>support@geig.co.uk</a>.
       </p>

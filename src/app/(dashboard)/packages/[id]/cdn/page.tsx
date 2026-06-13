@@ -38,8 +38,8 @@ export default async function PackageCDNPage({ params }: { params: Promise<{ id:
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       <div>
-        <h2 style={{ fontSize: '16px', fontWeight: 600, color: '#0a0a0a' }}>CDN & Performance</h2>
-        <p style={{ fontSize: '12px', color: '#9a9a9a', marginTop: '3px' }}>
+        <h2 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text-primary)' }}>CDN & Performance</h2>
+        <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '3px' }}>
           Manage CDN, caching, security and performance for {pkg.domain_name}
         </p>
       </div>

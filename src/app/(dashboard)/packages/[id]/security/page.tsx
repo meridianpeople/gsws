@@ -32,8 +32,8 @@ export default async function PackageSecurityPage({ params }: { params: Promise<
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       <div>
-        <h2 style={{ fontSize: '16px', fontWeight: 600, color: '#0a0a0a' }}>Security</h2>
-        <p style={{ fontSize: '12px', color: '#9a9a9a', marginTop: '3px' }}>Manage security settings for {pkg.domain_name}</p>
+        <h2 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text-primary)' }}>Security</h2>
+        <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '3px' }}>Manage security settings for {pkg.domain_name}</p>
       </div>
       <SecurityManager
         packageId={id}

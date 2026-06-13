@@ -38,8 +38,8 @@ export default async function PackageEmailPage({ params }: { params: Promise<{ i
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       <div>
-        <h2 style={{ fontSize: '16px', fontWeight: 600, color: '#0a0a0a' }}>Email management</h2>
-        <p style={{ fontSize: '12px', color: '#9a9a9a', marginTop: '3px' }}>
+        <h2 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text-primary)' }}>Email management</h2>
+        <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '3px' }}>
           Manage mailboxes, forwarders and email settings for {pkg.domain_name}
         </p>
       </div>

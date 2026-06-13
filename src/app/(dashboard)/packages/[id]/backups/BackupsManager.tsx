@@ -45,8 +45,8 @@ export default function BackupsManager({ packageId, backupData, webJobs, domainN
 
       {/* Create backup */}
       <div className="gsws-card">
-        <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#0a0a0a', marginBottom: '6px' }}>Create backup</h3>
-        <p style={{ fontSize: '12px', color: '#9a9a9a', marginBottom: '16px' }}>
+        <h3 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '6px' }}>Create backup</h3>
+        <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '16px' }}>
           Take an on-demand snapshot outside the normal backup schedule.
         </p>
 
@@ -59,11 +59,11 @@ export default function BackupsManager({ packageId, backupData, webJobs, domainN
             <div key={opt.value} onClick={() => setBackupType(opt.value as any)}
               style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 14px', borderRadius: '8px', cursor: 'pointer', border: `1.5px solid ${backupType === opt.value ? '#1a6ef5' : '#ebebeb'}`, background: backupType === opt.value ? '#e8f0fe' : '#fff' }}>
               <div style={{ width: '16px', height: '16px', borderRadius: '50%', border: `2px solid ${backupType === opt.value ? '#1a6ef5' : '#d4d4d4'}`, background: backupType === opt.value ? '#1a6ef5' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                {backupType === opt.value && <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#fff' }} />}
+                {backupType === opt.value && <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--card-bg)' }} />}
               </div>
               <div>
-                <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a' }}>{opt.label}</p>
-                <p style={{ fontSize: '11px', color: '#9a9a9a' }}>{opt.desc}</p>
+                <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>{opt.label}</p>
+                <p style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{opt.desc}</p>
               </div>
             </div>
           ))}
@@ -89,14 +89,14 @@ export default function BackupsManager({ packageId, backupData, webJobs, domainN
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <span style={{ fontSize: '16px' }}>🌐</span>
-            <h3 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a' }}>Webspace</h3>
+            <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>Webspace</h3>
           </div>
-          {lastSnapshot && <span style={{ fontSize: '11px', color: '#9a9a9a' }}>Last snapshot: {new Date(lastSnapshot).toLocaleString('en-GB')}</span>}
+          {lastSnapshot && <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Last snapshot: {new Date(lastSnapshot).toLocaleString('en-GB')}</span>}
         </div>
 
         {webSnapshots.length === 0 && webJobHistory.length === 0 ? (
-          <div style={{ padding: '20px', textAlign: 'center', border: '1px dashed #d4d4d4', borderRadius: '8px' }}>
-            <p style={{ fontSize: '13px', color: '#9a9a9a' }}>No snapshots yet. Click "Create backup" to take one now.</p>
+          <div style={{ padding: '20px', textAlign: 'center', border: '1px dashed var(--card-border-hover)', borderRadius: '8px' }}>
+            <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>No snapshots yet. Click "Create backup" to take one now.</p>
           </div>
         ) : (
           <table className="gsws-table">
@@ -105,11 +105,11 @@ export default function BackupsManager({ packageId, backupData, webJobs, domainN
               {webSnapshots.slice().reverse().slice(0, 10).map((snap: any, i: number) => (
                 <tr key={'snap-' + i}>
                   <td style={{ fontFamily: 'ui-monospace, monospace', fontSize: '12px' }}>{new Date(snap).toLocaleString('en-GB')}</td>
-                  <td style={{ fontSize: '12px', color: '#9a9a9a' }}>Automatic</td>
+                  <td style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Automatic</td>
                   <td><span style={{ padding: '2px 8px', borderRadius: '20px', fontSize: '11px', fontWeight: 500, background: '#eaf3de', color: '#3b6d11' }}>Available</span></td>
                   <td>
                     <button onClick={() => { if(confirm('Restore website to this snapshot?')) alert('Contact support to restore: support@geig.co.uk') }}
-                      style={{ padding: '0 10px', height: '24px', border: '1px solid #d4d4d4', borderRadius: '4px', fontSize: '11px', cursor: 'pointer', background: '#fff', fontFamily: 'inherit' }}>
+                      style={{ padding: '0 10px', height: '24px', border: '1px solid var(--card-border-hover)', borderRadius: '4px', fontSize: '11px', cursor: 'pointer', background: 'var(--card-bg)', fontFamily: 'inherit' }}>
                       Restore
                     </button>
                   </td>
@@ -118,10 +118,10 @@ export default function BackupsManager({ packageId, backupData, webJobs, domainN
               {webJobHistory.map((job: any, i: number) => (
                 <tr key={'job-' + i}>
                   <td style={{ fontFamily: 'ui-monospace, monospace', fontSize: '12px' }}>{new Date(job.UpdatedAt || job.CreatedAt).toLocaleString('en-GB')}</td>
-                  <td style={{ fontSize: '12px', color: '#9a9a9a' }}>On-demand</td>
+                  <td style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>On-demand</td>
                   <td><span style={{ padding: '2px 8px', borderRadius: '20px', fontSize: '11px', fontWeight: 500, background: '#eaf3de', color: '#3b6d11' }}>✅ Completed</span></td>
                   <td>
-                    <span style={{ fontSize: '11px', color: '#9a9a9a' }}>Snapshot #{job.SnapshotId}</span>
+                    <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Snapshot #{job.SnapshotId}</span>
                   </td>
                 </tr>
               ))}
@@ -132,11 +132,11 @@ export default function BackupsManager({ packageId, backupData, webJobs, domainN
         {/* Active jobs - only show in-progress */}
         {webJobs.filter((j: any) => j.QueueStatus !== 'success' && j.QueueStatus !== 'failed').length > 0 && (
           <div style={{ marginTop: '12px' }}>
-            <p style={{ fontSize: '11px', color: '#9a9a9a', marginBottom: '6px' }}>In progress</p>
+            <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '6px' }}>In progress</p>
             {webJobs.filter((j: any) => j.QueueStatus !== 'success' && j.QueueStatus !== 'failed').map((job: any, i: number) => (
               <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 10px', background: '#faeeda', borderRadius: '4px', marginBottom: '4px', fontSize: '12px' }}>
                 <span style={{ color: '#854f0b', fontWeight: 500 }}>🔄 {job.Action || 'snapshot'} — {job.QueueStatus || 'queued'}</span>
-                <span style={{ color: '#9a9a9a' }}>{job.CreatedAt ? new Date(job.CreatedAt).toLocaleString('en-GB') : ''}</span>
+                <span style={{ color: 'var(--text-secondary)' }}>{job.CreatedAt ? new Date(job.CreatedAt).toLocaleString('en-GB') : ''}</span>
               </div>
             ))}
           </div>
@@ -148,7 +148,7 @@ export default function BackupsManager({ packageId, backupData, webJobs, domainN
         <div className="gsws-card">
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
             <span style={{ fontSize: '16px' }}>🗄️</span>
-            <h3 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a' }}>Databases</h3>
+            <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>Databases</h3>
           </div>
           <table className="gsws-table">
             <thead><tr><th>Database</th><th>Last snapshot</th><th>Snapshots</th><th></th></tr></thead>
@@ -158,13 +158,13 @@ export default function BackupsManager({ packageId, backupData, webJobs, domainN
                 return (
                   <tr key={d.id}>
                     <td style={{ fontFamily: 'ui-monospace, monospace', fontSize: '12px', fontWeight: 600 }}>{d.name}</td>
-                    <td style={{ fontSize: '12px', color: '#9a9a9a' }}>
+                    <td style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
                       {lastSnap ? new Date(lastSnap).toLocaleString('en-GB') : 'No backups'}
                     </td>
-                    <td style={{ fontSize: '12px', color: '#9a9a9a' }}>{d.snapshotTimes?.length || 0}</td>
+                    <td style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{d.snapshotTimes?.length || 0}</td>
                     <td>
                       <button onClick={() => handleCreateBackup('database', d.id)} disabled={creating}
-                        style={{ padding: '0 10px', height: '24px', border: '1px solid #1a6ef5', borderRadius: '4px', fontSize: '11px', color: '#1a6ef5', background: '#fff', cursor: 'pointer', fontFamily: 'inherit' }}>
+                        style={{ padding: '0 10px', height: '24px', border: '1px solid #1a6ef5', borderRadius: '4px', fontSize: '11px', color: '#1a6ef5', background: 'var(--card-bg)', cursor: 'pointer', fontFamily: 'inherit' }}>
                         Backup now
                       </button>
                     </td>
@@ -176,7 +176,7 @@ export default function BackupsManager({ packageId, backupData, webJobs, domainN
         </div>
       )}
 
-      <div style={{ padding: '12px 16px', background: '#f7f7f7', borderRadius: '8px', fontSize: '12px', color: '#9a9a9a', display: 'flex', gap: '8px' }}>
+      <div style={{ padding: '12px 16px', background: 'var(--card-bg-elevated)', borderRadius: '8px', fontSize: '12px', color: 'var(--text-secondary)', display: 'flex', gap: '8px' }}>
         <span>ℹ️</span>
         <span>Timeline backups run automatically every day with 30-day retention. On-demand snapshots are available anytime. For backup assistance contact <a href="mailto:support@geig.co.uk" style={{ color: '#1a6ef5' }}>support@geig.co.uk</a>.</span>
       </div>

@@ -36,8 +36,8 @@ export default async function PackageRedirectsPage({ params }: { params: Promise
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       <div>
-        <h2 style={{ fontSize: '16px', fontWeight: 600, color: '#0a0a0a' }}>Redirects</h2>
-        <p style={{ fontSize: '12px', color: '#9a9a9a', marginTop: '3px' }}>Manage URL redirects for {pkg.domain_name}</p>
+        <h2 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text-primary)' }}>Redirects</h2>
+        <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '3px' }}>Manage URL redirects for {pkg.domain_name}</p>
       </div>
       <RedirectsManager packageId={id} domainName={pkg.domain_name} initialRedirects={redirects} webNames={webNames} />
     </div>

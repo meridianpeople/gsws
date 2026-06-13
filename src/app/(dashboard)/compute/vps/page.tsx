@@ -32,9 +32,9 @@ export default function VPSPage() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
         <div>
-          <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#9a9a9a', marginBottom: '6px' }}>Compute</p>
-          <h1 style={{ fontSize: '22px', fontWeight: 700, color: '#0a0a0a', letterSpacing: '-0.02em', margin: 0 }}>Cloud VPS</h1>
-          <p style={{ fontSize: '13px', color: '#9a9a9a', marginTop: '4px' }}>High-performance virtual servers across EU, UK, US, Singapore and Australia</p>
+          <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-secondary)', marginBottom: '6px' }}>Compute</p>
+          <h1 style={{ fontSize: '22px', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.02em', margin: 0 }}>Cloud VPS</h1>
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '4px' }}>High-performance virtual servers across EU, UK, US, Singapore and Australia</p>
         </div>
         <Link href="/compute/vps/new" style={{ display: 'inline-flex', alignItems: 'center', gap: '7px', height: '38px', padding: '0 18px', background: '#0a0a0a', color: '#fff', borderRadius: '9px', fontSize: '13px', fontWeight: 600, textDecoration: 'none' }}>
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
@@ -50,9 +50,9 @@ export default function VPSPage() {
             { label: 'ACTIVE', value: active },
             { label: 'MONTHLY SPEND', value: `£${orders.reduce((s, o) => s + (o.price_inc_vat || 0), 0).toFixed(2)}` },
           ].map(({ label, value }) => (
-            <div key={label} style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', padding: '16px 20px' }}>
-              <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#9a9a9a', marginBottom: '8px' }}>{label}</p>
-              <p style={{ fontSize: '24px', fontWeight: 700, color: '#0a0a0a', letterSpacing: '-0.02em' }}>{value}</p>
+            <div key={label} style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '10px', padding: '16px 20px' }}>
+              <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-secondary)', marginBottom: '8px' }}>{label}</p>
+              <p style={{ fontSize: '24px', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>{value}</p>
             </div>
           ))}
         </div>
@@ -62,13 +62,13 @@ export default function VPSPage() {
       {loading ? (
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '160px', gap: '10px' }}>
           <div style={{ width: '16px', height: '16px', border: '2px solid #e5e5e5', borderTopColor: '#0a0a0a', borderRadius: '50%', animation: 'spin 0.6s linear infinite' }} />
-          <span style={{ fontSize: '13px', color: '#9a9a9a' }}>Loading...</span>
+          <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>Loading...</span>
         </div>
       ) : orders.length === 0 ? (
-        <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '14px', padding: '64px', textAlign: 'center' }}>
-          <div style={{ width: '48px', height: '48px', background: '#f7f7f7', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', color: '#9a9a9a' }}><ServerIcon /></div>
-          <p style={{ fontSize: '15px', fontWeight: 700, color: '#0a0a0a', marginBottom: '6px', letterSpacing: '-0.01em' }}>No VPS instances</p>
-          <p style={{ fontSize: '13px', color: '#9a9a9a', marginBottom: '24px' }}>Deploy a cloud VPS in seconds — choose your plan, region and OS.</p>
+        <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '14px', padding: '64px', textAlign: 'center' }}>
+          <div style={{ width: '48px', height: '48px', background: 'var(--card-bg-elevated)', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 16px', color: 'var(--text-secondary)' }}><ServerIcon /></div>
+          <p style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '6px', letterSpacing: '-0.01em' }}>No VPS instances</p>
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '24px' }}>Deploy a cloud VPS in seconds — choose your plan, region and OS.</p>
           <Link href="/compute/vps/new" style={{ display: 'inline-flex', height: '38px', alignItems: 'center', padding: '0 20px', background: '#0a0a0a', color: '#fff', borderRadius: '9px', fontSize: '13px', fontWeight: 600, textDecoration: 'none' }}>
             Order your first VPS
           </Link>
@@ -87,7 +87,7 @@ export default function VPSPage() {
 
             return (
               <Link key={o.id} href={`/compute/vps/${o.id}`} style={{ textDecoration: 'none' }}>
-                <div className="vps-row" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '11px', padding: '16px 20px', display: 'grid', gridTemplateColumns: '2fr 100px 200px 100px auto', gap: '16px', alignItems: 'center' }}>
+                <div className="vps-row" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '11px', padding: '16px 20px', display: 'grid', gridTemplateColumns: '2fr 100px 200px 100px auto', gap: '16px', alignItems: 'center' }}>
 
                   {/* Name */}
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -95,27 +95,27 @@ export default function VPSPage() {
                       <ServerIcon />
                     </div>
                     <div>
-                      <p style={{ fontSize: '13px', fontWeight: 700, color: '#0a0a0a', marginBottom: '2px', letterSpacing: '-0.01em' }}>{name}</p>
-                      <p style={{ fontSize: '11px', color: '#9a9a9a', fontFamily: "'DM Mono', monospace" }}>{ip} · {region}</p>
+                      <p style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '2px', letterSpacing: '-0.01em' }}>{name}</p>
+                      <p style={{ fontSize: '11px', color: 'var(--text-secondary)', fontFamily: "'DM Mono', monospace" }}>{ip} · {region}</p>
                     </div>
                   </div>
 
                   {/* Plan */}
                   <div>
-                    <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#9a9a9a', marginBottom: '3px' }}>Plan</p>
+                    <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-secondary)', marginBottom: '3px' }}>Plan</p>
                     <p style={{ fontSize: '12px', fontWeight: 600, color: '#333' }}>{o.service_key}</p>
                   </div>
 
                   {/* Specs */}
                   <div>
-                    <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#9a9a9a', marginBottom: '3px' }}>Specs</p>
+                    <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-secondary)', marginBottom: '3px' }}>Specs</p>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       {[
                         { icon: <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9a9a9a" strokeWidth="2"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M1 15h3M20 9h3M20 15h3"/></svg>, val: `${cpu} vCPU` },
                         { icon: <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9a9a9a" strokeWidth="2"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h.01M10 12h.01"/></svg>, val: ram },
                         { icon: <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9a9a9a" strokeWidth="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/></svg>, val: `${disk} SSD` },
                       ].map(({ icon, val }) => (
-                        <span key={val} style={{ display: 'flex', alignItems: 'center', gap: '3px', fontSize: '11px', color: '#555' }}>
+                        <span key={val} style={{ display: 'flex', alignItems: 'center', gap: '3px', fontSize: '11px', color: 'var(--text-tertiary)' }}>
                           {icon}{val}
                         </span>
                       ))}
@@ -124,7 +124,7 @@ export default function VPSPage() {
 
                   {/* Price */}
                   <div>
-                    <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#9a9a9a', marginBottom: '3px' }}>Price</p>
+                    <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-secondary)', marginBottom: '3px' }}>Price</p>
                     <p style={{ fontSize: '12px', fontWeight: 600, color: '#333' }}>{o.price_inc_vat ? `£${o.price_inc_vat.toFixed(2)}/mo` : '—'}</p>
                   </div>
 

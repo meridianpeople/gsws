@@ -116,16 +116,16 @@ export default function FilesManager({ packageId, domainName, ftpUsers, ftpCrede
           { icon: '🔑', label: 'SSH Access', desc: `${sshKeys.length} key${sshKeys.length !== 1 ? 's' : ''} configured`, tab: 'ssh' },
         ].map(item => (
           <div key={item.tab} onClick={() => switchTab(item.tab as any)}
-            style={{ padding: '16px', borderRadius: '10px', background: '#fff', border: '1px solid #ebebeb', cursor: 'pointer' }}>
+            style={{ padding: '16px', borderRadius: '10px', background: 'var(--card-bg)', border: '1px solid var(--card-border)', cursor: 'pointer' }}>
             <p style={{ fontSize: '24px', marginBottom: '8px' }}>{item.icon}</p>
-            <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a' }}>{item.label}</p>
-            <p style={{ fontSize: '11px', color: '#9a9a9a', marginTop: '3px' }}>{item.desc}</p>
+            <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>{item.label}</p>
+            <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '3px' }}>{item.desc}</p>
           </div>
         ))}
       </div>
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: '2px', borderBottom: '1px solid #ebebeb' }}>
+      <div style={{ display: 'flex', gap: '2px', borderBottom: '1px solid var(--card-border)' }}>
         {[
           { key: 'ftp', label: '📡 FTP access' },
           { key: 'permissions', label: '🔒 File permissions' },
@@ -160,7 +160,7 @@ export default function FilesManager({ packageId, domainName, ftpUsers, ftpCrede
                   <div style={{ display: 'flex', gap: '4px', flexShrink: 0 }}>
                     {item.secret && (
                       <button onClick={() => setShowPassword(s => ({ ...s, [item.key]: !s[item.key] }))}
-                        style={{ height: '24px', padding: '0 8px', background: '#1a3060', color: '#9a9a9a', border: 'none', borderRadius: '4px', fontSize: '11px', cursor: 'pointer', fontFamily: 'inherit' }}>
+                        style={{ height: '24px', padding: '0 8px', background: '#1a3060', color: 'var(--text-secondary)', border: 'none', borderRadius: '4px', fontSize: '11px', cursor: 'pointer', fontFamily: 'inherit' }}>
                         {showPassword[item.key] ? 'Hide' : 'Show'}
                       </button>
                     )}
@@ -180,9 +180,9 @@ export default function FilesManager({ packageId, domainName, ftpUsers, ftpCrede
           </div>
 
           <div className="gsws-card">
-            <h3 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '14px' }}>FTP accounts ({ftpUsers.length})</h3>
+            <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '14px' }}>FTP accounts ({ftpUsers.length})</h3>
             {ftpUsers.length === 0 ? (
-              <p style={{ fontSize: '13px', color: '#9a9a9a' }}>No FTP accounts found.</p>
+              <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>No FTP accounts found.</p>
             ) : (
               <table className="gsws-table">
                 <thead>
@@ -192,9 +192,9 @@ export default function FilesManager({ packageId, domainName, ftpUsers, ftpCrede
                   {ftpUsers.map((u: any) => (
                     <tr key={u.Id}>
                       <td style={{ fontFamily: 'ui-monospace, monospace', fontSize: '12px', fontWeight: 600 }}>{u.Username}</td>
-                      <td style={{ fontFamily: 'ui-monospace, monospace', fontSize: '11px', color: '#9a9a9a' }}>{u.JailFrom || '/'}</td>
+                      <td style={{ fontFamily: 'ui-monospace, monospace', fontSize: '11px', color: 'var(--text-secondary)' }}>{u.JailFrom || '/'}</td>
                       <td><span style={{ padding: '2px 8px', borderRadius: '20px', fontSize: '11px', fontWeight: 500, background: u.Enabled ? '#eaf3de' : '#f7f7f7', color: u.Enabled ? '#3b6d11' : '#9a9a9a' }}>{u.Enabled ? 'Active' : 'Disabled'}</span></td>
-                      <td style={{ fontSize: '12px', color: '#9a9a9a' }}>{u.UnlockedUntil ? new Date(u.UnlockedUntil).toLocaleDateString('en-GB') : '—'}</td>
+                      <td style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{u.UnlockedUntil ? new Date(u.UnlockedUntil).toLocaleDateString('en-GB') : '—'}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -203,7 +203,7 @@ export default function FilesManager({ packageId, domainName, ftpUsers, ftpCrede
           </div>
 
           <div className="gsws-card">
-            <h3 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '12px' }}>Recommended FTP clients</h3>
+            <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '12px' }}>Recommended FTP clients</h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
               {[
                 { name: 'FileZilla', desc: 'Free, cross-platform', url: 'https://filezilla-project.org', icon: '🦎' },
@@ -211,11 +211,11 @@ export default function FilesManager({ packageId, domainName, ftpUsers, ftpCrede
                 { name: 'WinSCP', desc: 'Windows only', url: 'https://winscp.net', icon: '🖥️' },
               ].map(item => (
                 <a key={item.name} href={item.url} target="_blank"
-                  style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 12px', border: '1px solid #ebebeb', borderRadius: '8px', textDecoration: 'none' }}>
+                  style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 12px', border: '1px solid var(--card-border)', borderRadius: '8px', textDecoration: 'none' }}>
                   <span style={{ fontSize: '20px' }}>{item.icon}</span>
                   <div>
-                    <p style={{ fontSize: '12px', fontWeight: 600, color: '#0a0a0a' }}>{item.name}</p>
-                    <p style={{ fontSize: '11px', color: '#9a9a9a' }}>{item.desc}</p>
+                    <p style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-primary)' }}>{item.name}</p>
+                    <p style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{item.desc}</p>
                   </div>
                 </a>
               ))}
@@ -230,8 +230,8 @@ export default function FilesManager({ packageId, domainName, ftpUsers, ftpCrede
           <div className="gsws-card">
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
               <div>
-                <h3 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a' }}>File permission checker</h3>
-                <p style={{ fontSize: '12px', color: '#9a9a9a', marginTop: '2px' }}>Scans your files and flags any with incorrect permissions</p>
+                <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>File permission checker</h3>
+                <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>Scans your files and flags any with incorrect permissions</p>
               </div>
               <button onClick={handleFixPermissions} disabled={fixingPerms}
                 style={{ height: '32px', padding: '0 14px', background: '#1a6ef5', color: '#fff', border: 'none', borderRadius: '6px', fontSize: '12px', fontWeight: 600, cursor: fixingPerms ? 'wait' : 'pointer', fontFamily: 'inherit', opacity: fixingPerms ? 0.7 : 1 }}>
@@ -239,8 +239,8 @@ export default function FilesManager({ packageId, domainName, ftpUsers, ftpCrede
               </button>
             </div>
             {!filePerms ? (
-              <div style={{ padding: '24px', textAlign: 'center', border: '1px dashed #d4d4d4', borderRadius: '8px' }}>
-                <p style={{ fontSize: '13px', color: '#9a9a9a' }}>No permission data. Click "Fix all permissions" to scan.</p>
+              <div style={{ padding: '24px', textAlign: 'center', border: '1px dashed var(--card-border-hover)', borderRadius: '8px' }}>
+                <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>No permission data. Click "Fix all permissions" to scan.</p>
               </div>
             ) : hasPermIssues ? (
               <div>
@@ -250,7 +250,7 @@ export default function FilesManager({ packageId, domainName, ftpUsers, ftpCrede
                 {permFailures.slice(0, 10).map((item: any, i: number) => (
                   <div key={i} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 10px', background: '#fcebeb', borderRadius: '4px', marginBottom: '4px', fontSize: '12px' }}>
                     <span style={{ fontFamily: 'ui-monospace, monospace', color: '#a32d2d', flex: 1, marginRight: '12px' }}>{item.file?.split('/').pop() || item.file}</span>
-                    <span style={{ color: '#9a9a9a', flexShrink: 0 }}>{item.perms?.c} → {item.perms?.r}</span>
+                    <span style={{ color: 'var(--text-secondary)', flexShrink: 0 }}>{item.perms?.c} → {item.perms?.r}</span>
                   </div>
                 ))}
               </div>
@@ -262,17 +262,17 @@ export default function FilesManager({ packageId, domainName, ftpUsers, ftpCrede
           </div>
 
           <div className="gsws-card">
-            <h3 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '12px' }}>Permission recommendations</h3>
+            <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '12px' }}>Permission recommendations</h3>
             {[
               { path: 'Directories', perm: '755', desc: 'Owner can read/write/execute; others can read/execute' },
               { path: 'PHP/HTML files', perm: '644', desc: 'Owner can read/write; others can read only' },
               { path: 'Config files', perm: '600', desc: 'Owner only' },
               { path: '.htaccess', perm: '644', desc: 'Owner can read/write; others can read only' },
             ].map(r => (
-              <div key={r.path} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '8px 0', borderBottom: '1px solid #ebebeb', fontSize: '12px' }}>
+              <div key={r.path} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '8px 0', borderBottom: '1px solid var(--card-border)', fontSize: '12px' }}>
                 <span style={{ fontFamily: 'ui-monospace, monospace', fontWeight: 700, color: '#1a6ef5', width: '36px', flexShrink: 0 }}>{r.perm}</span>
-                <span style={{ fontWeight: 500, color: '#0a0a0a', width: '160px', flexShrink: 0 }}>{r.path}</span>
-                <span style={{ color: '#9a9a9a' }}>{r.desc}</span>
+                <span style={{ fontWeight: 500, color: 'var(--text-primary)', width: '160px', flexShrink: 0 }}>{r.path}</span>
+                <span style={{ color: 'var(--text-secondary)' }}>{r.desc}</span>
               </div>
             ))}
           </div>
@@ -307,15 +307,15 @@ export default function FilesManager({ packageId, domainName, ftpUsers, ftpCrede
           </div>
 
           <div className="gsws-card">
-            <h3 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '12px' }}>How to generate an SSH key pair</h3>
+            <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '12px' }}>How to generate an SSH key pair</h3>
             {[
               { os: 'Linux / Mac', cmd: 'ssh-keygen -t ed25519 -C "your@email.com"' },
               { os: 'Windows (PowerShell)', cmd: 'ssh-keygen -t ed25519 -C "your@email.com"' },
             ].map(item => (
               <div key={item.os} style={{ marginBottom: '10px' }}>
-                <p style={{ fontSize: '11px', color: '#9a9a9a', marginBottom: '4px' }}>{item.os}</p>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 12px', background: '#f7f7f7', borderRadius: '6px' }}>
-                  <code style={{ fontSize: '11px', fontFamily: 'ui-monospace, monospace', color: '#0a0a0a' }}>{item.cmd}</code>
+                <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '4px' }}>{item.os}</p>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '8px 12px', background: 'var(--card-bg-elevated)', borderRadius: '6px' }}>
+                  <code style={{ fontSize: '11px', fontFamily: 'ui-monospace, monospace', color: 'var(--text-primary)' }}>{item.cmd}</code>
                   <button onClick={() => copyToClipboard(item.cmd, item.os)}
                     style={{ height: '24px', padding: '0 8px', background: copied === item.os ? '#3b6d11' : '#ebebeb', color: copied === item.os ? '#fff' : '#0a0a0a', border: 'none', borderRadius: '4px', fontSize: '11px', cursor: 'pointer', fontFamily: 'inherit', flexShrink: 0, marginLeft: '8px' }}>
                     {copied === item.os ? '✓' : 'Copy'}
@@ -323,14 +323,14 @@ export default function FilesManager({ packageId, domainName, ftpUsers, ftpCrede
                 </div>
               </div>
             ))}
-            <p style={{ fontSize: '11px', color: '#9a9a9a', marginTop: '8px' }}>
+            <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '8px' }}>
               Your public key will be at <code style={{ fontFamily: 'ui-monospace, monospace' }}>~/.ssh/id_ed25519.pub</code> — paste its contents below.
             </p>
           </div>
 
           <div className="gsws-card">
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
-              <h3 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a' }}>Public SSH keys ({sshKeys.length})</h3>
+              <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>Public SSH keys ({sshKeys.length})</h3>
               <button onClick={() => setShowAddKey(s => !s)}
                 style={{ height: '30px', padding: '0 14px', background: '#1a6ef5', color: '#fff', border: 'none', borderRadius: '6px', fontSize: '12px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
                 + Add public key
@@ -340,17 +340,17 @@ export default function FilesManager({ packageId, domainName, ftpUsers, ftpCrede
             {showAddKey && (
               <div style={{ padding: '16px', background: '#f7f9ff', border: '1px solid #d4e0ff', borderRadius: '8px', marginBottom: '14px' }}>
                 <div style={{ marginBottom: '10px' }}>
-                  <label style={{ fontSize: '11px', color: '#9a9a9a', display: 'block', marginBottom: '4px' }}>Public key (OpenSSH format)</label>
+                  <label style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Public key (OpenSSH format)</label>
                   <textarea value={newKey.key} onChange={e => setNewKey(k => ({ ...k, key: e.target.value }))}
                     placeholder="ssh-ed25519 AAAA... your@email.com"
                     rows={4}
-                    style={{ width: '100%', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '12px', fontFamily: 'ui-monospace, monospace', padding: '8px 10px', boxSizing: 'border-box', resize: 'vertical' }} />
+                    style={{ width: '100%', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '12px', fontFamily: 'ui-monospace, monospace', padding: '8px 10px', boxSizing: 'border-box', resize: 'vertical' }} />
                 </div>
                 <div style={{ marginBottom: '12px' }}>
-                  <label style={{ fontSize: '11px', color: '#9a9a9a', display: 'block', marginBottom: '4px' }}>Label</label>
+                  <label style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Label</label>
                   <input value={newKey.handle} onChange={e => setNewKey(k => ({ ...k, handle: e.target.value }))}
                     placeholder="e.g. My Laptop"
-                    style={{ width: '100%', height: '34px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', padding: '0 10px', boxSizing: 'border-box', fontFamily: 'inherit' }} />
+                    style={{ width: '100%', height: '34px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', padding: '0 10px', boxSizing: 'border-box', fontFamily: 'inherit' }} />
                 </div>
                 <div style={{ display: 'flex', gap: '8px' }}>
                   <button onClick={handleAddSshKey} disabled={addingKey || !newKey.key || !newKey.handle}
@@ -358,7 +358,7 @@ export default function FilesManager({ packageId, domainName, ftpUsers, ftpCrede
                     {addingKey ? 'Adding…' : 'Add key'}
                   </button>
                   <button onClick={() => setShowAddKey(false)}
-                    style={{ height: '32px', padding: '0 14px', background: '#fff', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '12px', cursor: 'pointer', fontFamily: 'inherit' }}>
+                    style={{ height: '32px', padding: '0 14px', background: 'var(--card-bg)', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '12px', cursor: 'pointer', fontFamily: 'inherit' }}>
                     Cancel
                   </button>
                 </div>
@@ -366,19 +366,19 @@ export default function FilesManager({ packageId, domainName, ftpUsers, ftpCrede
             )}
 
             {sshKeys.length === 0 ? (
-              <div style={{ padding: '24px', textAlign: 'center', border: '1px dashed #d4d4d4', borderRadius: '8px' }}>
-                <p style={{ fontSize: '13px', color: '#9a9a9a' }}>No SSH keys. Add a public key to enable SSH access.</p>
+              <div style={{ padding: '24px', textAlign: 'center', border: '1px dashed var(--card-border-hover)', borderRadius: '8px' }}>
+                <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>No SSH keys. Add a public key to enable SSH access.</p>
               </div>
             ) : (
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {sshKeys.map((k: any, i: number) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', background: '#f7f7f7', borderRadius: '8px' }}>
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', background: 'var(--card-bg-elevated)', borderRadius: '8px' }}>
                     <div>
-                      <p style={{ fontSize: '12px', fontWeight: 600, color: '#0a0a0a' }}>{k.handle}</p>
-                      <p style={{ fontSize: '11px', fontFamily: 'ui-monospace, monospace', color: '#9a9a9a', marginTop: '2px' }}>{k.key?.substring(0, 50)}…</p>
+                      <p style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-primary)' }}>{k.handle}</p>
+                      <p style={{ fontSize: '11px', fontFamily: 'ui-monospace, monospace', color: 'var(--text-secondary)', marginTop: '2px' }}>{k.key?.substring(0, 50)}…</p>
                     </div>
                     <button onClick={() => handleRemoveSshKey(k.handle, i)}
-                      style={{ padding: '0 10px', height: '26px', border: '1px solid #f5c1c1', borderRadius: '4px', fontSize: '11px', color: '#a32d2d', background: '#fff', cursor: 'pointer', fontFamily: 'inherit' }}>
+                      style={{ padding: '0 10px', height: '26px', border: '1px solid #f5c1c1', borderRadius: '4px', fontSize: '11px', color: '#a32d2d', background: 'var(--card-bg)', cursor: 'pointer', fontFamily: 'inherit' }}>
                       Remove
                     </button>
                   </div>

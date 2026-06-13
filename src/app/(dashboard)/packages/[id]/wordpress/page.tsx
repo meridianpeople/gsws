@@ -15,8 +15,8 @@ export default async function PackageWordPressPage({ params }: { params: Promise
     return (
       <div className="gsws-card" style={{ textAlign: 'center', padding: '48px' }}>
         <p style={{ fontSize: '32px', marginBottom: '12px' }}>🌐</p>
-        <p style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a', marginBottom: '6px' }}>Not a WordPress package</p>
-        <p style={{ fontSize: '13px', color: '#9a9a9a' }}>WordPress tools are only available on WordPress hosting packages.</p>
+        <p style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '6px' }}>Not a WordPress package</p>
+        <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>WordPress tools are only available on WordPress hosting packages.</p>
       </div>
     )
   }
@@ -56,8 +56,8 @@ export default async function PackageWordPressPage({ params }: { params: Promise
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
         <div>
-          <h2 style={{ fontSize: '16px', fontWeight: 600, color: '#0a0a0a' }}>WordPress</h2>
-          <p style={{ fontSize: '12px', color: '#9a9a9a', marginTop: '3px' }}>
+          <h2 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text-primary)' }}>WordPress</h2>
+          <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '3px' }}>
             Manage WordPress for {pkg.domain_name}
           </p>
         </div>

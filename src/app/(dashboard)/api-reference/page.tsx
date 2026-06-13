@@ -212,7 +212,7 @@ export default function APIReferencePage() {
     <div style={{ maxWidth: '960px' }}>
       <div style={{ marginBottom: '24px' }}>
         <h1 style={{ fontSize: '22px', fontWeight: 700, color: '#111', margin: 0 }}>API Reference</h1>
-        <p style={{ fontSize: '13px', color: '#666', marginTop: '4px' }}>
+        <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '4px' }}>
           {ROUTES.length} endpoints · All routes require session cookie unless marked public · Base URL: <code style={{ background: '#f3f4f6', padding: '1px 5px', borderRadius: '3px', fontSize: '12px' }}>https://sws.geig.co.uk</code>
         </p>
       </div>
@@ -235,7 +235,7 @@ export default function APIReferencePage() {
       {Object.entries(grouped).map(([group, routes]) => (
         <div key={group} style={{ marginBottom: '24px' }}>
           <h2 style={{ fontSize: '14px', fontWeight: 700, color: '#111', margin: '0 0 10px', paddingBottom: '8px', borderBottom: '2px solid #f3f4f6' }}>
-            {group} <span style={{ fontWeight: 400, color: '#9a9a9a', fontSize: '12px' }}>({routes.length})</span>
+            {group} <span style={{ fontWeight: 400, color: 'var(--text-secondary)', fontSize: '12px' }}>({routes.length})</span>
           </h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
             {routes.map((r, i) => {
@@ -251,8 +251,8 @@ export default function APIReferencePage() {
                     </span>
                     <code style={{ fontSize: '12px', color: '#1a1a1a', fontFamily: 'monospace', flex: 1 }}>{r.path}</code>
                     {!r.auth && <span style={{ fontSize: '10px', background: '#fef9c3', color: '#92400e', padding: '1px 5px', borderRadius: '3px', fontWeight: 600, flexShrink: 0 }}>PUBLIC</span>}
-                    <span style={{ fontSize: '12px', color: '#666', flex: 2 }}>{r.desc}</span>
-                    <span style={{ color: '#9a9a9a', fontSize: '12px' }}>{isOpen ? '▲' : '▼'}</span>
+                    <span style={{ fontSize: '12px', color: 'var(--text-secondary)', flex: 2 }}>{r.desc}</span>
+                    <span style={{ color: 'var(--text-secondary)', fontSize: '12px' }}>{isOpen ? '▲' : '▼'}</span>
                   </button>
 
                   {isOpen && (
@@ -260,22 +260,22 @@ export default function APIReferencePage() {
                       <div style={{ display: 'grid', gridTemplateColumns: r.body ? '1fr 1fr' : '1fr', gap: '12px' }}>
                         {r.params && (
                           <div>
-                            <div style={{ fontSize: '11px', fontWeight: 700, color: '#666', marginBottom: '6px', textTransform: 'uppercase' }}>Query Params</div>
-                            <pre style={{ margin: 0, fontSize: '11px', background: '#fff', border: '1px solid #e5e7eb', borderRadius: '6px', padding: '8px 10px', overflow: 'auto' }}>{r.params}</pre>
+                            <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '6px', textTransform: 'uppercase' }}>Query Params</div>
+                            <pre style={{ margin: 0, fontSize: '11px', background: 'var(--card-bg)', border: '1px solid #e5e7eb', borderRadius: '6px', padding: '8px 10px', overflow: 'auto' }}>{r.params}</pre>
                           </div>
                         )}
                         {r.body && (
                           <div>
-                            <div style={{ fontSize: '11px', fontWeight: 700, color: '#666', marginBottom: '6px', textTransform: 'uppercase' }}>Request Body</div>
-                            <pre style={{ margin: 0, fontSize: '11px', background: '#fff', border: '1px solid #e5e7eb', borderRadius: '6px', padding: '8px 10px', overflow: 'auto' }}>{r.body}</pre>
+                            <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '6px', textTransform: 'uppercase' }}>Request Body</div>
+                            <pre style={{ margin: 0, fontSize: '11px', background: 'var(--card-bg)', border: '1px solid #e5e7eb', borderRadius: '6px', padding: '8px 10px', overflow: 'auto' }}>{r.body}</pre>
                           </div>
                         )}
                         <div>
-                          <div style={{ fontSize: '11px', fontWeight: 700, color: '#666', marginBottom: '6px', textTransform: 'uppercase' }}>Response</div>
-                          <pre style={{ margin: 0, fontSize: '11px', background: '#fff', border: '1px solid #e5e7eb', borderRadius: '6px', padding: '8px 10px', overflow: 'auto' }}>{r.response}</pre>
+                          <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '6px', textTransform: 'uppercase' }}>Response</div>
+                          <pre style={{ margin: 0, fontSize: '11px', background: 'var(--card-bg)', border: '1px solid #e5e7eb', borderRadius: '6px', padding: '8px 10px', overflow: 'auto' }}>{r.response}</pre>
                         </div>
                       </div>
-                      <div style={{ marginTop: '10px', fontSize: '11px', color: '#666' }}>
+                      <div style={{ marginTop: '10px', fontSize: '11px', color: 'var(--text-secondary)' }}>
                         🔐 Auth: {r.auth ? 'Session cookie required' : 'Public — no auth required'}
                         {!r.auth && r.group === 'Cron' && ' (x-cron-secret header required)'}
                       </div>

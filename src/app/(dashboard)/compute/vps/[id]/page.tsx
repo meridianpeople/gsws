@@ -119,9 +119,9 @@ export default function VPSDetailPage() {
 
       {/* Breadcrumb */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '16px' }}>
-        <Link href="/compute/vps" style={{ fontSize: '12px', color: '#9a9a9a', textDecoration: 'none', letterSpacing: '0.01em' }}>VPS</Link>
+        <Link href="/compute/vps" style={{ fontSize: '12px', color: 'var(--text-secondary)', textDecoration: 'none', letterSpacing: '0.01em' }}>VPS</Link>
         <span style={{ color: '#d4d4d4', fontSize: '12px' }}>›</span>
-        <span style={{ fontSize: '12px', color: '#666' }}>{name}</span>
+        <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{name}</span>
       </div>
 
       {/* Hero header */}
@@ -129,7 +129,7 @@ export default function VPSDetailPage() {
         <div style={{ position: 'absolute', top: 0, right: 0, width: '300px', height: '100%', background: 'radial-gradient(ellipse at top right, #1a1a2e 0%, transparent 70%)', pointerEvents: 'none' }} />
         <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', position: 'relative' }}>
           <div>
-            <p style={{ fontSize: '10px', fontWeight: 600, letterSpacing: '0.12em', color: '#666', textTransform: 'uppercase', marginBottom: '8px' }}>Cloud VPS · {pd?.region || 'EU'}</p>
+            <p style={{ fontSize: '10px', fontWeight: 600, letterSpacing: '0.12em', color: 'var(--text-secondary)', textTransform: 'uppercase', marginBottom: '8px' }}>Cloud VPS · {pd?.region || 'EU'}</p>
             {editingVpsName ? (
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
                 <input value={newVpsName} onChange={e => setNewVpsName(e.target.value)}
@@ -139,27 +139,27 @@ export default function VPSDetailPage() {
                     await doAction('rename', { displayName: newVpsName })
                     setEditingVpsName(false); loadVPS()
                   } catch {}
-                }} style={{ height: '34px', padding: '0 12px', background: '#4ade80', color: '#0a0a0a', border: 'none', borderRadius: '6px', fontSize: '12px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>Save</button>
-                <button onClick={() => setEditingVpsName(false)} style={{ height: '34px', padding: '0 12px', background: '#1a1a1a', color: '#9a9a9a', border: '1px solid #333', borderRadius: '6px', fontSize: '12px', cursor: 'pointer', fontFamily: 'inherit' }}>Cancel</button>
+                }} style={{ height: '34px', padding: '0 12px', background: '#4ade80', color: 'var(--text-primary)', border: 'none', borderRadius: '6px', fontSize: '12px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>Save</button>
+                <button onClick={() => setEditingVpsName(false)} style={{ height: '34px', padding: '0 12px', background: '#1a1a1a', color: 'var(--text-secondary)', border: '1px solid #333', borderRadius: '6px', fontSize: '12px', cursor: 'pointer', fontFamily: 'inherit' }}>Cancel</button>
               </div>
             ) : (
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
                 <h1 style={{ fontSize: '24px', fontWeight: 700, color: '#f5f5f5', margin: '0', letterSpacing: '-0.02em' }}>{name}</h1>
                 <button onClick={() => { setNewVpsName(name); setEditingVpsName(true) }}
-                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#555', fontSize: '13px', padding: '0', lineHeight: 1, marginTop: '2px' }} title="Rename">✏️</button>
+                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-tertiary)', fontSize: '13px', padding: '0', lineHeight: 1, marginTop: '2px' }} title="Rename">✏️</button>
               </div>
             )}
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '12px', color: '#9a9a9a', fontFamily: "'DM Mono', monospace" }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '12px', color: 'var(--text-secondary)', fontFamily: "'DM Mono', monospace" }}>
                 {ICON.ip}<span style={{ color: '#e5e5e5' }}>{ip}</span>
               </span>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '12px', color: '#9a9a9a' }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '12px', color: 'var(--text-secondary)' }}>
                 {ICON.cpu}<span style={{ color: '#e5e5e5' }}>{pd?.cpuCores || '—'} vCPU</span>
               </span>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '12px', color: '#9a9a9a' }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '12px', color: 'var(--text-secondary)' }}>
                 {ICON.ram}<span style={{ color: '#e5e5e5' }}>{pd?.ramMb ? `${pd.ramMb/1024}GB` : '—'} RAM</span>
               </span>
-              <span style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '12px', color: '#9a9a9a' }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: '5px', fontSize: '12px', color: 'var(--text-secondary)' }}>
                 {ICON.disk}<span style={{ color: '#e5e5e5' }}>{pd?.diskMb ? `${pd.diskMb/1024}GB` : '—'} SSD</span>
               </span>
               <span style={{ display: 'inline-flex', alignItems: 'center', gap: '5px', padding: '3px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 600, background: status === 'running' ? '#0d2818' : '#2d1515', color: status === 'running' ? '#4ade80' : '#f87171', border: `1px solid ${status === 'running' ? '#166534' : '#7f1d1d'}` }}>
@@ -193,7 +193,7 @@ export default function VPSDetailPage() {
       {success && <div style={{ padding: '11px 16px', background: '#f0fdf4', border: '1px solid #bbf7d0', borderRadius: '8px', fontSize: '13px', color: '#15803d', marginBottom: '12px' }}>{success}</div>}
 
       {/* Tabs */}
-      <div style={{ display: 'flex', gap: '2px', marginBottom: '16px', borderBottom: '1px solid #ebebeb', paddingBottom: '0' }}>
+      <div style={{ display: 'flex', gap: '2px', marginBottom: '16px', borderBottom: '1px solid var(--card-border)', paddingBottom: '0' }}>
         {TABS.map(t => (
           <button key={t} onClick={() => setTab(t)} className="vps-tab-btn"
             style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '9px 14px', fontSize: '12px', fontWeight: tab === t ? 600 : 400, color: tab === t ? '#0a0a0a' : '#888', background: 'none', border: 'none', borderBottom: tab === t ? '2px solid #0a0a0a' : '2px solid transparent', cursor: 'pointer', marginBottom: '-1px', transition: 'all 0.1s', fontFamily: 'inherit', borderRadius: '0', whiteSpace: 'nowrap' }}>
@@ -219,12 +219,12 @@ export default function VPSDetailPage() {
               { icon: ICON.zap, label: 'PLAN', value: order.service_key },
             ].map(({ icon, label, value, mono }) => (
               <div key={label} className="vps-card"
-                style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', padding: '14px 16px', transition: 'border-color 0.15s' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '6px', color: '#9a9a9a' }}>
+                style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '10px', padding: '14px 16px', transition: 'border-color 0.15s' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '5px', marginBottom: '6px', color: 'var(--text-secondary)' }}>
                   {icon}
                   <span style={{ fontSize: '10px', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase' }}>{label}</span>
                 </div>
-                <p style={{ fontSize: mono ? '12px' : '13px', fontWeight: 600, color: '#0a0a0a', fontFamily: mono ? "'DM Mono', monospace" : 'inherit' } as any}>{value}</p>
+                <p style={{ fontSize: mono ? '12px' : '13px', fontWeight: 600, color: 'var(--text-primary)', fontFamily: mono ? "'DM Mono', monospace" : 'inherit' } as any}>{value}</p>
               </div>
             ))}
           </div>
@@ -237,25 +237,25 @@ export default function VPSDetailPage() {
               </div>
               <div>
                 <p style={{ fontSize: '13px', fontWeight: 600, color: '#f5f5f5', marginBottom: '1px' }}>Browser Terminal</p>
-                <p style={{ fontSize: '11px', color: '#666' }}>SSH directly in your browser — no client needed</p>
+                <p style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>SSH directly in your browser — no client needed</p>
               </div>
             </div>
-            <Link href="/cli" style={{ height: '32px', padding: '0 16px', background: '#f5f5f5', color: '#0a0a0a', borderRadius: '7px', fontSize: '12px', fontWeight: 700, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '5px', letterSpacing: '-0.01em' }}>
+            <Link href="/cli" style={{ height: '32px', padding: '0 16px', background: 'var(--page-bg)', color: 'var(--text-primary)', borderRadius: '7px', fontSize: '12px', fontWeight: 700, textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '5px', letterSpacing: '-0.01em' }}>
               Open Terminal →
             </Link>
           </div>
 
           {/* Backup upsell */}
           {!hasBackup && (
-            <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '10px', padding: '14px 20px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <div style={{ width: '30px', height: '30px', background: '#f7f7f7', borderRadius: '7px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#666' }}>{ICON.camera}</div>
+                <div style={{ width: '30px', height: '30px', background: 'var(--card-bg-elevated)', borderRadius: '7px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-secondary)' }}>{ICON.camera}</div>
                 <div>
-                  <p style={{ fontSize: '12px', fontWeight: 600, color: '#0a0a0a' }}>Auto Backup not enabled</p>
-                  <p style={{ fontSize: '11px', color: '#9a9a9a' }}>Daily snapshots with 7-day retention</p>
+                  <p style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-primary)' }}>Auto Backup not enabled</p>
+                  <p style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Daily snapshots with 7-day retention</p>
                 </div>
               </div>
-              <button style={{ height: '30px', padding: '0 12px', background: '#f7f7f7', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '11px', fontWeight: 600, cursor: 'pointer', color: '#333', fontFamily: 'inherit' }}>Enable</button>
+              <button style={{ height: '30px', padding: '0 12px', background: 'var(--card-bg-elevated)', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '11px', fontWeight: 600, cursor: 'pointer', color: '#333', fontFamily: 'inherit' }}>Enable</button>
             </div>
           )}
         </div>
@@ -266,8 +266,8 @@ export default function VPSDetailPage() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
-              <p style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a' }}>Snapshots</p>
-              <p style={{ fontSize: '12px', color: '#9a9a9a', marginTop: '2px' }}>Point-in-time captures of your VPS state</p>
+              <p style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)' }}>Snapshots</p>
+              <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>Point-in-time captures of your VPS state</p>
             </div>
             <button onClick={() => doAction('snapshot')} disabled={!!actionLoading}
               style={{ height: '34px', padding: '0 16px', background: '#0a0a0a', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '12px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -275,30 +275,30 @@ export default function VPSDetailPage() {
             </button>
           </div>
           {snapshots.length === 0 ? (
-            <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '12px', padding: '48px', textAlign: 'center' }}>
-              <div style={{ width: '40px', height: '40px', background: '#f7f7f7', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px', color: '#9a9a9a' }}>{ICON.camera}</div>
-              <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '4px' }}>No snapshots yet</p>
-              <p style={{ fontSize: '12px', color: '#9a9a9a' }}>Create a snapshot to save the current state of your VPS</p>
+            <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '12px', padding: '48px', textAlign: 'center' }}>
+              <div style={{ width: '40px', height: '40px', background: 'var(--card-bg-elevated)', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px', color: 'var(--text-secondary)' }}>{ICON.camera}</div>
+              <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '4px' }}>No snapshots yet</p>
+              <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Create a snapshot to save the current state of your VPS</p>
             </div>
           ) : (
-            <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', overflow: 'hidden' }}>
+            <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '10px', overflow: 'hidden' }}>
               <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
                 <thead>
-                  <tr style={{ background: '#fafafa', borderBottom: '1px solid #ebebeb' }}>
+                  <tr style={{ background: '#fafafa', borderBottom: '1px solid var(--card-border)' }}>
                     {['Name', 'Created', 'Size', ''].map(h => (
-                      <th key={h} style={{ padding: '10px 16px', textAlign: 'left', fontSize: '10px', fontWeight: 600, color: '#9a9a9a', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{h}</th>
+                      <th key={h} style={{ padding: '10px 16px', textAlign: 'left', fontSize: '10px', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{h}</th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
                   {snapshots.map((s: any) => (
                     <tr key={s.snapshotId} className="vps-row" style={{ borderBottom: '1px solid #f0f0f0', transition: 'background 0.1s' }}>
-                      <td style={{ padding: '12px 16px', fontWeight: 600, color: '#0a0a0a' }}>{s.name || s.snapshotId}</td>
-                      <td style={{ padding: '12px 16px', color: '#666', fontFamily: "'DM Mono', monospace", fontSize: '11px' }}>{s.createdDate?.substring(0, 10)}</td>
-                      <td style={{ padding: '12px 16px', color: '#666' }}>{s.diskMb ? `${(s.diskMb/1024).toFixed(1)} GB` : '—'}</td>
+                      <td style={{ padding: '12px 16px', fontWeight: 600, color: 'var(--text-primary)' }}>{s.name || s.snapshotId}</td>
+                      <td style={{ padding: '12px 16px', color: 'var(--text-secondary)', fontFamily: "'DM Mono', monospace", fontSize: '11px' }}>{s.createdDate?.substring(0, 10)}</td>
+                      <td style={{ padding: '12px 16px', color: 'var(--text-secondary)' }}>{s.diskMb ? `${(s.diskMb/1024).toFixed(1)} GB` : '—'}</td>
                       <td style={{ padding: '12px 16px', display: 'flex', gap: '6px' }}>
                         <button onClick={() => doAction('rollback', { snapshotId: s.snapshotId })}
-                          style={{ padding: '4px 10px', background: '#f7f7f7', border: '1px solid #d4d4d4', borderRadius: '5px', fontSize: '11px', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 500 }}>Restore</button>
+                          style={{ padding: '4px 10px', background: 'var(--card-bg-elevated)', border: '1px solid var(--card-border-hover)', borderRadius: '5px', fontSize: '11px', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 500 }}>Restore</button>
                         <button onClick={() => doAction('delete_snapshot', { snapshotId: s.snapshotId })}
                           style={{ padding: '4px 10px', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '5px', fontSize: '11px', cursor: 'pointer', color: '#dc2626', fontFamily: 'inherit', fontWeight: 500 }}>Delete</button>
                       </td>
@@ -315,12 +315,12 @@ export default function VPSDetailPage() {
       {tab === 'Images' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <div>
-            <p style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a' }}>Reinstall OS</p>
-            <p style={{ fontSize: '12px', color: '#9a9a9a', marginTop: '2px' }}>Choose an operating system to install. <strong style={{ color: '#dc2626' }}>All data will be permanently wiped.</strong></p>
+            <p style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)' }}>Reinstall OS</p>
+            <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>Choose an operating system to install. <strong style={{ color: '#dc2626' }}>All data will be permanently wiped.</strong></p>
           </div>
           <div style={{ display: 'flex', gap: '8px' }}>
             <input value={imageSearch} onChange={e => setImageSearch(e.target.value)} placeholder="Search images..."
-              style={{ flex: 1, height: '36px', border: '1px solid #d4d4d4', borderRadius: '7px', padding: '0 12px', fontSize: '13px', fontFamily: 'inherit' }} />
+              style={{ flex: 1, height: '36px', border: '1px solid var(--card-border-hover)', borderRadius: '7px', padding: '0 12px', fontSize: '13px', fontFamily: 'inherit' }} />
             {['all', 'Linux', 'Windows'].map(f => (
               <button key={f} onClick={() => setImageFilter(f)}
                 style={{ height: '36px', padding: '0 14px', background: imageFilter === f ? '#0a0a0a' : '#f7f7f7', color: imageFilter === f ? '#fff' : '#333', border: `1px solid ${imageFilter === f ? '#0a0a0a' : '#d4d4d4'}`, borderRadius: '7px', fontSize: '12px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', transition: 'all 0.1s' }}>
@@ -328,21 +328,21 @@ export default function VPSDetailPage() {
               </button>
             ))}
           </div>
-          <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', overflow: 'hidden' }}>
+          <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '10px', overflow: 'hidden' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
               <thead>
-                <tr style={{ background: '#fafafa', borderBottom: '1px solid #ebebeb' }}>
+                <tr style={{ background: '#fafafa', borderBottom: '1px solid var(--card-border)' }}>
                   {['Image', 'Type', 'Version', ''].map(h => (
-                    <th key={h} style={{ padding: '10px 16px', textAlign: 'left', fontSize: '10px', fontWeight: 600, color: '#9a9a9a', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{h}</th>
+                    <th key={h} style={{ padding: '10px 16px', textAlign: 'left', fontSize: '10px', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{h}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
                 {images.length === 0 ? (
-                  <tr><td colSpan={4} style={{ padding: '24px', textAlign: 'center', color: '#9a9a9a', fontSize: '13px' }}>Loading images...</td></tr>
+                  <tr><td colSpan={4} style={{ padding: '24px', textAlign: 'center', color: 'var(--text-secondary)', fontSize: '13px' }}>Loading images...</td></tr>
                 ) : images.filter((img: any) => (imageFilter === 'all' || img.osType === imageFilter) && (!imageSearch || img.name.toLowerCase().includes(imageSearch.toLowerCase()))).map((img: any) => (
                   <tr key={img.imageId} className="vps-row" style={{ borderBottom: '1px solid #f0f0f0', transition: 'background 0.1s' }}>
-                    <td style={{ padding: '11px 16px', fontWeight: 600, color: '#0a0a0a' }}>
+                    <td style={{ padding: '11px 16px', fontWeight: 600, color: 'var(--text-primary)' }}>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                         <span style={{ fontSize: '15px' }}>{img.osType === 'Windows' ? '🪟' : '🐧'}</span>
                         {img.name}
@@ -351,7 +351,7 @@ export default function VPSDetailPage() {
                     <td style={{ padding: '11px 16px' }}>
                       <span style={{ padding: '2px 7px', borderRadius: '4px', fontSize: '10px', fontWeight: 700, letterSpacing: '0.05em', textTransform: 'uppercase', background: img.osType === 'Windows' ? '#eff6ff' : '#f0fdf4', color: img.osType === 'Windows' ? '#1d4ed8' : '#15803d' }}>{img.osType}</span>
                     </td>
-                    <td style={{ padding: '11px 16px', color: '#666', fontFamily: "'DM Mono', monospace", fontSize: '11px' }}>{img.version}</td>
+                    <td style={{ padding: '11px 16px', color: 'var(--text-secondary)', fontFamily: "'DM Mono', monospace", fontSize: '11px' }}>{img.version}</td>
                     <td style={{ padding: '11px 16px' }}>
                       <button onClick={() => { if (confirm(`Install ${img.name}? All data will be permanently wiped.`)) doAction('reinstall', { imageId: img.imageId }) }} disabled={!!actionLoading}
                         style={{ padding: '5px 12px', background: '#fef2f2', border: '1px solid #fecaca', borderRadius: '6px', fontSize: '11px', cursor: 'pointer', color: '#dc2626', fontWeight: 600, fontFamily: 'inherit' }}>
@@ -363,7 +363,7 @@ export default function VPSDetailPage() {
               </tbody>
             </table>
           </div>
-          <p style={{ fontSize: '11px', color: '#9a9a9a' }}>{images.filter((img: any) => (imageFilter === 'all' || img.osType === imageFilter) && (!imageSearch || img.name.toLowerCase().includes(imageSearch.toLowerCase()))).length} of {images.length} images</p>
+          <p style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{images.filter((img: any) => (imageFilter === 'all' || img.osType === imageFilter) && (!imageSearch || img.name.toLowerCase().includes(imageSearch.toLowerCase()))).length} of {images.length} images</p>
         </div>
       )}
 
@@ -371,12 +371,12 @@ export default function VPSDetailPage() {
       {tab === 'Firewall' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <div>
-            <p style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a' }}>Firewall</p>
-            <p style={{ fontSize: '12px', color: '#9a9a9a', marginTop: '2px' }}>Control inbound and outbound traffic to your VPS</p>
+            <p style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)' }}>Firewall</p>
+            <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>Control inbound and outbound traffic to your VPS</p>
           </div>
           {firewall ? (
             <>
-              <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '10px', padding: '16px 20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <div style={{ width: '32px', height: '32px', background: '#f0fdf4', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#15803d' }}>{ICON.shield}</div>
                   {editingFwName ? (
@@ -391,13 +391,13 @@ export default function VPSDetailPage() {
                           setSuccess('Renamed'); setEditingFwName(false); loadFirewall()
                         } catch (err: any) { setError(err.message) }
                       }} style={{ height: '30px', padding: '0 10px', background: '#0a0a0a', color: '#fff', border: 'none', borderRadius: '5px', fontSize: '11px', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 600 }}>Save</button>
-                      <button onClick={() => setEditingFwName(false)} style={{ height: '30px', padding: '0 10px', background: '#f7f7f7', border: '1px solid #d4d4d4', borderRadius: '5px', fontSize: '11px', cursor: 'pointer', fontFamily: 'inherit' }}>Cancel</button>
+                      <button onClick={() => setEditingFwName(false)} style={{ height: '30px', padding: '0 10px', background: 'var(--card-bg-elevated)', border: '1px solid var(--card-border-hover)', borderRadius: '5px', fontSize: '11px', cursor: 'pointer', fontFamily: 'inherit' }}>Cancel</button>
                     </div>
                   ) : (
                     <div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                        <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a' }}>{firewall.name}</p>
-                        <button onClick={() => { setNewFwName(firewall.name); setEditingFwName(true) }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9a9a9a', fontSize: '11px', padding: '0', lineHeight: 1 }}>✏️</button>
+                        <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>{firewall.name}</p>
+                        <button onClick={() => { setNewFwName(firewall.name); setEditingFwName(true) }} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-secondary)', fontSize: '11px', padding: '0', lineHeight: 1 }}>✏️</button>
                       </div>
                       <p style={{ fontSize: '10px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#15803d', marginTop: '2px' }}>{firewall.status}</p>
                     </div>
@@ -410,17 +410,17 @@ export default function VPSDetailPage() {
               </div>
 
               {showAddRule && (
-                <div style={{ background: '#f7f7f7', border: '1px solid #e5e5e5', borderRadius: '10px', padding: '16px 20px' }}>
-                  <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#666', marginBottom: '12px' }}>New inbound rule</p>
+                <div style={{ background: 'var(--card-bg-elevated)', border: '1px solid #e5e5e5', borderRadius: '10px', padding: '16px 20px' }}>
+                  <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-secondary)', marginBottom: '12px' }}>New inbound rule</p>
                   <div style={{ display: 'grid', gridTemplateColumns: '120px 140px 180px 120px 1fr', gap: '8px', alignItems: 'end' }}>
                     {[
-                      { label: 'Protocol', el: <select value={newRule.protocol} onChange={e => setNewRule(r => ({ ...r, protocol: e.target.value }))} style={{ width: '100%', height: '36px', border: '1px solid #d4d4d4', borderRadius: '6px', padding: '0 8px', fontSize: '12px', fontFamily: 'inherit', background: '#fff' }}><option value="tcp">TCP</option><option value="udp">UDP</option><option value="icmp">ICMP</option><option value="">Any</option></select> },
-                      { label: 'Port / Range', el: <input value={newRule.port} onChange={e => setNewRule(r => ({ ...r, port: e.target.value }))} placeholder="22 or 8000-9000" style={{ width: '100%', height: '36px', border: '1px solid #d4d4d4', borderRadius: '6px', padding: '0 10px', fontSize: '12px', fontFamily: 'inherit', boxSizing: 'border-box' as const }} /> },
-                      { label: 'Source CIDR', el: <input value={newRule.cidr} onChange={e => setNewRule(r => ({ ...r, cidr: e.target.value }))} placeholder="0.0.0.0/0" style={{ width: '100%', height: '36px', border: '1px solid #d4d4d4', borderRadius: '6px', padding: '0 10px', fontSize: '12px', fontFamily: 'inherit', boxSizing: 'border-box' as const }} /> },
-                      { label: 'Action', el: <select value={newRule.action} onChange={e => setNewRule(r => ({ ...r, action: e.target.value }))} style={{ width: '100%', height: '36px', border: '1px solid #d4d4d4', borderRadius: '6px', padding: '0 8px', fontSize: '12px', fontFamily: 'inherit', background: '#fff' }}><option value="accept">Accept</option><option value="drop">Drop</option></select> },
+                      { label: 'Protocol', el: <select value={newRule.protocol} onChange={e => setNewRule(r => ({ ...r, protocol: e.target.value }))} style={{ width: '100%', height: '36px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', padding: '0 8px', fontSize: '12px', fontFamily: 'inherit', background: 'var(--card-bg)' }}><option value="tcp">TCP</option><option value="udp">UDP</option><option value="icmp">ICMP</option><option value="">Any</option></select> },
+                      { label: 'Port / Range', el: <input value={newRule.port} onChange={e => setNewRule(r => ({ ...r, port: e.target.value }))} placeholder="22 or 8000-9000" style={{ width: '100%', height: '36px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', padding: '0 10px', fontSize: '12px', fontFamily: 'inherit', boxSizing: 'border-box' as const }} /> },
+                      { label: 'Source CIDR', el: <input value={newRule.cidr} onChange={e => setNewRule(r => ({ ...r, cidr: e.target.value }))} placeholder="0.0.0.0/0" style={{ width: '100%', height: '36px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', padding: '0 10px', fontSize: '12px', fontFamily: 'inherit', boxSizing: 'border-box' as const }} /> },
+                      { label: 'Action', el: <select value={newRule.action} onChange={e => setNewRule(r => ({ ...r, action: e.target.value }))} style={{ width: '100%', height: '36px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', padding: '0 8px', fontSize: '12px', fontFamily: 'inherit', background: 'var(--card-bg)' }}><option value="accept">Accept</option><option value="drop">Drop</option></select> },
                     ].map(({ label, el }) => (
                       <div key={label}>
-                        <label style={{ fontSize: '10px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#9a9a9a', display: 'block', marginBottom: '4px' }}>{label}</label>
+                        <label style={{ fontSize: '10px', fontWeight: 600, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>{label}</label>
                         {el}
                       </div>
                     ))}
@@ -443,24 +443,24 @@ export default function VPSDetailPage() {
                 </div>
               )}
 
-              <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', overflow: 'hidden' }}>
+              <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '10px', overflow: 'hidden' }}>
                 <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
                   <thead>
-                    <tr style={{ background: '#fafafa', borderBottom: '1px solid #ebebeb' }}>
+                    <tr style={{ background: '#fafafa', borderBottom: '1px solid var(--card-border)' }}>
                       {['Rule', 'Protocol', 'Ports', 'Source', 'Action'].map(h => (
-                        <th key={h} style={{ padding: '10px 16px', textAlign: 'left', fontSize: '10px', fontWeight: 600, color: '#9a9a9a', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{h}</th>
+                        <th key={h} style={{ padding: '10px 16px', textAlign: 'left', fontSize: '10px', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.08em' }}>{h}</th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
                     {(firewall.rules?.inbound || []).length === 0 ? (
-                      <tr><td colSpan={5} style={{ padding: '24px', textAlign: 'center', color: '#9a9a9a' }}>No rules configured</td></tr>
+                      <tr><td colSpan={5} style={{ padding: '24px', textAlign: 'center', color: 'var(--text-secondary)' }}>No rules configured</td></tr>
                     ) : (firewall.rules?.inbound || []).map((r: any, i: number) => (
                       <tr key={i} className="vps-row" style={{ borderBottom: '1px solid #f0f0f0', transition: 'background 0.1s' }}>
-                        <td style={{ padding: '11px 16px', fontWeight: 600, color: '#0a0a0a' }}>{r.displayName || '—'}</td>
-                        <td style={{ padding: '11px 16px', color: '#666', fontFamily: "'DM Mono', monospace" }}>{r.protocol || 'any'}</td>
-                        <td style={{ padding: '11px 16px', color: '#666', fontFamily: "'DM Mono', monospace" }}>{r.destPorts?.length > 0 ? r.destPorts.join(', ') : 'all'}</td>
-                        <td style={{ padding: '11px 16px', color: '#666', fontFamily: "'DM Mono', monospace", fontSize: '11px' }}>{r.srcCidr?.ipv4?.join(', ') || '0.0.0.0/0'}</td>
+                        <td style={{ padding: '11px 16px', fontWeight: 600, color: 'var(--text-primary)' }}>{r.displayName || '—'}</td>
+                        <td style={{ padding: '11px 16px', color: 'var(--text-secondary)', fontFamily: "'DM Mono', monospace" }}>{r.protocol || 'any'}</td>
+                        <td style={{ padding: '11px 16px', color: 'var(--text-secondary)', fontFamily: "'DM Mono', monospace" }}>{r.destPorts?.length > 0 ? r.destPorts.join(', ') : 'all'}</td>
+                        <td style={{ padding: '11px 16px', color: 'var(--text-secondary)', fontFamily: "'DM Mono', monospace", fontSize: '11px' }}>{r.srcCidr?.ipv4?.join(', ') || '0.0.0.0/0'}</td>
                         <td style={{ padding: '11px 16px' }}>
                           <span style={{ padding: '2px 8px', borderRadius: '4px', fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', background: r.action === 'accept' ? '#f0fdf4' : '#fef2f2', color: r.action === 'accept' ? '#15803d' : '#dc2626' }}>{r.action}</span>
                         </td>
@@ -471,10 +471,10 @@ export default function VPSDetailPage() {
               </div>
             </>
           ) : (
-            <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '12px', padding: '48px', textAlign: 'center' }}>
-              <div style={{ width: '40px', height: '40px', background: '#f7f7f7', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px', color: '#9a9a9a' }}>{ICON.shield}</div>
-              <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '4px' }}>No firewall configured</p>
-              <p style={{ fontSize: '12px', color: '#9a9a9a', marginBottom: '16px' }}>Create a firewall to control traffic to this instance</p>
+            <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '12px', padding: '48px', textAlign: 'center' }}>
+              <div style={{ width: '40px', height: '40px', background: 'var(--card-bg-elevated)', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 12px', color: 'var(--text-secondary)' }}>{ICON.shield}</div>
+              <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '4px' }}>No firewall configured</p>
+              <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '16px' }}>Create a firewall to control traffic to this instance</p>
               <button onClick={() => doAction('create_firewall').then(() => loadFirewall())} disabled={!!actionLoading}
                 style={{ height: '36px', padding: '0 16px', background: '#0a0a0a', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '12px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
                 {actionLoading === 'create_firewall' ? 'Creating...' : '+ Create Firewall'}
@@ -488,18 +488,18 @@ export default function VPSDetailPage() {
       {tab === 'DNS' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <div>
-            <p style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a' }}>DNS Zones</p>
-            <p style={{ fontSize: '12px', color: '#9a9a9a', marginTop: '2px' }}>Manage DNS zones for <span style={{ fontFamily: "'DM Mono', monospace" }}>{ip}</span></p>
+            <p style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)' }}>DNS Zones</p>
+            <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>Manage DNS zones for <span style={{ fontFamily: "'DM Mono', monospace" }}>{ip}</span></p>
           </div>
           {dnsZones.length > 0 && (
-            <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', overflow: 'hidden' }}>
+            <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '10px', overflow: 'hidden' }}>
               {dnsZones.map((z: any) => (
                 <div key={z.name} className="vps-row" style={{ padding: '14px 20px', borderBottom: '1px solid #f0f0f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', transition: 'background 0.1s' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                     <div style={{ width: '28px', height: '28px', background: '#f0f4ff', borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#4f46e5' }}>{ICON.dns}</div>
                     <div>
-                      <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a' }}>{z.name}</p>
-                      <p style={{ fontSize: '11px', color: '#9a9a9a' }}>{z.records?.length || 0} records</p>
+                      <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>{z.name}</p>
+                      <p style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{z.records?.length || 0} records</p>
                     </div>
                   </div>
                   <span style={{ padding: '2px 8px', borderRadius: '4px', fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', background: '#f0fdf4', color: '#15803d' }}>Active</span>
@@ -507,11 +507,11 @@ export default function VPSDetailPage() {
               ))}
             </div>
           )}
-          <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', padding: '20px' }}>
-            <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#9a9a9a', marginBottom: '12px' }}>{dnsZones.length > 0 ? 'Add DNS Zone' : 'Create DNS Zone'}</p>
+          <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '10px', padding: '20px' }}>
+            <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-secondary)', marginBottom: '12px' }}>{dnsZones.length > 0 ? 'Add DNS Zone' : 'Create DNS Zone'}</p>
             <div style={{ display: 'flex', gap: '8px' }}>
               <input id="dns-zone-name" placeholder="example.com"
-                style={{ flex: 1, height: '36px', border: '1px solid #d4d4d4', borderRadius: '7px', padding: '0 12px', fontSize: '13px', fontFamily: 'inherit' }} />
+                style={{ flex: 1, height: '36px', border: '1px solid var(--card-border-hover)', borderRadius: '7px', padding: '0 12px', fontSize: '13px', fontFamily: 'inherit' }} />
               <button onClick={() => {
                 const zn = (document.getElementById('dns-zone-name') as HTMLInputElement)?.value?.trim()
                 if (!zn) { alert('Enter a domain name'); return }
@@ -529,8 +529,8 @@ export default function VPSDetailPage() {
       {tab === 'Actions' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
           <div>
-            <p style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a' }}>Actions</p>
-            <p style={{ fontSize: '12px', color: '#9a9a9a', marginTop: '2px' }}>Manage your VPS lifecycle and recovery options</p>
+            <p style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)' }}>Actions</p>
+            <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>Manage your VPS lifecycle and recovery options</p>
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
             {[
@@ -540,14 +540,14 @@ export default function VPSDetailPage() {
               { icon: ICON.user, label: 'Reset Password', category: 'SECURITY', desc: 'Send new root credentials to your email', action: 'reset_credentials', accent: '#1d4ed8', accentBg: '#eff6ff' },
             ].map(({ icon, label, category, desc, action, accent, accentBg }) => (
               <div key={action} className="vps-card"
-                style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '12px', padding: '18px', display: 'flex', flexDirection: 'column', gap: '10px', transition: 'border-color 0.15s' }}>
+                style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '12px', padding: '18px', display: 'flex', flexDirection: 'column', gap: '10px', transition: 'border-color 0.15s' }}>
                 <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
                   <div style={{ width: '34px', height: '34px', background: accentBg, borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: accent }}>{icon}</div>
-                  <span style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#9a9a9a' }}>{category}</span>
+                  <span style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-secondary)' }}>{category}</span>
                 </div>
                 <div>
-                  <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '3px' }}>{label}</p>
-                  <p style={{ fontSize: '11px', color: '#9a9a9a', lineHeight: 1.5 }}>{desc}</p>
+                  <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '3px' }}>{label}</p>
+                  <p style={{ fontSize: '11px', color: 'var(--text-secondary)', lineHeight: 1.5 }}>{desc}</p>
                 </div>
                 <button onClick={() => doAction(action)} disabled={!!actionLoading}
                   style={{ height: '30px', padding: '0 12px', background: accentBg, color: accent, border: `1px solid ${accent}30`, borderRadius: '6px', fontSize: '11px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', alignSelf: 'flex-start', transition: 'opacity 0.15s' }}>
@@ -558,14 +558,14 @@ export default function VPSDetailPage() {
           </div>
 
           {/* Upgrade plan */}
-          <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '12px', padding: '18px' }}>
+          <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '12px', padding: '18px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: showUpgrade ? '16px' : '0' }}>
               <div>
-                <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#9a9a9a', marginBottom: '4px' }}>Current Plan</p>
-                <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a' }}>{order.service_key} — {pd?.cpuCores || '—'} vCPU · {pd?.ramMb ? `${pd.ramMb/1024}GB` : '—'} RAM · {pd?.diskMb ? `${pd.diskMb/1024}GB` : '—'} SSD</p>
+                <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-secondary)', marginBottom: '4px' }}>Current Plan</p>
+                <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>{order.service_key} — {pd?.cpuCores || '—'} vCPU · {pd?.ramMb ? `${pd.ramMb/1024}GB` : '—'} RAM · {pd?.diskMb ? `${pd.diskMb/1024}GB` : '—'} SSD</p>
               </div>
               <button onClick={() => setShowUpgrade(s => !s)}
-                style={{ height: '32px', padding: '0 14px', background: '#f7f7f7', color: '#333', border: '1px solid #d4d4d4', borderRadius: '7px', fontSize: '12px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
+                style={{ height: '32px', padding: '0 14px', background: 'var(--card-bg-elevated)', color: '#333', border: '1px solid var(--card-border-hover)', borderRadius: '7px', fontSize: '12px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
                 {showUpgrade ? 'Cancel' : 'Upgrade Plan'}
               </button>
             </div>
@@ -580,11 +580,11 @@ export default function VPSDetailPage() {
                 ].map(plan => (
                   <div key={plan.id} style={{ border: `2px solid ${order.service_key === plan.id ? '#0a0a0a' : '#ebebeb'}`, borderRadius: '10px', padding: '14px', textAlign: 'center', cursor: 'pointer' }}
                     onClick={() => { if (confirm(`Upgrade to ${plan.label}? This will change your monthly cost to ${plan.price}.`)) doAction('upgrade', { productId: plan.id }) }}>
-                    <p style={{ fontSize: '12px', fontWeight: 700, color: '#0a0a0a', marginBottom: '6px' }}>{plan.label}</p>
-                    <p style={{ fontSize: '10px', color: '#666', marginBottom: '2px' }}>{plan.cpu} vCPU</p>
-                    <p style={{ fontSize: '10px', color: '#666', marginBottom: '2px' }}>{plan.ram}GB RAM</p>
-                    <p style={{ fontSize: '10px', color: '#666', marginBottom: '8px' }}>{plan.disk}GB SSD</p>
-                    <p style={{ fontSize: '12px', fontWeight: 700, color: '#0a0a0a' }}>{plan.price}/mo</p>
+                    <p style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '6px' }}>{plan.label}</p>
+                    <p style={{ fontSize: '10px', color: 'var(--text-secondary)', marginBottom: '2px' }}>{plan.cpu} vCPU</p>
+                    <p style={{ fontSize: '10px', color: 'var(--text-secondary)', marginBottom: '2px' }}>{plan.ram}GB RAM</p>
+                    <p style={{ fontSize: '10px', color: 'var(--text-secondary)', marginBottom: '8px' }}>{plan.disk}GB SSD</p>
+                    <p style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-primary)' }}>{plan.price}/mo</p>
                   </div>
                 ))}
               </div>
@@ -592,12 +592,12 @@ export default function VPSDetailPage() {
           </div>
 
           {/* Danger zone */}
-          <div style={{ background: '#fff', border: '1px solid #fecaca', borderRadius: '12px', padding: '18px' }}>
+          <div style={{ background: 'var(--card-bg)', border: '1px solid #fecaca', borderRadius: '12px', padding: '18px' }}>
             <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#dc2626', marginBottom: '12px' }}>Danger Zone</p>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px' }}>
               <div>
-                <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '3px' }}>Cancel VPS</p>
-                <p style={{ fontSize: '11px', color: '#9a9a9a', lineHeight: 1.5 }}>Schedule termination at end of billing period. All data will be permanently deleted.</p>
+                <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '3px' }}>Cancel VPS</p>
+                <p style={{ fontSize: '11px', color: 'var(--text-secondary)', lineHeight: 1.5 }}>Schedule termination at end of billing period. All data will be permanently deleted.</p>
               </div>
               <button onClick={() => { if (confirm('Cancel this VPS? It will be terminated at the end of the billing period and all data deleted permanently.')) doAction('cancel') }} disabled={!!actionLoading}
                 style={{ height: '34px', padding: '0 16px', background: '#dc2626', color: '#fff', border: 'none', borderRadius: '7px', fontSize: '12px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap', flexShrink: 0 }}>
@@ -610,9 +610,9 @@ export default function VPSDetailPage() {
 
       {/* Backups tab */}
       {tab === 'Backups' && (
-        <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '12px', padding: '24px' }}>
-          <p style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a', marginBottom: '6px' }}>Auto Backup</p>
-          <p style={{ fontSize: '13px', color: '#9a9a9a' }}>Your VPS is enrolled in automatic daily backups with 7-day retention.</p>
+        <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '12px', padding: '24px' }}>
+          <p style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '6px' }}>Auto Backup</p>
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>Your VPS is enrolled in automatic daily backups with 7-day retention.</p>
         </div>
       )}
 
@@ -627,9 +627,9 @@ export default function VPSDetailPage() {
             { label: 'Data Centre', value: pd?.dataCenter || '—' },
             { label: 'Region', value: pd?.regionName || '—' },
           ].map(({ label, value, mono }) => (
-            <div key={label} className="vps-card" style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', padding: '14px 16px', transition: 'border-color 0.15s' }}>
-              <p style={{ fontSize: '10px', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#9a9a9a', marginBottom: '6px' }}>{label}</p>
-              <p style={{ fontSize: mono ? '12px' : '13px', fontWeight: 600, color: '#0a0a0a', fontFamily: mono ? "'DM Mono', monospace" : 'inherit' }}>{value}</p>
+            <div key={label} className="vps-card" style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '10px', padding: '14px 16px', transition: 'border-color 0.15s' }}>
+              <p style={{ fontSize: '10px', fontWeight: 600, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-secondary)', marginBottom: '6px' }}>{label}</p>
+              <p style={{ fontSize: mono ? '12px' : '13px', fontWeight: 600, color: 'var(--text-primary)', fontFamily: mono ? "'DM Mono', monospace" : 'inherit' }}>{value}</p>
             </div>
           ))}
         </div>

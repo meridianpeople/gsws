@@ -29,7 +29,7 @@ function SupportSessionContent() {
 
   if (status === 'loading') return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60vh' }}>
-      <p style={{ color: '#666' }}>Starting support session...</p>
+      <p style={{ color: 'var(--text-secondary)' }}>Starting support session...</p>
     </div>
   )
 
@@ -46,10 +46,10 @@ function SupportSessionContent() {
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60vh' }}>
-      <div style={{ textAlign: 'center', background: '#fff', border: '1px solid #fca5a5', borderRadius: '12px', padding: '32px' }}>
+      <div style={{ textAlign: 'center', background: 'var(--card-bg)', border: '1px solid #fca5a5', borderRadius: '12px', padding: '32px' }}>
         <p style={{ fontSize: '24px', margin: '0 0 12px' }}>⚠️</p>
         <h2 style={{ fontSize: '16px', fontWeight: 700, margin: '0 0 8px' }}>Support Session Active</h2>
-        <p style={{ fontSize: '13px', color: '#666', margin: '0 0 4px' }}>Viewing as: <strong>{targetEmail}</strong></p>
+        <p style={{ fontSize: '13px', color: 'var(--text-secondary)', margin: '0 0 4px' }}>Viewing as: <strong>{targetEmail}</strong></p>
         <p style={{ fontSize: '12px', color: '#999' }}>Redirecting to dashboard...</p>
       </div>
     </div>
@@ -58,7 +58,7 @@ function SupportSessionContent() {
 
 export default function SupportSessionPage() {
   return (
-    <Suspense fallback={<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60vh' }}><p style={{ color: '#666' }}>Loading...</p></div>}>
+    <Suspense fallback={<div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '60vh' }}><p style={{ color: 'var(--text-secondary)' }}>Loading...</p></div>}>
       <SupportSessionContent />
     </Suspense>
   )

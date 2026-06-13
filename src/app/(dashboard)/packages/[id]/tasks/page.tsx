@@ -96,14 +96,14 @@ export default function TasksPage() {
     } catch { setError('Failed to update task') }
   }
 
-  if (loading) return <div style={{ padding: '40px', color: '#666' }}>Loading...</div>
+  if (loading) return <div style={{ padding: '40px', color: 'var(--text-secondary)' }}>Loading...</div>
 
   return (
     <div style={{ maxWidth: '760px' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
         <div>
           <h1 style={{ fontSize: '20px', fontWeight: 700, color: '#111', margin: 0 }}>Scheduled Tasks</h1>
-          <p style={{ fontSize: '13px', color: '#666', marginTop: '4px' }}>Manage cron jobs for your PHP scripts and commands</p>
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '4px' }}>Manage cron jobs for your PHP scripts and commands</p>
         </div>
         <button onClick={() => setShowAdd(!showAdd)}
           style={{ height: '36px', padding: '0 16px', background: '#1a6ef5', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>
@@ -115,17 +115,17 @@ export default function TasksPage() {
       {success && <div style={{ padding: '12px 16px', borderRadius: '8px', background: '#f0fdf4', border: '1px solid #86efac', color: '#166534', fontSize: '13px', marginBottom: '16px' }}>{success}</div>}
 
       {showAdd && (
-        <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', marginBottom: '20px' }}>
+        <div style={{ background: 'var(--card-bg)', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', marginBottom: '20px' }}>
           <h3 style={{ fontSize: '14px', fontWeight: 600, margin: '0 0 16px' }}>New scheduled task</h3>
           <div style={{ display: 'grid', gap: '12px' }}>
             <div>
-              <label style={{ fontSize: '12px', color: '#666', display: 'block', marginBottom: '4px' }}>Command</label>
+              <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Command</label>
               <input value={form.Command} onChange={e => setForm(f => ({ ...f, Command: e.target.value }))}
                 placeholder="php /home/customer/public_html/cron.php"
                 style={{ width: '100%', height: '36px', padding: '0 12px', border: '1px solid #e5e7eb', borderRadius: '6px', fontSize: '13px', fontFamily: 'monospace', boxSizing: 'border-box' }} />
             </div>
             <div>
-              <label style={{ fontSize: '12px', color: '#666', display: 'block', marginBottom: '4px' }}>Schedule</label>
+              <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Schedule</label>
               <select value={form.schedulePreset} onChange={e => setForm(f => ({ ...f, schedulePreset: e.target.value, TimeSpec: e.target.value !== 'custom' ? e.target.value : f.customSchedule }))}
                 style={{ width: '100%', height: '36px', padding: '0 12px', border: '1px solid #e5e7eb', borderRadius: '6px', fontSize: '13px', marginBottom: '8px', boxSizing: 'border-box' }}>
                 {COMMON_SCHEDULES.map(s => <option key={s.value} value={s.value}>{s.label} {s.value !== 'custom' ? `(${s.value})` : ''}</option>)}
@@ -137,7 +137,7 @@ export default function TasksPage() {
               )}
             </div>
             <div>
-              <label style={{ fontSize: '12px', color: '#666', display: 'block', marginBottom: '4px' }}>Email output to (optional)</label>
+              <label style={{ fontSize: '12px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Email output to (optional)</label>
               <input value={form.MailTo} onChange={e => setForm(f => ({ ...f, MailTo: e.target.value }))}
                 placeholder="you@example.com"
                 style={{ width: '100%', height: '36px', padding: '0 12px', border: '1px solid #e5e7eb', borderRadius: '6px', fontSize: '13px', boxSizing: 'border-box' }} />
@@ -148,7 +148,7 @@ export default function TasksPage() {
                 {saving ? 'Creating...' : 'Create task'}
               </button>
               <button onClick={() => setShowAdd(false)}
-                style={{ height: '36px', padding: '0 16px', background: '#f5f5f5', color: '#444', border: '1px solid #e5e7eb', borderRadius: '6px', fontSize: '13px', cursor: 'pointer' }}>
+                style={{ height: '36px', padding: '0 16px', background: 'var(--page-bg)', color: '#444', border: '1px solid #e5e7eb', borderRadius: '6px', fontSize: '13px', cursor: 'pointer' }}>
                 Cancel
               </button>
             </div>
@@ -157,17 +157,17 @@ export default function TasksPage() {
       )}
 
       {tasks.length === 0 ? (
-        <div style={{ padding: '48px', textAlign: 'center', background: '#fff', border: '1px solid #e5e7eb', borderRadius: '12px' }}>
-          <p style={{ fontSize: '14px', color: '#666', margin: 0 }}>No scheduled tasks yet</p>
+        <div style={{ padding: '48px', textAlign: 'center', background: 'var(--card-bg)', border: '1px solid #e5e7eb', borderRadius: '12px' }}>
+          <p style={{ fontSize: '14px', color: 'var(--text-secondary)', margin: 0 }}>No scheduled tasks yet</p>
           <p style={{ fontSize: '12px', color: '#aaa', marginTop: '4px' }}>Add a cron job to run PHP scripts automatically</p>
         </div>
       ) : (
-        <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: '12px', overflow: 'hidden' }}>
+        <div style={{ background: 'var(--card-bg)', border: '1px solid #e5e7eb', borderRadius: '12px', overflow: 'hidden' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse' }}>
             <thead>
               <tr style={{ background: '#f9fafb', borderBottom: '1px solid #e5e7eb' }}>
                 {['Command', 'Schedule', 'Email', 'Status', ''].map(h => (
-                  <th key={h} style={{ padding: '10px 16px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: '#666', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{h}</th>
+                  <th key={h} style={{ padding: '10px 16px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>{h}</th>
                 ))}
               </tr>
             </thead>
@@ -175,8 +175,8 @@ export default function TasksPage() {
               {tasks.map((task, i) => (
                 <tr key={task.Id} style={{ borderBottom: i < tasks.length - 1 ? '1px solid #f3f4f6' : 'none' }}>
                   <td style={{ padding: '12px 16px', fontSize: '12px', fontFamily: 'monospace', color: '#111', maxWidth: '260px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{task.Command}</td>
-                  <td style={{ padding: '12px 16px', fontSize: '12px', fontFamily: 'monospace', color: '#666' }}>{task.TimeSpec}</td>
-                  <td style={{ padding: '12px 16px', fontSize: '12px', color: '#666' }}>{task.MailTo || '—'}</td>
+                  <td style={{ padding: '12px 16px', fontSize: '12px', fontFamily: 'monospace', color: 'var(--text-secondary)' }}>{task.TimeSpec}</td>
+                  <td style={{ padding: '12px 16px', fontSize: '12px', color: 'var(--text-secondary)' }}>{task.MailTo || '—'}</td>
                   <td style={{ padding: '12px 16px' }}>
                     <button onClick={() => handleToggle(task)}
                       style={{ padding: '3px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 600, border: 'none', cursor: 'pointer', background: task.Enabled ? '#dcfce7' : '#f3f4f6', color: task.Enabled ? '#166534' : '#666' }}>
@@ -197,7 +197,7 @@ export default function TasksPage() {
       )}
 
       <div style={{ marginTop: '16px', padding: '12px 16px', background: '#f8fafc', borderRadius: '8px', border: '1px solid #e5e7eb' }}>
-        <p style={{ fontSize: '12px', color: '#666', margin: 0 }}>
+        <p style={{ fontSize: '12px', color: 'var(--text-secondary)', margin: 0 }}>
           <strong>Tip:</strong> Use the full path to PHP — e.g. <code style={{ fontFamily: 'monospace', background: '#e5e7eb', padding: '1px 4px', borderRadius: '3px' }}>php /home/customer/public_html/cron.php</code>
         </p>
       </div>

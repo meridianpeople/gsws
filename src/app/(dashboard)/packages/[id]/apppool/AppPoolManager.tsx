@@ -51,25 +51,25 @@ export default function AppPoolManager({ packageId, domainName, config }: {
       {error && <div style={{ padding: '12px 16px', borderRadius: '8px', fontSize: '12px', background: '#fcebeb', color: '#a32d2d', border: '1px solid #f5c1c1' }}>{error}</div>}
 
       <div className="gsws-card">
-        <h3 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '14px' }}>Application Pool configuration</h3>
+        <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '14px' }}>Application Pool configuration</h3>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '16px' }}>
           <div>
-            <label style={{ fontSize: '11px', color: '#9a9a9a', display: 'block', marginBottom: '4px' }}>Pipeline mode</label>
+            <label style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Pipeline mode</label>
             <select value={pipeline} onChange={e => setPipeline(e.target.value)}
-              style={{ width: '100%', height: '36px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', fontFamily: 'inherit', padding: '0 10px' }}>
+              style={{ width: '100%', height: '36px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', fontFamily: 'inherit', padding: '0 10px' }}>
               {PIPELINE_MODES.map(m => <option key={m}>{m}</option>)}
             </select>
-            <p style={{ fontSize: '11px', color: '#9a9a9a', marginTop: '4px' }}>
+            <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '4px' }}>
               {pipeline === 'Integrated' ? 'Recommended for ASP.NET 2.0+' : 'Use for legacy ASP.NET applications'}
             </p>
           </div>
           <div>
-            <label style={{ fontSize: '11px', color: '#9a9a9a', display: 'block', marginBottom: '4px' }}>.NET runtime version</label>
+            <label style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>.NET runtime version</label>
             <select value={runtime} onChange={e => setRuntime(e.target.value)}
-              style={{ width: '100%', height: '36px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', fontFamily: 'inherit', padding: '0 10px' }}>
+              style={{ width: '100%', height: '36px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', fontFamily: 'inherit', padding: '0 10px' }}>
               {RUNTIME_VERSIONS.map(v => <option key={v}>{v}</option>)}
             </select>
-            <p style={{ fontSize: '11px', color: '#9a9a9a', marginTop: '4px' }}>
+            <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '4px' }}>
               {runtime === 'v4.0' ? 'Recommended for modern ASP.NET' : runtime === 'v2.0' ? 'Legacy ASP.NET 2.0/3.5' : 'For static sites or non-.NET apps'}
             </p>
           </div>
@@ -80,29 +80,29 @@ export default function AppPoolManager({ packageId, domainName, config }: {
             {saving ? 'Saving…' : 'Save configuration'}
           </button>
           <button onClick={handleRecycle} disabled={recycling}
-            style={{ height: '34px', padding: '0 16px', background: '#fff', color: '#854f0b', border: '1px solid #f0c070', borderRadius: '6px', fontSize: '13px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
+            style={{ height: '34px', padding: '0 16px', background: 'var(--card-bg)', color: '#854f0b', border: '1px solid #f0c070', borderRadius: '6px', fontSize: '13px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
             {recycling ? 'Recycling…' : '♻️ Recycle App Pool'}
           </button>
         </div>
       </div>
 
       <div className="gsws-card">
-        <h3 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '12px' }}>Current configuration</h3>
+        <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '12px' }}>Current configuration</h3>
         {[
           ['Pipeline mode', config.ApplicationPoolPipelineMode || '—'],
           ['Runtime version', config.ApplicationPoolRuntimeVersion || '—'],
           ['Config ID', String(config.VirtualHostWindowsConfigurationId || '—')],
         ].map(([label, value]) => (
-          <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid #ebebeb', fontSize: '12px' }}>
-            <span style={{ color: '#9a9a9a' }}>{label}</span>
-            <span style={{ fontFamily: 'ui-monospace, monospace', fontWeight: 500, color: '#0a0a0a' }}>{value}</span>
+          <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--card-border)', fontSize: '12px' }}>
+            <span style={{ color: 'var(--text-secondary)' }}>{label}</span>
+            <span style={{ fontFamily: 'ui-monospace, monospace', fontWeight: 500, color: 'var(--text-primary)' }}>{value}</span>
           </div>
         ))}
       </div>
 
       <div className="gsws-card">
-        <h3 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '8px' }}>About App Pool recycling</h3>
-        <p style={{ fontSize: '12px', color: '#9a9a9a', lineHeight: 1.6 }}>
+        <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '8px' }}>About App Pool recycling</h3>
+        <p style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
           Recycling the application pool restarts the IIS worker process for your site. This clears cached memory and can resolve performance issues. Your site will be briefly unavailable during recycling (usually under 5 seconds).
         </p>
       </div>

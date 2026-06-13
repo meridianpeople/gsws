@@ -103,12 +103,12 @@ export default function DNSManager({ domainName, paramName }: { domainName: stri
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', maxWidth: '960px' }}>
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
         <div>
-          <div style={{ fontSize: '12px', color: '#9a9a9a', marginBottom: '4px' }}>
+          <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>
             <Link href="/domains" style={{ color: '#1a6ef5' }}>Domains</Link> ›{' '}
             <Link href={`/domains/${paramName}`} style={{ color: '#1a6ef5' }}>{domainName}</Link> › DNS records
           </div>
-          <h1 style={{ fontSize: '20px', fontWeight: 600, color: '#0a0a0a' }}>DNS records</h1>
-          <p style={{ fontSize: '13px', color: '#9a9a9a', marginTop: '3px' }}>Manage DNS records for <strong>{domainName}</strong></p>
+          <h1 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text-primary)' }}>DNS records</h1>
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '3px' }}>Manage DNS records for <strong>{domainName}</strong></p>
         </div>
         <button onClick={() => setShowAdd(!showAdd)}
           style={{ height: '38px', padding: '0 20px', background: '#1a6ef5', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit', display: 'flex', alignItems: 'center', gap: '6px' }}>
@@ -122,35 +122,35 @@ export default function DNSManager({ domainName, paramName }: { domainName: stri
       {/* Add record form */}
       {showAdd && (
         <div className="gsws-card">
-          <h2 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '16px' }}>Add DNS record</h2>
+          <h2 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '16px' }}>Add DNS record</h2>
           <div style={{ display: 'grid', gridTemplateColumns: '140px 1fr 1fr 100px', gap: '10px', marginBottom: '12px' }}>
             <div>
-              <label style={{ fontSize: '11px', fontWeight: 500, color: '#9a9a9a', display: 'block', marginBottom: '4px' }}>Type</label>
+              <label style={{ fontSize: '11px', fontWeight: 500, color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Type</label>
               <select value={newRecord.type} onChange={e => setNewRecord(r => ({ ...r, type: e.target.value }))}
-                style={{ width: '100%', height: '36px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', fontFamily: 'inherit', padding: '0 8px', background: '#fff', color: '#0a0a0a' }}>
+                style={{ width: '100%', height: '36px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', fontFamily: 'inherit', padding: '0 8px', background: 'var(--card-bg)', color: 'var(--text-primary)' }}>
                 {RECORD_TYPES.map(t => <option key={t}>{t}</option>)}
               </select>
             </div>
             <div>
-              <label style={{ fontSize: '11px', fontWeight: 500, color: '#9a9a9a', display: 'block', marginBottom: '4px' }}>
+              <label style={{ fontSize: '11px', fontWeight: 500, color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>
                 Host {newRecord.type === 'MX' ? '(e.g. @)' : '(e.g. @ or subdomain)'}
               </label>
               <input value={newRecord.host} onChange={e => setNewRecord(r => ({ ...r, host: e.target.value }))}
                 placeholder={newRecord.type === 'MX' ? '@' : newRecord.type === 'CNAME' ? 'www' : '@'}
-                style={{ width: '100%', height: '36px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', fontFamily: 'ui-monospace, monospace', padding: '0 10px', background: '#fff', color: '#0a0a0a', boxSizing: 'border-box' }} />
+                style={{ width: '100%', height: '36px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', fontFamily: 'ui-monospace, monospace', padding: '0 10px', background: 'var(--card-bg)', color: 'var(--text-primary)', boxSizing: 'border-box' }} />
             </div>
             <div>
-              <label style={{ fontSize: '11px', fontWeight: 500, color: '#9a9a9a', display: 'block', marginBottom: '4px' }}>
+              <label style={{ fontSize: '11px', fontWeight: 500, color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>
                 Value {newRecord.type === 'A' ? '(IP address)' : newRecord.type === 'MX' ? '(mail server)' : newRecord.type === 'TXT' ? '(text content)' : ''}
               </label>
               <input value={newRecord.data} onChange={e => setNewRecord(r => ({ ...r, data: e.target.value }))}
                 placeholder={newRecord.type === 'A' ? '1.2.3.4' : newRecord.type === 'MX' ? 'mail.example.com' : newRecord.type === 'TXT' ? 'v=spf1 include:...' : ''}
-                style={{ width: '100%', height: '36px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', fontFamily: 'ui-monospace, monospace', padding: '0 10px', background: '#fff', color: '#0a0a0a', boxSizing: 'border-box' }} />
+                style={{ width: '100%', height: '36px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', fontFamily: 'ui-monospace, monospace', padding: '0 10px', background: 'var(--card-bg)', color: 'var(--text-primary)', boxSizing: 'border-box' }} />
             </div>
             <div>
-              <label style={{ fontSize: '11px', fontWeight: 500, color: '#9a9a9a', display: 'block', marginBottom: '4px' }}>TTL</label>
+              <label style={{ fontSize: '11px', fontWeight: 500, color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>TTL</label>
               <select value={newRecord.ttl} onChange={e => setNewRecord(r => ({ ...r, ttl: Number(e.target.value) }))}
-                style={{ width: '100%', height: '36px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', fontFamily: 'inherit', padding: '0 8px', background: '#fff', color: '#0a0a0a' }}>
+                style={{ width: '100%', height: '36px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', fontFamily: 'inherit', padding: '0 8px', background: 'var(--card-bg)', color: 'var(--text-primary)' }}>
                 <option value={300}>5 min</option>
                 <option value={3600}>1 hour</option>
                 <option value={86400}>1 day</option>
@@ -159,9 +159,9 @@ export default function DNSManager({ domainName, paramName }: { domainName: stri
           </div>
           {newRecord.type === 'MX' && (
             <div style={{ marginBottom: '12px' }}>
-              <label style={{ fontSize: '11px', fontWeight: 500, color: '#9a9a9a', display: 'block', marginBottom: '4px' }}>Priority</label>
+              <label style={{ fontSize: '11px', fontWeight: 500, color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Priority</label>
               <input type="number" value={newRecord.priority || 10} onChange={e => setNewRecord(r => ({ ...r, priority: Number(e.target.value) }))}
-                style={{ width: '100px', height: '36px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', padding: '0 10px', background: '#fff', color: '#0a0a0a', fontFamily: 'inherit' }} />
+                style={{ width: '100px', height: '36px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', padding: '0 10px', background: 'var(--card-bg)', color: 'var(--text-primary)', fontFamily: 'inherit' }} />
             </div>
           )}
           <div style={{ display: 'flex', gap: '8px' }}>
@@ -170,7 +170,7 @@ export default function DNSManager({ domainName, paramName }: { domainName: stri
               {saving ? 'Saving…' : 'Save record'}
             </button>
             <button onClick={() => setShowAdd(false)}
-              style={{ height: '34px', padding: '0 16px', background: '#fff', color: '#0a0a0a', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', cursor: 'pointer', fontFamily: 'inherit' }}>
+              style={{ height: '34px', padding: '0 16px', background: 'var(--card-bg)', color: 'var(--text-primary)', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', cursor: 'pointer', fontFamily: 'inherit' }}>
               Cancel
             </button>
           </div>
@@ -178,16 +178,16 @@ export default function DNSManager({ domainName, paramName }: { domainName: stri
       )}
 
       {/* Records table */}
-      <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', overflow: 'hidden' }}>
-        <div style={{ padding: '14px 20px', borderBottom: '1px solid #ebebeb', background: '#f7f7f7' }}>
-          <h2 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a' }}>
+      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '10px', overflow: 'hidden' }}>
+        <div style={{ padding: '14px 20px', borderBottom: '1px solid var(--card-border)', background: 'var(--card-bg-elevated)' }}>
+          <h2 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>
             {loading ? 'Loading records…' : `${records.length} DNS record${records.length !== 1 ? 's' : ''}`}
           </h2>
         </div>
         {loading ? (
-          <div style={{ padding: '40px', textAlign: 'center', color: '#9a9a9a', fontSize: '13px' }}>Loading DNS records…</div>
+          <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-secondary)', fontSize: '13px' }}>Loading DNS records…</div>
         ) : records.length === 0 ? (
-          <div style={{ padding: '40px', textAlign: 'center', color: '#9a9a9a', fontSize: '13px' }}>
+          <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-secondary)', fontSize: '13px' }}>
             No DNS records found. Add your first record above.
           </div>
         ) : (
@@ -203,13 +203,13 @@ export default function DNSManager({ domainName, paramName }: { domainName: stri
                       {r.type}
                     </span>
                   </td>
-                  <td style={{ fontFamily: 'ui-monospace, monospace', fontSize: '12px', color: '#0a0a0a' }}>{r.host || '@'}</td>
+                  <td style={{ fontFamily: 'ui-monospace, monospace', fontSize: '12px', color: 'var(--text-primary)' }}>{r.host || '@'}</td>
                   <td style={{ fontFamily: 'ui-monospace, monospace', fontSize: '12px', maxWidth: '280px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', color: '#5a5a5a' }}>{r.data || r.value}</td>
-                  <td style={{ fontSize: '12px', color: '#9a9a9a' }}>{r.ttl}s</td>
-                  <td style={{ fontSize: '12px', color: '#9a9a9a' }}>{r.priority || '—'}</td>
+                  <td style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{r.ttl}s</td>
+                  <td style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{r.priority || '—'}</td>
                   <td>
                     <button onClick={() => handleDelete(r)} disabled={deleteId === r.id}
-                      style={{ padding: '0 10px', height: '24px', border: '1px solid #f5c1c1', borderRadius: '4px', fontSize: '11px', color: '#a32d2d', background: '#fff', cursor: 'pointer', fontFamily: 'inherit' }}>
+                      style={{ padding: '0 10px', height: '24px', border: '1px solid #f5c1c1', borderRadius: '4px', fontSize: '11px', color: '#a32d2d', background: 'var(--card-bg)', cursor: 'pointer', fontFamily: 'inherit' }}>
                       {deleteId === r.id ? '…' : 'Delete'}
                     </button>
                   </td>

@@ -25,7 +25,7 @@ export default async function PackagesPage({ searchParams }: { searchParams: Pro
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
         <div>
           <h1 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text-primary)' }}>Hosting packages</h1>
-          <p style={{ fontSize: '13px', color: '#9a9a9a', marginTop: '3px' }}>
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '3px' }}>
             {packages.length > 0
               ? `${packages.length} package${packages.length !== 1 ? 's' : ''} across ${domains.length} domain${domains.length !== 1 ? 's' : ''}`
               : 'Add a domain before creating a hosting package.'}
@@ -48,7 +48,7 @@ export default async function PackagesPage({ searchParams }: { searchParams: Pro
       {domains.length === 0 && (
         <div style={{ background: 'var(--card-bg)', border: '1px dashed var(--card-border-hover)', borderRadius: '10px', padding: '48px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
           <p style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text-primary)' }}>No domains yet</p>
-          <p style={{ fontSize: '13px', color: '#9a9a9a', maxWidth: '340px' }}>
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary)', maxWidth: '340px' }}>
             You need at least one domain before creating a hosting package.
           </p>
           <Link href="/domains/search"
@@ -62,7 +62,7 @@ export default async function PackagesPage({ searchParams }: { searchParams: Pro
       {domains.length > 0 && packages.length === 0 && (
         <div style={{ background: 'var(--card-bg)', border: '1px dashed var(--card-border-hover)', borderRadius: '10px', padding: '48px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
           <p style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text-primary)' }}>No packages yet</p>
-          <p style={{ fontSize: '13px', color: '#9a9a9a', maxWidth: '340px' }}>
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary)', maxWidth: '340px' }}>
             Create your first hosting package for one of your domains.
           </p>
           <Link href="/packages/new"
@@ -75,7 +75,7 @@ export default async function PackagesPage({ searchParams }: { searchParams: Pro
       {/* Packages table */}
       {packages.length > 0 && (
         <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '10px', overflow: 'hidden' }}>
-          <div style={{ padding: '14px 20px', borderBottom: '1px solid #ebebeb', background: '#f7f7f7' }}>
+          <div style={{ padding: '14px 20px', borderBottom: '1px solid var(--card-border)', background: 'var(--card-bg-elevated)' }}>
             <h2 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>
               {packages.length} active package{packages.length !== 1 ? 's' : ''}
             </h2>
@@ -110,7 +110,7 @@ export default async function PackagesPage({ searchParams }: { searchParams: Pro
                       Active
                     </span>
                   </td>
-                  <td style={{ fontSize: '12px', color: '#9a9a9a' }}>
+                  <td style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>
                     {new Date(pkg.created_at).toLocaleDateString('en-GB')}
                   </td>
                   <td>
@@ -137,7 +137,7 @@ export default async function PackagesPage({ searchParams }: { searchParams: Pro
             <Link key={ht.type} href={ht.href}
               style={{ display: 'flex', flexDirection: 'column', gap: '6px', padding: '16px 20px', background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '10px', textDecoration: 'none', transition: 'border-color 0.15s' }}>
               <span style={{ fontSize: '11px', fontWeight: 600, padding: '2px 8px', borderRadius: '20px', background: ht.bg, color: ht.color, alignSelf: 'flex-start' }}>{ht.type}</span>
-              <p style={{ fontSize: '12px', color: '#9a9a9a' }}>{ht.desc}</p>
+              <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{ht.desc}</p>
               <p style={{ fontSize: '12px', color: '#1a6ef5', fontWeight: 500 }}>Add package →</p>
             </Link>
           ))}

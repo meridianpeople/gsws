@@ -148,7 +148,7 @@ export default function DatabaseManager({ packageId, initialDatabases, storedDbs
               Open phpMyAdmin ↗
             </a>
             <button onClick={() => setCreatedDb(null)}
-              style={{ height: '32px', padding: '0 14px', background: 'transparent', color: '#9a9a9a', border: '1px solid #2a3a50', borderRadius: '6px', fontSize: '12px', cursor: 'pointer', fontFamily: 'inherit' }}>
+              style={{ height: '32px', padding: '0 14px', background: 'transparent', color: 'var(--text-secondary)', border: '1px solid #2a3a50', borderRadius: '6px', fontSize: '12px', cursor: 'pointer', fontFamily: 'inherit' }}>
               I've saved the credentials
             </button>
           </div>
@@ -157,7 +157,7 @@ export default function DatabaseManager({ packageId, initialDatabases, storedDbs
 
       {/* Create form */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <p style={{ fontSize: '13px', color: '#9a9a9a' }}>{databases.length} database{databases.length !== 1 ? 's' : ''}</p>
+        <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>{databases.length} database{databases.length !== 1 ? 's' : ''}</p>
         <button onClick={() => setShowCreate(s => !s)}
           style={{ height: '32px', padding: '0 14px', background: '#1a6ef5', color: '#fff', border: 'none', borderRadius: '6px', fontSize: '12px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
           + Create database
@@ -166,20 +166,20 @@ export default function DatabaseManager({ packageId, initialDatabases, storedDbs
 
       {showCreate && (
         <div className="gsws-card" style={{ border: '2px solid #1a6ef5' }}>
-          <h3 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '14px' }}>Create MySQL database</h3>
+          <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '14px' }}>Create MySQL database</h3>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '12px' }}>
             <div>
-              <label style={{ fontSize: '11px', color: '#9a9a9a', display: 'block', marginBottom: '4px' }}>Database name</label>
+              <label style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Database name</label>
               <input value={newDb.name} onChange={e => setNewDb(d => ({ ...d, name: e.target.value.replace(/[^a-zA-Z0-9_]/g, '') }))}
                 placeholder="my_database"
-                style={{ width: '100%', height: '34px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', fontFamily: 'ui-monospace, monospace', padding: '0 10px', boxSizing: 'border-box' }} />
-              <p style={{ fontSize: '11px', color: '#9a9a9a', marginTop: '3px' }}>Letters, numbers and underscores only</p>
+                style={{ width: '100%', height: '34px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', fontFamily: 'ui-monospace, monospace', padding: '0 10px', boxSizing: 'border-box' }} />
+              <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '3px' }}>Letters, numbers and underscores only</p>
             </div>
             <div>
-              <label style={{ fontSize: '11px', color: '#9a9a9a', display: 'block', marginBottom: '4px' }}>Password (leave blank to auto-generate)</label>
+              <label style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Password (leave blank to auto-generate)</label>
               <input value={newDb.password} onChange={e => setNewDb(d => ({ ...d, password: e.target.value }))}
                 placeholder="Auto-generated if empty"
-                style={{ width: '100%', height: '34px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', padding: '0 10px', boxSizing: 'border-box', fontFamily: 'inherit' }} />
+                style={{ width: '100%', height: '34px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', padding: '0 10px', boxSizing: 'border-box', fontFamily: 'inherit' }} />
             </div>
           </div>
           <div style={{ padding: '10px 12px', background: '#faeeda', borderRadius: '6px', fontSize: '12px', color: '#854f0b', marginBottom: '12px' }}>
@@ -191,7 +191,7 @@ export default function DatabaseManager({ packageId, initialDatabases, storedDbs
               {creating ? 'Creating…' : 'Create database'}
             </button>
             <button onClick={() => setShowCreate(false)}
-              style={{ height: '32px', padding: '0 14px', background: '#fff', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '12px', cursor: 'pointer', fontFamily: 'inherit' }}>
+              style={{ height: '32px', padding: '0 14px', background: 'var(--card-bg)', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '12px', cursor: 'pointer', fontFamily: 'inherit' }}>
               Cancel
             </button>
           </div>
@@ -201,15 +201,15 @@ export default function DatabaseManager({ packageId, initialDatabases, storedDbs
       {/* Connection info */}
       {databases.length > 0 && (
         <div className="gsws-card">
-          <h3 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '12px' }}>Connection details</h3>
+          <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '12px' }}>Connection details</h3>
           {[
             ['Host', databases[0]?.host || 'shareddb.hosting.stackcp.net'],
             ['Port', '3306'],
             ['phpMyAdmin', 'pma.stackcp.com'],
           ].map(([label, value]) => (
-            <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid #ebebeb', fontSize: '12px' }}>
-              <span style={{ color: '#9a9a9a' }}>{label}</span>
-              <span style={{ fontFamily: 'ui-monospace, monospace', fontSize: '11px', fontWeight: 500, color: '#0a0a0a' }}>{value}</span>
+            <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--card-border)', fontSize: '12px' }}>
+              <span style={{ color: 'var(--text-secondary)' }}>{label}</span>
+              <span style={{ fontFamily: 'ui-monospace, monospace', fontSize: '11px', fontWeight: 500, color: 'var(--text-primary)' }}>{value}</span>
             </div>
           ))}
         </div>
@@ -219,11 +219,11 @@ export default function DatabaseManager({ packageId, initialDatabases, storedDbs
       {databases.length === 0 ? (
         <div className="gsws-card" style={{ textAlign: 'center', padding: '48px' }}>
           <p style={{ fontSize: '32px', marginBottom: '10px' }}>🗄️</p>
-          <p style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a', marginBottom: '4px' }}>No databases</p>
-          <p style={{ fontSize: '13px', color: '#9a9a9a' }}>Create your first MySQL database</p>
+          <p style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '4px' }}>No databases</p>
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>Create your first MySQL database</p>
         </div>
       ) : (
-        <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', overflow: 'hidden' }}>
+        <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '10px', overflow: 'hidden' }}>
           <table className="gsws-table">
             <thead>
               <tr><th>Name</th><th>Host</th><th>Size used</th><th>Quota</th><th></th></tr>
@@ -232,25 +232,25 @@ export default function DatabaseManager({ packageId, initialDatabases, storedDbs
               {databases.map((d: any) => (
                 <tr key={d.id}>
                   <td style={{ fontFamily: 'ui-monospace, monospace', fontSize: '12px', fontWeight: 600 }}>{d.name}</td>
-                  <td style={{ fontFamily: 'ui-monospace, monospace', fontSize: '11px', color: '#9a9a9a' }}>{d.host}</td>
-                  <td style={{ fontSize: '12px', color: '#9a9a9a' }}>{d.quotaUsed ? `${Number(d.quotaUsed).toFixed(1)} MB` : '—'}</td>
-                  <td style={{ fontSize: '12px', color: '#9a9a9a' }}>{d.quotaMb ? `${d.quotaMb} MB` : 'Unlimited'}</td>
+                  <td style={{ fontFamily: 'ui-monospace, monospace', fontSize: '11px', color: 'var(--text-secondary)' }}>{d.host}</td>
+                  <td style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{d.quotaUsed ? `${Number(d.quotaUsed).toFixed(1)} MB` : '—'}</td>
+                  <td style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{d.quotaMb ? `${d.quotaMb} MB` : 'Unlimited'}</td>
                   <td>
                     <div style={{ display: 'flex', gap: '6px' }}>
                       <button onClick={() => { setViewingDb(viewingDb?.id === d.id ? null : d); setShowResetForm(false); setNewPassword('') }}
-                        style={{ padding: '0 10px', height: '26px', display: 'inline-flex', alignItems: 'center', border: '1px solid #1a6ef5', borderRadius: '4px', fontSize: '11px', color: '#1a6ef5', background: '#fff', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 500 }}>
+                        style={{ padding: '0 10px', height: '26px', display: 'inline-flex', alignItems: 'center', border: '1px solid #1a6ef5', borderRadius: '4px', fontSize: '11px', color: '#1a6ef5', background: 'var(--card-bg)', cursor: 'pointer', fontFamily: 'inherit', fontWeight: 500 }}>
                         View credentials
                       </button>
                       <button onClick={() => { setViewingDb(d); setShowResetForm(true); setNewPassword('') }}
-                        style={{ padding: '0 10px', height: '26px', display: 'inline-flex', alignItems: 'center', border: '1px solid #854f0b', borderRadius: '4px', fontSize: '11px', color: '#854f0b', background: '#fff', cursor: 'pointer', fontFamily: 'inherit' }}>
+                        style={{ padding: '0 10px', height: '26px', display: 'inline-flex', alignItems: 'center', border: '1px solid #854f0b', borderRadius: '4px', fontSize: '11px', color: '#854f0b', background: 'var(--card-bg)', cursor: 'pointer', fontFamily: 'inherit' }}>
                         Change password
                       </button>
                       <a href={getPMAUrl(d.host, d.name)} target="_blank"
-                        style={{ padding: '0 10px', height: '26px', display: 'inline-flex', alignItems: 'center', border: '1px solid #d4d4d4', borderRadius: '4px', fontSize: '11px', color: '#5a5a5a', background: '#fff', textDecoration: 'none' }}>
+                        style={{ padding: '0 10px', height: '26px', display: 'inline-flex', alignItems: 'center', border: '1px solid var(--card-border-hover)', borderRadius: '4px', fontSize: '11px', color: '#5a5a5a', background: 'var(--card-bg)', textDecoration: 'none' }}>
                         phpMyAdmin ↗
                       </a>
                       <button onClick={() => handleDelete(d)} disabled={deleting === d.id}
-                        style={{ padding: '0 10px', height: '26px', border: '1px solid #f5c1c1', borderRadius: '4px', fontSize: '11px', color: '#a32d2d', background: '#fff', cursor: 'pointer', fontFamily: 'inherit' }}>
+                        style={{ padding: '0 10px', height: '26px', border: '1px solid #f5c1c1', borderRadius: '4px', fontSize: '11px', color: '#a32d2d', background: 'var(--card-bg)', cursor: 'pointer', fontFamily: 'inherit' }}>
                         {deleting === d.id ? '…' : 'Delete'}
                       </button>
                     </div>
@@ -267,7 +267,7 @@ export default function DatabaseManager({ packageId, initialDatabases, storedDbs
         <div style={{ padding: '20px', borderRadius: '10px', background: '#0a1628', border: '1px solid #1a3060' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
             <p style={{ fontSize: '13px', fontWeight: 700, color: '#fff' }}>🔑 Database credentials — {viewingDb.name}</p>
-            <button onClick={() => setViewingDb(null)} style={{ background: 'none', border: 'none', color: '#9a9a9a', cursor: 'pointer', fontSize: '18px' }}>×</button>
+            <button onClick={() => setViewingDb(null)} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '18px' }}>×</button>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {[
@@ -307,12 +307,12 @@ export default function DatabaseManager({ packageId, initialDatabases, storedDbs
                     {resettingPwd ? '…' : 'Save'}
                   </button>
                   <button onClick={() => { setShowResetForm(false); setNewPassword('') }}
-                    style={{ height: '30px', padding: '0 10px', background: 'transparent', color: '#9a9a9a', border: '1px solid #2a3a50', borderRadius: '4px', fontSize: '11px', cursor: 'pointer', fontFamily: 'inherit' }}>
+                    style={{ height: '30px', padding: '0 10px', background: 'transparent', color: 'var(--text-secondary)', border: '1px solid #2a3a50', borderRadius: '4px', fontSize: '11px', cursor: 'pointer', fontFamily: 'inherit' }}>
                     Cancel
                   </button>
                 </div>
               ) : (
-                <p style={{ fontSize: '12px', color: '#9a9a9a' }}>Click "Reset password" to set a new database password.</p>
+                <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Click "Reset password" to set a new database password.</p>
               )}
             </div>
           </div>

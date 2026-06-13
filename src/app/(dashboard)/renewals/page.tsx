@@ -63,9 +63,9 @@ export default function RenewalsPage() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
         <div>
-          <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: '#9a9a9a', marginBottom: '6px' }}>Account</p>
-          <h1 style={{ fontSize: '22px', fontWeight: 700, color: '#0a0a0a', letterSpacing: '-0.02em', margin: 0 }}>Renewals</h1>
-          <p style={{ fontSize: '13px', color: '#9a9a9a', marginTop: '4px' }}>Manage renewal settings for all your services. Auto-renew charges your credit balance.</p>
+          <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--text-secondary)', marginBottom: '6px' }}>Account</p>
+          <h1 style={{ fontSize: '22px', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.02em', margin: 0 }}>Renewals</h1>
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '4px' }}>Manage renewal settings for all your services. Auto-renew charges your credit balance.</p>
         </div>
         <Link href="/account/topup" style={{ display: 'inline-flex', alignItems: 'center', gap: '7px', height: '38px', padding: '0 18px', background: '#0a0a0a', color: '#fff', borderRadius: '9px', fontSize: '13px', fontWeight: 600, textDecoration: 'none' }}>
           <IconMoney /> Top up credit
@@ -80,19 +80,19 @@ export default function RenewalsPage() {
           { label: 'OVERDUE', value: stats.overdue || 0, Icon: IconAlert, color: '#a32d2d', bg: '#fcebeb' },
           { label: 'ANNUAL COST', value: `£${((stats.monthlyTotal || 0) * 12).toFixed(2)}`, Icon: IconMoney, color: '#3b6d11', bg: '#eaf3de' },
         ].map(({ label, value, Icon, color, bg }) => (
-          <div key={label} style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', padding: '16px 18px' }}>
+          <div key={label} style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '10px', padding: '16px 18px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '10px' }}>
               <div style={{ width: '26px', height: '26px', background: bg, borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center', color }}><Icon /></div>
-              <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#9a9a9a' }}>{label}</p>
+              <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-secondary)' }}>{label}</p>
             </div>
-            <p style={{ fontSize: '22px', fontWeight: 700, color: '#0a0a0a', letterSpacing: '-0.02em' }}>{value}</p>
+            <p style={{ fontSize: '22px', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.02em' }}>{value}</p>
           </div>
         ))}
       </div>
 
       {/* Timeline */}
-      <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', padding: '16px 20px' }}>
-        <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: '#9a9a9a', marginBottom: '12px' }}>Renewal timeline</p>
+      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '10px', padding: '16px 20px' }}>
+        <p style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.1em', textTransform: 'uppercase', color: 'var(--text-secondary)', marginBottom: '12px' }}>Renewal timeline</p>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '0' }}>
           {[
             { period: '30 DAYS BEFORE', title: 'Reminder sent', desc: 'Email + notification sent', color: '#185fa5' },
@@ -102,8 +102,8 @@ export default function RenewalsPage() {
           ].map(({ period, title, desc, color }) => (
             <div key={period} style={{ borderRight: '1px solid #f0f0f0', paddingRight: '16px', marginRight: '16px' }}>
               <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', color, marginBottom: '4px' }}>{period}</p>
-              <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '2px' }}>{title}</p>
-              <p style={{ fontSize: '11px', color: '#9a9a9a' }}>{desc}</p>
+              <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '2px' }}>{title}</p>
+              <p style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{desc}</p>
             </div>
           ))}
         </div>
@@ -121,17 +121,17 @@ export default function RenewalsPage() {
 
       {/* Renewals list */}
       {loading ? (
-        <div style={{ textAlign: 'center', padding: '48px', color: '#9a9a9a', fontSize: '13px' }}>Loading...</div>
+        <div style={{ textAlign: 'center', padding: '48px', color: 'var(--text-secondary)', fontSize: '13px' }}>Loading...</div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
           {filtered.map((r: any) => {
-            const meta = TYPE_META[r.resource_type] || { label: 'Service', color: '#555', bg: '#f7f7f7', Icon: IconBox }
+            const meta = TYPE_META[r.resource_type] || { label: 'Service', color: 'var(--text-tertiary)', bg: '#f7f7f7', Icon: IconBox }
             const urgency = getUrgency(r)
             const urg = URGENCY_INFO[urgency]
             const Icon = meta.Icon
 
             return (
-              <div key={r.id} style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', padding: '14px 18px', display: 'flex', alignItems: 'center', gap: '14px' }}>
+              <div key={r.id} style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '10px', padding: '14px 18px', display: 'flex', alignItems: 'center', gap: '14px' }}>
                 {/* Icon */}
                 <div style={{ width: '36px', height: '36px', background: meta.bg, borderRadius: '9px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: meta.color, flexShrink: 0 }}>
                   <Icon />
@@ -140,10 +140,10 @@ export default function RenewalsPage() {
                 {/* Info */}
                 <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '2px' }}>
-                    <p style={{ fontSize: '13px', fontWeight: 700, color: '#0a0a0a', letterSpacing: '-0.01em' }}>{r.resource_name}</p>
+                    <p style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.01em' }}>{r.resource_name}</p>
                     <span style={{ padding: '1px 7px', borderRadius: '4px', fontSize: '10px', fontWeight: 700, background: urg.bg, color: urg.color, textTransform: 'uppercase', letterSpacing: '0.05em' }}>{urg.label}</span>
                   </div>
-                  <p style={{ fontSize: '11px', color: '#9a9a9a' }}>
+                  <p style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
                     {meta.label} · {r.plan_name}
                   </p>
                   <p style={{ fontSize: '11px', color: r.daysLeft < 7 ? '#a32d2d' : '#9a9a9a', marginTop: '1px', fontFamily: "'DM Mono', monospace" }}>
@@ -153,17 +153,17 @@ export default function RenewalsPage() {
 
                 {/* Price */}
                 <div style={{ textAlign: 'right', flexShrink: 0, marginRight: '16px' }}>
-                  <p style={{ fontSize: '14px', fontWeight: 700, color: '#0a0a0a' }}>£{(r.renewal_price_inc_vat || 0).toFixed(2)}</p>
-                  <p style={{ fontSize: '10px', color: '#9a9a9a', textTransform: 'uppercase', letterSpacing: '0.05em' }}>inc VAT / {r.billing_period || 'year'}</p>
+                  <p style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>£{(r.renewal_price_inc_vat || 0).toFixed(2)}</p>
+                  <p style={{ fontSize: '10px', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>inc VAT / {r.billing_period || 'year'}</p>
                 </div>
 
                 {/* Auto-renew toggle */}
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3px', flexShrink: 0 }}>
                   <button onClick={() => toggleAutoRenew(r.id, !!r.auto_renew)}
                     style={{ width: '44px', height: '24px', borderRadius: '12px', border: 'none', cursor: 'pointer', background: r.auto_renew ? '#0a0a0a' : '#d4d4d4', position: 'relative', transition: 'background 0.2s', flexShrink: 0 }}>
-                    <span style={{ position: 'absolute', top: '3px', left: r.auto_renew ? '23px' : '3px', width: '18px', height: '18px', borderRadius: '50%', background: '#fff', transition: 'left 0.2s', display: 'block' }} />
+                    <span style={{ position: 'absolute', top: '3px', left: r.auto_renew ? '23px' : '3px', width: '18px', height: '18px', borderRadius: '50%', background: 'var(--card-bg)', transition: 'left 0.2s', display: 'block' }} />
                   </button>
-                  <p style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: '#9a9a9a' }}>AUTO</p>
+                  <p style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-secondary)' }}>AUTO</p>
                 </div>
               </div>
             )
@@ -172,10 +172,10 @@ export default function RenewalsPage() {
       )}
 
       {/* Footer note */}
-      <p style={{ fontSize: '12px', color: '#9a9a9a', lineHeight: 1.6 }}>
+      <p style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
         Auto-renew charges your credit balance on the renewal date. Ensure you have sufficient credit to avoid service interruption.
         Services suspended after 30 days of non-payment are permanently deleted after a further 30 days.
-        For renewal assistance contact <a href="mailto:support@geig.co.uk" style={{ color: '#0a0a0a', fontWeight: 600 }}>support@geig.co.uk</a>.
+        For renewal assistance contact <a href="mailto:support@geig.co.uk" style={{ color: 'var(--text-primary)', fontWeight: 600 }}>support@geig.co.uk</a>.
       </p>
     </div>
   )

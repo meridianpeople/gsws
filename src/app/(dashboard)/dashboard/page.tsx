@@ -56,7 +56,7 @@ export default async function DashboardPage() {
           <h1 style={{ fontSize: '22px', fontWeight: 700, color: '#fff', letterSpacing: '-0.3px', marginBottom: '4px' }}>
             Welcome back{firstName ? `, ${firstName}` : ''}
           </h1>
-          <p style={{ fontSize: '13px', color: '#666' }}>
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
             Monitor and manage your hosting, domains, VPS, GPU compute, and account services from one workspace.
           </p>
         </div>
@@ -70,11 +70,11 @@ export default async function DashboardPage() {
         {metrics.map(m => (
           <div key={m.label} style={{ background: '#111', border: '1px solid #1e1e1e', borderRadius: '12px', padding: '18px 16px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
-              <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '9px', textTransform: 'uppercase', letterSpacing: '0.12em', color: '#555' }}>{m.label}</p>
+              <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '9px', textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--text-tertiary)' }}>{m.label}</p>
               <span style={{ color: m.color }}>{m.icon}</span>
             </div>
             <p style={{ fontSize: '26px', fontWeight: 700, color: '#fff', letterSpacing: '-0.5px', lineHeight: 1 }}>{m.value}</p>
-            <p style={{ fontSize: '11px', color: '#555', marginTop: '6px' }}>{m.sub}</p>
+            <p style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginTop: '6px' }}>{m.sub}</p>
           </div>
         ))}
       </div>
@@ -87,7 +87,7 @@ export default async function DashboardPage() {
             <div key={s.title} style={{ background: '#111', border: '1px solid #1e1e1e', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', opacity: s.active ? 1 : 0.6, transition: 'border-color 0.2s' }}>
               <div>
                 <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#fff', marginBottom: '4px' }}>{s.title}</h3>
-                <p style={{ fontSize: '12px', color: '#666', marginBottom: '12px' }}>{s.sub}</p>
+                <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '12px' }}>{s.sub}</p>
                 <span style={{ display: 'inline-block', padding: '3px 10px', borderRadius: '4px', fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: s.badgeColor, background: s.badgeBg }}>
                   {s.badge}
                 </span>
@@ -114,7 +114,7 @@ export default async function DashboardPage() {
                 <path d="M22 12H2M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z"/>
               </svg>
             </div>
-            <p style={{ fontSize: '13px', color: '#666', marginBottom: '16px' }}>No packages yet. Add a domain first then create a hosting package.</p>
+            <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '16px' }}>No packages yet. Add a domain first then create a hosting package.</p>
             <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
               <Link href="/domains/search" style={{ padding: '0 16px', height: '34px', display: 'inline-flex', alignItems: 'center', background: '#1a6ef5', color: '#fff', borderRadius: '6px', fontSize: '12.5px', fontWeight: 600, textDecoration: 'none' }}>
                 Register domain →
@@ -130,7 +130,7 @@ export default async function DashboardPage() {
               <thead>
                 <tr style={{ borderBottom: '1px solid #1e1e1e' }}>
                   {['Domain', 'Type', 'Status', 'Created', ''].map(h => (
-                    <th key={h} style={{ padding: '10px 20px', textAlign: 'left', fontFamily: 'JetBrains Mono, monospace', fontSize: '9px', textTransform: 'uppercase', letterSpacing: '0.12em', color: '#555', fontWeight: 600, whiteSpace: 'nowrap' }}>{h}</th>
+                    <th key={h} style={{ padding: '10px 20px', textAlign: 'left', fontFamily: 'JetBrains Mono, monospace', fontSize: '9px', textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--text-tertiary)', fontWeight: 600, whiteSpace: 'nowrap' }}>{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -148,7 +148,7 @@ export default async function DashboardPage() {
                     <td style={{ padding: '14px 20px' }}>
                       <span style={{ padding: '3px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 600, background: 'rgba(20,83,45,0.2)', color: '#4ade80' }}>Active</span>
                     </td>
-                    <td style={{ padding: '14px 20px', fontSize: '12px', color: '#555' }}>{new Date(pkg.created_at).toLocaleDateString('en-GB')}</td>
+                    <td style={{ padding: '14px 20px', fontSize: '12px', color: 'var(--text-tertiary)' }}>{new Date(pkg.created_at).toLocaleDateString('en-GB')}</td>
                     <td style={{ padding: '14px 20px', textAlign: 'right' }}>
                       <Link href={`/packages/${pkg.id}`} style={{ padding: '0 14px', height: '28px', display: 'inline-flex', alignItems: 'center', background: '#1a1a1a', border: '1px solid #2a2a2a', borderRadius: '6px', fontSize: '12px', color: '#ccc', textDecoration: 'none' }}>
                         Manage
@@ -180,7 +180,7 @@ export default async function DashboardPage() {
             </div>
             <div>
               <p style={{ fontSize: '13px', fontWeight: 600, color: '#fff' }}>{qa.label}</p>
-              <p style={{ fontSize: '11px', color: '#555', marginTop: '2px' }}>{qa.desc}</p>
+              <p style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginTop: '2px' }}>{qa.desc}</p>
             </div>
           </Link>
         ))}

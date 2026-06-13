@@ -60,7 +60,7 @@ export default function RedirectsManager({ packageId, domainName, initialRedirec
       {error && <div style={{ padding: '12px 16px', borderRadius: '8px', fontSize: '12px', background: '#fcebeb', color: '#a32d2d', border: '1px solid #f5c1c1' }}>{error}</div>}
 
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <p style={{ fontSize: '13px', color: '#9a9a9a' }}>{redirects.length} redirect{redirects.length !== 1 ? 's' : ''}</p>
+        <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>{redirects.length} redirect{redirects.length !== 1 ? 's' : ''}</p>
         <button onClick={() => setShowAdd(s => !s)}
           style={{ height: '32px', padding: '0 14px', background: '#1a6ef5', color: '#fff', border: 'none', borderRadius: '6px', fontSize: '12px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
           + Add redirect
@@ -69,20 +69,20 @@ export default function RedirectsManager({ packageId, domainName, initialRedirec
 
       {showAdd && (
         <div className="gsws-card" style={{ border: '2px solid #1a6ef5' }}>
-          <h3 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '14px' }}>Add redirect</h3>
+          <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '14px' }}>Add redirect</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '14px' }}>
             <div style={{ display: 'flex', gap: '10px' }}>
               <div style={{ flex: 1 }}>
                 <label style={{ fontSize: '11px', fontWeight: 500, color: '#5a5a5a', display: 'block', marginBottom: '4px' }}>Domain</label>
                 <select value={newRed.domain} onChange={e => setNewRed(r => ({ ...r, domain: e.target.value }))}
-                  style={{ width: '100%', height: '32px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '12px', padding: '0 8px', fontFamily: 'inherit' }}>
+                  style={{ width: '100%', height: '32px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '12px', padding: '0 8px', fontFamily: 'inherit' }}>
                   {webNames.map(n => <option key={n} value={n}>{n}</option>)}
                 </select>
               </div>
               <div style={{ flex: '0 0 90px' }}>
                 <label style={{ fontSize: '11px', fontWeight: 500, color: '#5a5a5a', display: 'block', marginBottom: '4px' }}>Type</label>
                 <select value={newRed.type} onChange={e => setNewRed(r => ({ ...r, type: e.target.value }))}
-                  style={{ width: '100%', height: '32px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '12px', padding: '0 8px', fontFamily: 'inherit' }}>
+                  style={{ width: '100%', height: '32px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '12px', padding: '0 8px', fontFamily: 'inherit' }}>
                   <option value="301">301 Permanent</option>
                   <option value="302">302 Temporary</option>
                 </select>
@@ -92,13 +92,13 @@ export default function RedirectsManager({ packageId, domainName, initialRedirec
               <label style={{ fontSize: '11px', fontWeight: 500, color: '#5a5a5a', display: 'block', marginBottom: '4px' }}>From path</label>
               <input value={newRed.from} onChange={e => setNewRed(r => ({ ...r, from: e.target.value }))}
                 placeholder="/old-page"
-                style={{ width: '100%', height: '32px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '12px', padding: '0 10px', fontFamily: 'ui-monospace, monospace', boxSizing: 'border-box' }} />
+                style={{ width: '100%', height: '32px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '12px', padding: '0 10px', fontFamily: 'ui-monospace, monospace', boxSizing: 'border-box' }} />
             </div>
             <div>
               <label style={{ fontSize: '11px', fontWeight: 500, color: '#5a5a5a', display: 'block', marginBottom: '4px' }}>To URL</label>
               <input value={newRed.to} onChange={e => setNewRed(r => ({ ...r, to: e.target.value }))}
                 placeholder="https://example.com/new-page"
-                style={{ width: '100%', height: '32px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '12px', padding: '0 10px', fontFamily: 'ui-monospace, monospace', boxSizing: 'border-box' }} />
+                style={{ width: '100%', height: '32px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '12px', padding: '0 10px', fontFamily: 'ui-monospace, monospace', boxSizing: 'border-box' }} />
             </div>
           </div>
           <div style={{ display: 'flex', gap: '8px' }}>
@@ -107,19 +107,19 @@ export default function RedirectsManager({ packageId, domainName, initialRedirec
               {saving ? 'Saving…' : 'Create redirect'}
             </button>
             <button onClick={() => setShowAdd(false)}
-              style={{ height: '32px', padding: '0 14px', background: '#fff', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '12px', cursor: 'pointer', fontFamily: 'inherit' }}>
+              style={{ height: '32px', padding: '0 14px', background: 'var(--card-bg)', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '12px', cursor: 'pointer', fontFamily: 'inherit' }}>
               Cancel
             </button>
           </div>
         </div>
       )}
 
-      <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', overflow: 'hidden' }}>
+      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '10px', overflow: 'hidden' }}>
         {redirects.length === 0 ? (
           <div style={{ padding: '40px', textAlign: 'center' }}>
             <p style={{ fontSize: '32px', marginBottom: '10px' }}>↪️</p>
-            <p style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a' }}>No redirects</p>
-            <p style={{ fontSize: '13px', color: '#9a9a9a', marginTop: '4px' }}>Redirect old URLs to new ones automatically</p>
+            <p style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)' }}>No redirects</p>
+            <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '4px' }}>Redirect old URLs to new ones automatically</p>
           </div>
         ) : (
           <table className="gsws-table">
@@ -130,13 +130,13 @@ export default function RedirectsManager({ packageId, domainName, initialRedirec
                 return (
                   <tr key={i}>
                     <td style={{ fontFamily: 'ui-monospace, monospace', fontSize: '12px' }}>
-                      <span style={{ color: '#9a9a9a' }}>{r.domain}</span>{r.from}
+                      <span style={{ color: 'var(--text-secondary)' }}>{r.domain}</span>{r.from}
                     </td>
                     <td style={{ fontFamily: 'ui-monospace, monospace', fontSize: '12px', color: '#1a6ef5', maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{String(r.to)}</td>
                     <td><span style={{ padding: '2px 8px', borderRadius: '20px', fontSize: '11px', fontWeight: 500, background: r.type === '301' ? '#eaf3de' : '#faeeda', color: r.type === '301' ? '#3b6d11' : '#854f0b' }}>{r.type}</span></td>
                     <td>
                       <button onClick={() => handleDelete(r)} disabled={deleting === key}
-                        style={{ padding: '0 10px', height: '24px', border: '1px solid #f5c1c1', borderRadius: '4px', fontSize: '11px', color: '#a32d2d', background: '#fff', cursor: 'pointer', fontFamily: 'inherit' }}>
+                        style={{ padding: '0 10px', height: '24px', border: '1px solid #f5c1c1', borderRadius: '4px', fontSize: '11px', color: '#a32d2d', background: 'var(--card-bg)', cursor: 'pointer', fontFamily: 'inherit' }}>
                         {deleting === key ? '…' : 'Delete'}
                       </button>
                     </td>

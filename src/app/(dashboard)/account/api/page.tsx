@@ -65,7 +65,7 @@ export default function APICredentialsPage() {
     <div style={{ maxWidth: '720px' }}>
       <div style={{ marginBottom: '24px' }}>
         <h1 style={{ fontSize: '22px', fontWeight: 700, color: '#111', margin: 0 }}>API Credentials</h1>
-        <p style={{ fontSize: '13px', color: '#666', marginTop: '4px' }}>
+        <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '4px' }}>
           Generate client ID and secret to access the GSWS API programmatically.
           See <a href="/api-reference" style={{ color: '#1a6ef5' }}>API Reference</a> for available endpoints.
         </p>
@@ -79,14 +79,14 @@ export default function APICredentialsPage() {
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             <div>
-              <div style={{ fontSize: '11px', fontWeight: 700, color: '#666', marginBottom: '4px' }}>CLIENT ID</div>
-              <div style={{ fontFamily: 'monospace', fontSize: '13px', background: '#fff', padding: '8px 12px', borderRadius: '6px', border: '1px solid #e5e7eb', wordBreak: 'break-all' }}>
+              <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '4px' }}>CLIENT ID</div>
+              <div style={{ fontFamily: 'monospace', fontSize: '13px', background: 'var(--card-bg)', padding: '8px 12px', borderRadius: '6px', border: '1px solid #e5e7eb', wordBreak: 'break-all' }}>
                 {newCred.clientId}
               </div>
             </div>
             <div>
-              <div style={{ fontSize: '11px', fontWeight: 700, color: '#666', marginBottom: '4px' }}>CLIENT SECRET</div>
-              <div style={{ fontFamily: 'monospace', fontSize: '13px', background: '#fff', padding: '8px 12px', borderRadius: '6px', border: '1px solid #e5e7eb', wordBreak: 'break-all' }}>
+              <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '4px' }}>CLIENT SECRET</div>
+              <div style={{ fontFamily: 'monospace', fontSize: '13px', background: 'var(--card-bg)', padding: '8px 12px', borderRadius: '6px', border: '1px solid #e5e7eb', wordBreak: 'break-all' }}>
                 {newCred.clientSecret}
               </div>
             </div>
@@ -101,7 +101,7 @@ export default function APICredentialsPage() {
       {error && <div style={{ padding: '10px 14px', background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: '8px', color: '#991b1b', fontSize: '13px', marginBottom: '16px' }}>{error}</div>}
 
       {/* Create new */}
-      <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', marginBottom: '20px' }}>
+      <div style={{ background: 'var(--card-bg)', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', marginBottom: '20px' }}>
         <h3 style={{ fontSize: '13px', fontWeight: 700, color: '#111', margin: '0 0 14px' }}>Create new credential</h3>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: '10px', alignItems: 'end' }}>
           <div>
@@ -112,7 +112,7 @@ export default function APICredentialsPage() {
           <div>
             <label style={{ fontSize: '12px', fontWeight: 600, color: '#444', display: 'block', marginBottom: '6px' }}>Scopes</label>
             <select value={newScopes} onChange={e => setNewScopes(e.target.value)}
-              style={{ width: '100%', padding: '9px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', background: '#fff', boxSizing: 'border-box' }}>
+              style={{ width: '100%', padding: '9px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', background: 'var(--card-bg)', boxSizing: 'border-box' }}>
               <option value="read">Read only</option>
               <option value="read,write">Read + Write</option>
               <option value="read,write,delete">Full access</option>
@@ -123,31 +123,31 @@ export default function APICredentialsPage() {
             {creating ? 'Creating...' : '+ Generate'}
           </button>
         </div>
-        <p style={{ fontSize: '11px', color: '#9a9a9a', margin: '10px 0 0' }}>Maximum 5 credentials per account</p>
+        <p style={{ fontSize: '11px', color: 'var(--text-secondary)', margin: '10px 0 0' }}>Maximum 5 credentials per account</p>
       </div>
 
       {/* Existing credentials */}
-      <div style={{ background: '#fff', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px' }}>
+      <div style={{ background: 'var(--card-bg)', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px' }}>
         <h3 style={{ fontSize: '13px', fontWeight: 700, color: '#111', margin: '0 0 14px' }}>
-          Your credentials <span style={{ fontWeight: 400, color: '#9a9a9a' }}>({creds.length}/5)</span>
+          Your credentials <span style={{ fontWeight: 400, color: 'var(--text-secondary)' }}>({creds.length}/5)</span>
         </h3>
         {loading ? (
-          <div style={{ color: '#9a9a9a', fontSize: '13px' }}>Loading...</div>
+          <div style={{ color: 'var(--text-secondary)', fontSize: '13px' }}>Loading...</div>
         ) : creds.length === 0 ? (
-          <div style={{ color: '#9a9a9a', fontSize: '13px', textAlign: 'center', padding: '20px 0' }}>No credentials yet — create one above</div>
+          <div style={{ color: 'var(--text-secondary)', fontSize: '13px', textAlign: 'center', padding: '20px 0' }}>No credentials yet — create one above</div>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {creds.map(c => (
               <div key={c.id} style={{ padding: '14px', border: '1px solid #f3f4f6', borderRadius: '8px', display: 'grid', gridTemplateColumns: '1fr 1.5fr 1fr auto', gap: '12px', alignItems: 'center' }}>
                 <div>
                   <div style={{ fontSize: '13px', fontWeight: 600 }}>{c.name}</div>
-                  <div style={{ fontSize: '11px', color: '#666', marginTop: '2px' }}>{c.scopes}</div>
+                  <div style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '2px' }}>{c.scopes}</div>
                 </div>
                 <div style={{ fontSize: '11px', fontFamily: 'monospace' }}>
                   <div style={{ color: '#111', marginBottom: '2px' }}>{c.client_id}</div>
-                  <div style={{ color: '#9a9a9a' }}>Secret: {c.client_secret_preview}</div>
+                  <div style={{ color: 'var(--text-secondary)' }}>Secret: {c.client_secret_preview}</div>
                 </div>
-                <div style={{ fontSize: '11px', color: '#666' }}>
+                <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
                   <div>{c.is_active ? '🟢 Active' : '🔴 Disabled'}</div>
                   <div style={{ marginTop: '2px' }}>{c.last_used_at ? 'Last used: ' + new Date(c.last_used_at).toLocaleDateString('en-GB') : 'Never used'}</div>
                 </div>

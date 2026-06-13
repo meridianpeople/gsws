@@ -11,18 +11,18 @@ export default async function EmailPage() {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       <div>
-        <h1 style={{ fontSize: '20px', fontWeight: 600, color: '#0a0a0a' }}>Email</h1>
-        <p style={{ fontSize: '12px', color: '#9a9a9a', marginTop: '3px' }}>Manage email for your hosting packages</p>
+        <h1 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text-primary)' }}>Email</h1>
+        <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '3px' }}>Manage email for your hosting packages</p>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
         {packages.map((pkg: any) => (
           <Link key={pkg.id} href={`/packages/${pkg.twentyi_package_id}/email`}
-            style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', textDecoration: 'none' }}>
+            style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '16px 20px', background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '10px', textDecoration: 'none' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
               <span style={{ fontSize: '20px' }}>📧</span>
               <div>
-                <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', fontFamily: 'ui-monospace, monospace' }}>{pkg.domain_name}</p>
-                <p style={{ fontSize: '11px', color: '#9a9a9a', marginTop: '2px' }}>{pkg.package_label}</p>
+                <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', fontFamily: 'ui-monospace, monospace' }}>{pkg.domain_name}</p>
+                <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '2px' }}>{pkg.package_label}</p>
               </div>
             </div>
             <span style={{ fontSize: '12px', color: '#1a6ef5', fontWeight: 500 }}>Manage email →</span>
@@ -31,8 +31,8 @@ export default async function EmailPage() {
         {packages.length === 0 && (
           <div className="gsws-card" style={{ textAlign: 'center', padding: '48px' }}>
             <p style={{ fontSize: '32px', marginBottom: '12px' }}>📧</p>
-            <p style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a' }}>No hosting packages</p>
-            <p style={{ fontSize: '13px', color: '#9a9a9a', marginTop: '6px' }}>Create a hosting package to manage email</p>
+            <p style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)' }}>No hosting packages</p>
+            <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '6px' }}>Create a hosting package to manage email</p>
           </div>
         )}
       </div>

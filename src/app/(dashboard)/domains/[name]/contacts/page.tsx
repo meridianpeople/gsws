@@ -13,14 +13,14 @@ export default async function ContactsPage({ params }: { params: Promise<{ name:
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', maxWidth: '700px' }}>
       <div>
-        <div style={{ fontSize: '12px', color: '#9a9a9a', marginBottom: '4px' }}>
+        <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>
           <Link href="/domains" style={{ color: '#1a6ef5' }}>Domains</Link> ›{' '}
           <Link href={"/domains/" + name} style={{ color: '#1a6ef5' }}>{domainName}</Link> › Contacts
         </div>
-        <h1 style={{ fontSize: '20px', fontWeight: 600, color: '#0a0a0a' }}>Contacts</h1>
+        <h1 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text-primary)' }}>Contacts</h1>
       </div>
-      <div className="gsws-card" style={{ textAlign: 'center', padding: '48px', border: '1px dashed #d4d4d4' }}>
-        <p style={{ fontSize: '13px', color: '#9a9a9a' }}>Contacts management coming soon.</p>
+      <div className="gsws-card" style={{ textAlign: 'center', padding: '48px', border: '1px dashed var(--card-border-hover)' }}>
+        <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>Contacts management coming soon.</p>
       </div>
     </div>
   )

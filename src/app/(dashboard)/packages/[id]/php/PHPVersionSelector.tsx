@@ -95,8 +95,8 @@ export default function PHPVersionSelector({
       {/* Current version */}
       <div className="gsws-card" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a' }}>Current PHP version</p>
-          <p style={{ fontSize: '12px', color: '#9a9a9a', marginTop: '2px' }}>
+          <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>Current PHP version</p>
+          <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>
             {current?.Title || currentVersion} · {current?.FullVersion || '—'}
           </p>
         </div>
@@ -107,7 +107,7 @@ export default function PHPVersionSelector({
 
       {/* Version selector */}
       <div className="gsws-card">
-        <h3 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '16px' }}>Select PHP version</h3>
+        <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '16px' }}>Select PHP version</h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', marginBottom: '16px' }}>
           {availableVersions.slice().reverse().map(v => {
             const isRec = RECOMMENDED.includes(v.Handler)
@@ -122,7 +122,7 @@ export default function PHPVersionSelector({
                   </div>
                 )}
                 <p style={{ fontSize: '13px', fontWeight: 700, color: isSelected ? '#1a6ef5' : '#0a0a0a', fontFamily: 'ui-monospace, monospace' }}>{v.Title}</p>
-                <p style={{ fontSize: '10px', color: '#9a9a9a', marginTop: '2px' }}>{v.FullVersion}</p>
+                <p style={{ fontSize: '10px', color: 'var(--text-secondary)', marginTop: '2px' }}>{v.FullVersion}</p>
                 {isCurrent && <p style={{ fontSize: '10px', color: '#3b6d11', marginTop: '2px', fontWeight: 600 }}>Current</p>}
               </div>
             )
@@ -144,8 +144,8 @@ export default function PHPVersionSelector({
         <div className="gsws-card">
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
             <div>
-              <h3 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a' }}>PHP directives</h3>
-              <p style={{ fontSize: '11px', color: '#9a9a9a', marginTop: '2px' }}>{directives.length} configurable directives</p>
+              <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>PHP directives</h3>
+              <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '2px' }}>{directives.length} configurable directives</p>
             </div>
             <button onClick={handleSaveConfig} disabled={savingConfig}
               style={{ height: '32px', padding: '0 16px', background: '#1a6ef5', color: '#fff', border: 'none', borderRadius: '6px', fontSize: '12px', fontWeight: 600, cursor: savingConfig ? 'wait' : 'pointer', opacity: savingConfig ? 0.7 : 1, fontFamily: 'inherit' }}>
@@ -155,15 +155,15 @@ export default function PHPVersionSelector({
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
             {visibleDirectives.map((d: PHPDirective) => (
-              <div key={d.DirectiveName} style={{ display: 'grid', gridTemplateColumns: '1fr 180px', gap: '12px', alignItems: 'center', padding: '6px 0', borderBottom: '1px solid #ebebeb' }}>
+              <div key={d.DirectiveName} style={{ display: 'grid', gridTemplateColumns: '1fr 180px', gap: '12px', alignItems: 'center', padding: '6px 0', borderBottom: '1px solid var(--card-border)' }}>
                 <div>
-                  <span style={{ fontFamily: 'ui-monospace, monospace', fontSize: '12px', color: '#0a0a0a' }}>{d.DirectiveName}</span>
-                  <span style={{ marginLeft: '8px', fontSize: '10px', color: '#9a9a9a' }}>default: {d.DirectiveDefault || '—'}</span>
+                  <span style={{ fontFamily: 'ui-monospace, monospace', fontSize: '12px', color: 'var(--text-primary)' }}>{d.DirectiveName}</span>
+                  <span style={{ marginLeft: '8px', fontSize: '10px', color: 'var(--text-secondary)' }}>default: {d.DirectiveDefault || '—'}</span>
                 </div>
                 <input
                   value={configValues[d.DirectiveName] ?? d.DirectiveDefault}
                   onChange={e => setConfigValues(v => ({ ...v, [d.DirectiveName]: e.target.value }))}
-                  style={{ height: '28px', border: '1px solid #d4d4d4', borderRadius: '4px', fontSize: '12px', fontFamily: 'ui-monospace, monospace', padding: '0 8px', background: '#fff', color: '#0a0a0a', width: '100%', boxSizing: 'border-box' }}
+                  style={{ height: '28px', border: '1px solid var(--card-border-hover)', borderRadius: '4px', fontSize: '12px', fontFamily: 'ui-monospace, monospace', padding: '0 8px', background: 'var(--card-bg)', color: 'var(--text-primary)', width: '100%', boxSizing: 'border-box' }}
                 />
               </div>
             ))}

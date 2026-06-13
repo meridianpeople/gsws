@@ -69,8 +69,8 @@ export default function SSLManager({ packageId, domainName, initialCerts, initia
       {/* Header */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
-          <h2 style={{ fontSize: '16px', fontWeight: 600, color: '#0a0a0a' }}>SSL / TLS certificates</h2>
-          <p style={{ fontSize: '12px', color: '#9a9a9a', marginTop: '3px' }}>{certs.length} certificate{certs.length !== 1 ? 's' : ''} installed</p>
+          <h2 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text-primary)' }}>SSL / TLS certificates</h2>
+          <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '3px' }}>{certs.length} certificate{certs.length !== 1 ? 's' : ''} installed</p>
         </div>
         <button onClick={() => setShowInstall(s => !s)}
           style={{ height: '34px', padding: '0 16px', background: '#1a6ef5', color: '#fff', border: 'none', borderRadius: '6px', fontSize: '12.5px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
@@ -81,15 +81,15 @@ export default function SSLManager({ packageId, domainName, initialCerts, initia
       {/* Install SSL panel */}
       {showInstall && (
         <div className="gsws-card" style={{ border: '1.5px solid #1a6ef5', background: '#f0f5ff' }}>
-          <h3 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '12px' }}>Install free Let's Encrypt certificate</h3>
+          <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '12px' }}>Install free Let's Encrypt certificate</h3>
           <div style={{ marginBottom: '12px' }}>
             <label style={{ fontSize: '12px', fontWeight: 500, color: '#5a5a5a', display: 'block', marginBottom: '6px' }}>Domain name</label>
             <select value={selectedName} onChange={e => setSelectedName(e.target.value)}
-              style={{ width: '100%', height: '34px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', padding: '0 10px', fontFamily: 'inherit', background: '#fff' }}>
+              style={{ width: '100%', height: '34px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', padding: '0 10px', fontFamily: 'inherit', background: 'var(--card-bg)' }}>
               {webNames.map(n => <option key={n} value={n}>{n}</option>)}
             </select>
           </div>
-          <p style={{ fontSize: '11px', color: '#9a9a9a', marginBottom: '12px' }}>
+          <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '12px' }}>
             A wildcard certificate will be installed covering {selectedName} and *.{selectedName}. Make sure DNS is pointed to 20i nameservers.
           </p>
           <div style={{ display: 'flex', gap: '8px' }}>
@@ -98,7 +98,7 @@ export default function SSLManager({ packageId, domainName, initialCerts, initia
               {installing ? 'Installing…' : 'Install certificate'}
             </button>
             <button onClick={() => setShowInstall(false)}
-              style={{ height: '32px', padding: '0 16px', background: '#fff', color: '#5a5a5a', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '12px', cursor: 'pointer', fontFamily: 'inherit' }}>
+              style={{ height: '32px', padding: '0 16px', background: 'var(--card-bg)', color: '#5a5a5a', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '12px', cursor: 'pointer', fontFamily: 'inherit' }}>
               Cancel
             </button>
           </div>
@@ -108,8 +108,8 @@ export default function SSLManager({ packageId, domainName, initialCerts, initia
       {/* Force HTTPS toggle */}
       <div className="gsws-card" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
         <div>
-          <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a' }}>Force HTTPS</p>
-          <p style={{ fontSize: '12px', color: '#9a9a9a', marginTop: '2px' }}>Redirect all HTTP traffic to HTTPS automatically</p>
+          <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>Force HTTPS</p>
+          <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>Redirect all HTTP traffic to HTTPS automatically</p>
         </div>
         <button onClick={handleToggleForceSSL} disabled={togglingSSL}
           style={{ height: '28px', padding: '0 14px', border: 'none', borderRadius: '20px', fontSize: '12px', fontWeight: 600, cursor: togglingSSL ? 'not-allowed' : 'pointer', fontFamily: 'inherit', background: forceSSL ? '#eaf3de' : '#f7f7f7', color: forceSSL ? '#3b6d11' : '#9a9a9a', transition: 'all 0.2s' }}>
@@ -121,8 +121,8 @@ export default function SSLManager({ packageId, domainName, initialCerts, initia
       {certs.length === 0 ? (
         <div className="gsws-card" style={{ textAlign: 'center', padding: '48px' }}>
           <p style={{ fontSize: '32px', marginBottom: '12px' }}>🔒</p>
-          <p style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a', marginBottom: '6px' }}>No certificates installed</p>
-          <p style={{ fontSize: '13px', color: '#9a9a9a', marginBottom: '16px' }}>Install a free Let's Encrypt certificate to secure your site</p>
+          <p style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '6px' }}>No certificates installed</p>
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '16px' }}>Install a free Let's Encrypt certificate to secure your site</p>
           <button onClick={() => setShowInstall(true)}
             style={{ height: '36px', padding: '0 20px', background: '#1a6ef5', color: '#fff', border: 'none', borderRadius: '6px', fontSize: '13px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
             Install free SSL
@@ -142,7 +142,7 @@ export default function SSLManager({ packageId, domainName, initialCerts, initia
                 return (
                   <tr key={c.id}>
                     <td style={{ fontFamily: 'ui-monospace, monospace', fontSize: '12px', fontWeight: 600 }}>{c.commonName}</td>
-                    <td style={{ fontSize: '12px', color: '#9a9a9a' }}>{c.provider}</td>
+                    <td style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{c.provider}</td>
                     <td style={{ fontSize: '12px', color: soonExpires ? '#854f0b' : isExpired ? '#a32d2d' : '#9a9a9a' }}>
                       {expires ? expires.toLocaleDateString('en-GB') : '—'}
                     </td>

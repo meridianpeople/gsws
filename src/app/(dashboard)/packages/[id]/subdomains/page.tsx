@@ -28,8 +28,8 @@ export default async function SubdomainsPage({ params }: { params: Promise<{ id:
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
       <div>
-        <h2 style={{ fontSize: '16px', fontWeight: 600, color: '#0a0a0a' }}>Subdomains</h2>
-        <p style={{ fontSize: '12px', color: '#9a9a9a', marginTop: '3px' }}>Manage subdomains for {primaryDomain}</p>
+        <h2 style={{ fontSize: '16px', fontWeight: 600, color: 'var(--text-primary)' }}>Subdomains</h2>
+        <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '3px' }}>Manage subdomains for {primaryDomain}</p>
       </div>
       <SubdomainsManager packageId={id} domainName={primaryDomain} webNames={webNames} initialSubdomains={subdomains} />
     </div>

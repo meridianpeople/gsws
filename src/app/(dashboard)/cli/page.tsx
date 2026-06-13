@@ -258,7 +258,7 @@ export default function TerminalPage() {
           <div style={{ position: 'relative' }}>
             <button
               onClick={() => setDropOpen(o => !o)}
-              style={{ display: 'flex', alignItems: 'center', gap: '6px', height: '32px', padding: '0 12px', background: '#fff', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '12px', fontWeight: 500, cursor: 'pointer', color: '#333' }}
+              style={{ display: 'flex', alignItems: 'center', gap: '6px', height: '32px', padding: '0 12px', background: 'var(--card-bg)', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '12px', fontWeight: 500, cursor: 'pointer', color: '#333' }}
             >
               <span style={{ color: mode === 'cli' ? '#6366f1' : '#10b981' }}>{svcIcon(selectedService?.type || 'cli')}</span>
               {selectedService?.name || 'Select service'}
@@ -266,7 +266,7 @@ export default function TerminalPage() {
             </button>
 
             {dropOpen && (
-              <div style={{ position: 'absolute', right: 0, top: '36px', background: '#fff', border: '1px solid #e5e7eb', borderRadius: '8px', minWidth: '220px', boxShadow: '0 8px 24px rgba(0,0,0,0.12)', zIndex: 100, overflow: 'hidden' }}>
+              <div style={{ position: 'absolute', right: 0, top: '36px', background: 'var(--card-bg)', border: '1px solid #e5e7eb', borderRadius: '8px', minWidth: '220px', boxShadow: '0 8px 24px rgba(0,0,0,0.12)', zIndex: 100, overflow: 'hidden' }}>
                 {services.map(svc => (
                   <div
                     key={svc.id}

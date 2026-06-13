@@ -104,12 +104,12 @@ export default function DomainTransferPage() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: '#9a9a9a', marginBottom: '4px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>
             <Link href="/domains" style={{ color: '#1a6ef5' }}>Domains</Link>
             <span>›</span><span>Transfer / Point domain</span>
           </div>
-          <h1 style={{ fontSize: '20px', fontWeight: 600, color: '#0a0a0a', letterSpacing: '-0.3px' }}>Use an existing domain</h1>
-          <p style={{ fontSize: '13px', color: '#9a9a9a', marginTop: '3px' }}>Transfer your domain to us, or point it to your hosting without transferring.</p>
+          <h1 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text-primary)', letterSpacing: '-0.3px' }}>Use an existing domain</h1>
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '3px' }}>Transfer your domain to us, or point it to your hosting without transferring.</p>
         </div>
         <Link href="/domains/search" className="gsws-btn">Register new domain</Link>
       </div>
@@ -118,7 +118,7 @@ export default function DomainTransferPage() {
       {error && <div style={{ padding: '12px 16px', borderRadius: '8px', background: '#fcebeb', color: '#a32d2d', border: '1px solid #f5c1c1', fontSize: '12px' }}>{error}</div>}
 
       {/* Tab switcher */}
-      <div style={{ display: 'flex', border: '1px solid #ebebeb', borderRadius: '10px', overflow: 'hidden' }}>
+      <div style={{ display: 'flex', border: '1px solid var(--card-border)', borderRadius: '10px', overflow: 'hidden' }}>
         {([['transfer', '↗️ Transfer domain', 'Move ownership to us'], ['dns', '🌐 Point DNS only', 'Keep at registrar, point here']] as const).map(([t, label, desc]) => (
           <button key={t} onClick={() => setTab(t)}
             style={{ flex: 1, padding: '16px 20px', background: tab === t ? '#1a6ef5' : '#fff', color: tab === t ? '#fff' : '#0a0a0a', border: 'none', cursor: 'pointer', fontFamily: 'inherit', textAlign: 'left', borderRight: t === 'transfer' ? '1px solid #ebebeb' : 'none' }}>
@@ -132,7 +132,7 @@ export default function DomainTransferPage() {
       {tab === 'transfer' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <div className="gsws-card">
-            <h3 style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a', marginBottom: '14px' }}>Enter your domain name</h3>
+            <h3 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '14px' }}>Enter your domain name</h3>
             <input value={transferDomain} onChange={e => setTransferDomain(e.target.value.toLowerCase().trim())}
               placeholder="e.g. yourdomain.co.uk"
               style={{ width: '100%', height: '44px', border: '1.5px solid #d4d4d4', borderRadius: '8px', fontSize: '15px', padding: '0 14px', fontFamily: 'ui-monospace, monospace', boxSizing: 'border-box', outline: 'none' }}
@@ -145,8 +145,8 @@ export default function DomainTransferPage() {
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
                 <span style={{ fontSize: '20px' }}>{rule.method === 'ips_tag' ? '🇬🇧' : '🔑'}</span>
                 <div>
-                  <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#0a0a0a' }}>How to transfer {transferDomain}</h3>
-                  <p style={{ fontSize: '11px', color: '#9a9a9a', marginTop: '2px' }}>Timeframe: {rule.timeframe}</p>
+                  <h3 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)' }}>How to transfer {transferDomain}</h3>
+                  <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '2px' }}>Timeframe: {rule.timeframe}</p>
                 </div>
               </div>
 
@@ -154,7 +154,7 @@ export default function DomainTransferPage() {
                 {rule.steps.map((step, i) => (
                   <div key={i} style={{ display: 'flex', gap: '12px', alignItems: 'flex-start' }}>
                     <div style={{ width: '22px', height: '22px', borderRadius: '50%', background: '#1a6ef5', color: '#fff', fontSize: '11px', fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '1px' }}>{i + 1}</div>
-                    <p style={{ fontSize: '13px', color: '#0a0a0a', lineHeight: '1.5', paddingTop: '2px' }}>{step}</p>
+                    <p style={{ fontSize: '13px', color: 'var(--text-primary)', lineHeight: '1.5', paddingTop: '2px' }}>{step}</p>
                   </div>
                 ))}
               </div>
@@ -177,14 +177,14 @@ export default function DomainTransferPage() {
 
               {rule.method === 'epp' && (
                 <div style={{ marginBottom: '16px' }}>
-                  <label style={{ fontSize: '12px', fontWeight: 600, color: '#0a0a0a', display: 'block', marginBottom: '6px' }}>EPP / Authorisation Code</label>
+                  <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-primary)', display: 'block', marginBottom: '6px' }}>EPP / Authorisation Code</label>
                   <input value={eppCode} onChange={e => setEppCode(e.target.value.trim())} placeholder="Enter your EPP code (case sensitive)"
-                    style={{ width: '100%', height: '36px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', padding: '0 10px', fontFamily: 'ui-monospace, monospace', boxSizing: 'border-box' }} />
-                  <p style={{ fontSize: '11px', color: '#9a9a9a', marginTop: '4px' }}>EPP codes are case-sensitive. Copy and paste to avoid errors.</p>
+                    style={{ width: '100%', height: '36px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', padding: '0 10px', fontFamily: 'ui-monospace, monospace', boxSizing: 'border-box' }} />
+                  <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '4px' }}>EPP codes are case-sensitive. Copy and paste to avoid errors.</p>
                 </div>
               )}
 
-              <div style={{ background: '#f7f7f7', borderRadius: '8px', padding: '12px 14px', marginBottom: '16px' }}>
+              <div style={{ background: 'var(--card-bg-elevated)', borderRadius: '8px', padding: '12px 14px', marginBottom: '16px' }}>
                 {transferPrice === 0 ? (
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span style={{ fontSize: '13px', color: '#5a5a5a' }}>Transfer fee</span>
@@ -204,10 +204,10 @@ export default function DomainTransferPage() {
                       <span style={{ fontSize: '13px', fontWeight: 700 }}>Total (from credit)</span>
                       <span style={{ fontSize: '14px', fontWeight: 700, color: '#1a6ef5' }}>£{totalTransfer.toFixed(2)}</span>
                     </div>
-                    <p style={{ fontSize: '11px', color: '#9a9a9a', marginTop: '4px' }}>Includes 1 additional year of registration.</p>
+                    <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '4px' }}>Includes 1 additional year of registration.</p>
                   </>
                 ) : (
-                  <p style={{ fontSize: '12px', color: '#9a9a9a' }}>Transfer pricing will appear once domain is entered.</p>
+                  <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Transfer pricing will appear once domain is entered.</p>
                 )}
               </div>
 
@@ -231,8 +231,8 @@ export default function DomainTransferPage() {
                     <span style={{ fontSize: '18px' }}>{c.icon}</span>
                     <span style={{ padding: '2px 8px', borderRadius: '20px', fontSize: '10px', fontWeight: 600, background: c.bb, color: c.bc }}>{c.badge}</span>
                   </div>
-                  <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a' }}>{c.title}</p>
-                  <p style={{ fontSize: '12px', color: '#9a9a9a', lineHeight: '1.5' }}>{c.desc}</p>
+                  <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>{c.title}</p>
+                  <p style={{ fontSize: '12px', color: 'var(--text-secondary)', lineHeight: '1.5' }}>{c.desc}</p>
                 </div>
               ))}
             </div>
@@ -245,7 +245,7 @@ export default function DomainTransferPage() {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
 
           <div className="gsws-card" style={{ background: '#e8f0fe', border: '1px solid #b3c8f5' }}>
-            <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#0a0a0a', marginBottom: '6px' }}>Point your domain without transferring</h3>
+            <h3 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '6px' }}>Point your domain without transferring</h3>
             <p style={{ fontSize: '13px', color: '#5a5a5a', lineHeight: '1.6' }}>Keep your domain at your current registrar and point it to your hosting here. Two methods — Nameservers (simplest) or A Records (keep existing DNS).</p>
             <div style={{ display: 'flex', gap: '16px', marginTop: '10px', flexWrap: 'wrap' }}>
               {['Free — no transfer fee', 'Domain stays at your registrar', 'Takes effect in 24-48 hours', 'SSL still works'].map(t => (
@@ -256,8 +256,8 @@ export default function DomainTransferPage() {
 
           {/* Step 1 - Domain */}
           <div className="gsws-card">
-            <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#0a0a0a', marginBottom: '4px' }}>Step 1 — Enter the domain you want to point</h3>
-            <p style={{ fontSize: '12px', color: '#9a9a9a', marginBottom: '12px' }}>The domain currently at your other registrar that you want to point here.</p>
+            <h3 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '4px' }}>Step 1 — Enter the domain you want to point</h3>
+            <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '12px' }}>The domain currently at your other registrar that you want to point here.</p>
             <div style={{ display: 'flex', gap: '10px' }}>
               <input value={dnsDomain} onChange={e => { setDnsDomain(e.target.value.toLowerCase().trim()); setDnsDomainLocked(false); setSelectedPkg('') }}
                 placeholder="e.g. yourdomain.co.uk" disabled={dnsDomainLocked}
@@ -269,7 +269,7 @@ export default function DomainTransferPage() {
                 </button>
               ) : (
                 <button onClick={() => { setDnsDomainLocked(false); setSelectedPkg('') }}
-                  style={{ height: '40px', padding: '0 16px', background: '#fff', color: '#5a5a5a', border: '1px solid #d4d4d4', borderRadius: '8px', fontSize: '13px', cursor: 'pointer', fontFamily: 'inherit' }}>
+                  style={{ height: '40px', padding: '0 16px', background: 'var(--card-bg)', color: '#5a5a5a', border: '1px solid var(--card-border-hover)', borderRadius: '8px', fontSize: '13px', cursor: 'pointer', fontFamily: 'inherit' }}>
                   Change
                 </button>
               )}
@@ -284,10 +284,10 @@ export default function DomainTransferPage() {
           {/* Step 2 - Package cards */}
           {dnsDomainLocked && (
             <div>
-              <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#0a0a0a', marginBottom: '4px' }}>Step 2 — Select your hosting package</h3>
-              <p style={{ fontSize: '12px', color: '#9a9a9a', marginBottom: '14px' }}>Choose the hosting package you want {dnsDomain} to point to.</p>
+              <h3 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '4px' }}>Step 2 — Select your hosting package</h3>
+              <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '14px' }}>Choose the hosting package you want {dnsDomain} to point to.</p>
               {loadingPkgs ? (
-                <p style={{ fontSize: '13px', color: '#9a9a9a' }}>Loading packages…</p>
+                <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>Loading packages…</p>
               ) : (
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
                   {packages.map((p: any) => {
@@ -299,8 +299,8 @@ export default function DomainTransferPage() {
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '10px' }}>
                           <span style={{ fontSize: '20px' }}>{info.icon}</span>
                           <div>
-                            <p style={{ fontSize: '12px', fontWeight: 700, color: '#0a0a0a' }}>{p.label || p.type}</p>
-                            <p style={{ fontSize: '11px', color: '#9a9a9a', fontFamily: 'ui-monospace, monospace' }}>{p.name}</p>
+                            <p style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-primary)' }}>{p.label || p.type}</p>
+                            <p style={{ fontSize: '11px', color: 'var(--text-secondary)', fontFamily: 'ui-monospace, monospace' }}>{p.name}</p>
                           </div>
                         </div>
                         <ul style={{ margin: 0, padding: '0 0 0 14px', fontSize: '11px', color: '#5a5a5a', lineHeight: '1.8' }}>
@@ -323,8 +323,8 @@ export default function DomainTransferPage() {
           {dnsDomainLocked && selectedPkg && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
               <div>
-                <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#0a0a0a', marginBottom: '4px' }}>Step 3 — Choose how to point your domain</h3>
-                <p style={{ fontSize: '12px', color: '#9a9a9a', marginBottom: '14px' }}>Two options — nameservers is simpler and recommended.</p>
+                <h3 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '4px' }}>Step 3 — Choose how to point your domain</h3>
+                <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '14px' }}>Two options — nameservers is simpler and recommended.</p>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                   {[
                     { id: 'ns', label: 'Option A — Change Nameservers', recommended: true, desc: 'Simplest. Point your nameservers to ours and we manage all DNS automatically.', pro: 'We manage all DNS records', con: 'All DNS must be managed here' },
@@ -332,12 +332,12 @@ export default function DomainTransferPage() {
                   ].map(opt => (
                     <div key={opt.id} style={{ border: `2px solid ${opt.recommended ? '#1a6ef5' : '#ebebeb'}`, borderRadius: '10px', padding: '16px', background: opt.recommended ? '#f0f5ff' : '#fff' }}>
                       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '8px' }}>
-                        <p style={{ fontSize: '13px', fontWeight: 700, color: '#0a0a0a' }}>{opt.label}</p>
+                        <p style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)' }}>{opt.label}</p>
                         {opt.recommended && <span style={{ padding: '2px 8px', borderRadius: '20px', fontSize: '10px', fontWeight: 700, background: '#1a6ef5', color: '#fff' }}>Recommended</span>}
                       </div>
                       <p style={{ fontSize: '12px', color: '#5a5a5a', lineHeight: '1.5', marginBottom: '8px' }}>{opt.desc}</p>
                       <p style={{ fontSize: '11px', color: '#3b6d11' }}>✓ {opt.pro}</p>
-                      <p style={{ fontSize: '11px', color: '#9a9a9a', marginTop: '2px' }}>⚠ {opt.con}</p>
+                      <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '2px' }}>⚠ {opt.con}</p>
                     </div>
                   ))}
                 </div>
@@ -345,11 +345,11 @@ export default function DomainTransferPage() {
 
               {/* Option A - Nameservers */}
               <div className="gsws-card">
-                <h4 style={{ fontSize: '13px', fontWeight: 700, color: '#0a0a0a', marginBottom: '10px' }}>⭐ Option A — Set these Nameservers at your registrar</h4>
-                <div style={{ border: '1px solid #ebebeb', borderRadius: '8px', overflow: 'hidden', marginBottom: '12px' }}>
+                <h4 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '10px' }}>⭐ Option A — Set these Nameservers at your registrar</h4>
+                <div style={{ border: '1px solid var(--card-border)', borderRadius: '8px', overflow: 'hidden', marginBottom: '12px' }}>
                   <table style={{ width: '100%', borderCollapse: 'collapse' }}>
                     <thead>
-                      <tr style={{ background: '#f7f7f7', borderBottom: '1px solid #ebebeb' }}>
+                      <tr style={{ background: 'var(--card-bg-elevated)', borderBottom: '1px solid var(--card-border)' }}>
                         <th style={{ padding: '8px 14px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: '#5a5a5a' }}>#</th>
                         <th style={{ padding: '8px 14px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: '#5a5a5a' }}>Nameserver</th>
                       </tr>
@@ -357,7 +357,7 @@ export default function DomainTransferPage() {
                     <tbody>
                       {NAMESERVERS.map((ns, i) => (
                         <tr key={ns} style={{ borderBottom: i < NAMESERVERS.length - 1 ? '1px solid #ebebeb' : 'none' }}>
-                          <td style={{ padding: '10px 14px', fontSize: '12px', color: '#9a9a9a', fontWeight: 600 }}>NS{i + 1}</td>
+                          <td style={{ padding: '10px 14px', fontSize: '12px', color: 'var(--text-secondary)', fontWeight: 600 }}>NS{i + 1}</td>
                           <td style={{ padding: '10px 14px', fontFamily: 'ui-monospace, monospace', fontSize: '13px', fontWeight: 700, color: '#1a6ef5' }}>{ns}</td>
                         </tr>
                       ))}
@@ -371,11 +371,11 @@ export default function DomainTransferPage() {
 
               {/* Option B - A Records */}
               <div className="gsws-card">
-                <h4 style={{ fontSize: '13px', fontWeight: 700, color: '#0a0a0a', marginBottom: '10px' }}>Option B — Add these A Records at your registrar</h4>
-                <div style={{ border: '1px solid #ebebeb', borderRadius: '8px', overflow: 'hidden', marginBottom: '12px' }}>
+                <h4 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '10px' }}>Option B — Add these A Records at your registrar</h4>
+                <div style={{ border: '1px solid var(--card-border)', borderRadius: '8px', overflow: 'hidden', marginBottom: '12px' }}>
                   <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px' }}>
                     <thead>
-                      <tr style={{ background: '#f7f7f7', borderBottom: '1px solid #ebebeb' }}>
+                      <tr style={{ background: 'var(--card-bg-elevated)', borderBottom: '1px solid var(--card-border)' }}>
                         {['Type', 'Name / Host', 'Value / Points to', 'TTL'].map(h => (
                           <th key={h} style={{ padding: '8px 12px', textAlign: 'left', fontSize: '11px', fontWeight: 600, color: '#5a5a5a' }}>{h}</th>
                         ))}
@@ -393,7 +393,7 @@ export default function DomainTransferPage() {
                           </td>
                           <td style={{ padding: '10px 12px', fontFamily: 'ui-monospace, monospace', fontWeight: 600 }}>{r.name}</td>
                           <td style={{ padding: '10px 12px', fontFamily: 'ui-monospace, monospace', color: '#1a6ef5', fontWeight: 600 }}>{r.value}</td>
-                          <td style={{ padding: '10px 12px', color: '#9a9a9a' }}>{r.ttl}</td>
+                          <td style={{ padding: '10px 12px', color: 'var(--text-secondary)' }}>{r.ttl}</td>
                         </tr>
                       ))}
                     </tbody>
@@ -406,7 +406,7 @@ export default function DomainTransferPage() {
 
               {/* Step 4 - Add to package */}
               <div className="gsws-card">
-                <h4 style={{ fontSize: '13px', fontWeight: 700, color: '#0a0a0a', marginBottom: '8px' }}>Step 4 — Add {dnsDomain} to your hosting package</h4>
+                <h4 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '8px' }}>Step 4 — Add {dnsDomain} to your hosting package</h4>
                 <p style={{ fontSize: '12px', color: '#5a5a5a', lineHeight: '1.6', marginBottom: '12px' }}>
                   After updating DNS, add {dnsDomain} to your hosting package so our servers know to serve it. Go to your package DNS settings and add it as a domain alias. Your site will be accessible immediately via a temporary URL while DNS propagates.
                 </p>
@@ -420,7 +420,7 @@ export default function DomainTransferPage() {
         </div>
       )}
 
-      <div style={{ padding: '12px 16px', background: '#f7f7f7', borderRadius: '8px', fontSize: '12px', color: '#9a9a9a' }}>
+      <div style={{ padding: '12px 16px', background: 'var(--card-bg-elevated)', borderRadius: '8px', fontSize: '12px', color: 'var(--text-secondary)' }}>
         ℹ️ Need help? <a href="mailto:support@geig.co.uk" style={{ color: '#1a6ef5' }}>Contact our support team</a> — we can assist with domain transfers and DNS configuration.
       </div>
     </div>

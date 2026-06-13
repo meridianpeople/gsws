@@ -44,11 +44,11 @@ export default function StatementPage() {
     <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', maxWidth: '860px' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
         <div>
-          <div style={{ fontSize: '12px', color: '#9a9a9a', marginBottom: '4px' }}>
+          <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>
             <Link href="/account/profile" style={{ color: '#1a6ef5' }}>Account</Link> › Statement
           </div>
-          <h1 style={{ fontSize: '20px', fontWeight: 600, color: '#0a0a0a' }}>Account statement</h1>
-          <p style={{ fontSize: '13px', color: '#9a9a9a', marginTop: '3px' }}>Full transaction history for your account.</p>
+          <h1 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text-primary)' }}>Account statement</h1>
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '3px' }}>Full transaction history for your account.</p>
         </div>
         <Link href="/account/topup"
           style={{ height: '36px', padding: '0 16px', background: '#1a6ef5', color: '#fff', borderRadius: '8px', fontSize: '13px', fontWeight: 600, textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
@@ -85,12 +85,12 @@ export default function StatementPage() {
       {/* Transactions table */}
       <div className="gsws-card" style={{ padding: 0, overflow: 'hidden' }}>
         {loading ? (
-          <div style={{ padding: '48px', textAlign: 'center', color: '#9a9a9a', fontSize: '13px' }}>Loading…</div>
+          <div style={{ padding: '48px', textAlign: 'center', color: 'var(--text-secondary)', fontSize: '13px' }}>Loading…</div>
         ) : !data?.transactions?.length ? (
           <div style={{ padding: '48px', textAlign: 'center' }}>
             <p style={{ fontSize: '32px', marginBottom: '10px' }}>📋</p>
-            <p style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a' }}>No transactions yet</p>
-            <p style={{ fontSize: '13px', color: '#9a9a9a', marginTop: '4px' }}>Transactions will appear here when you top up or purchase services.</p>
+            <p style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)' }}>No transactions yet</p>
+            <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '4px' }}>Transactions will appear here when you top up or purchase services.</p>
           </div>
         ) : (
           <>
@@ -110,14 +110,14 @@ export default function StatementPage() {
                   const isCredit = tx.amount > 0
                   return (
                     <tr key={tx.id}>
-                      <td style={{ fontSize: '12px', color: '#9a9a9a', whiteSpace: 'nowrap' }}>
+                      <td style={{ fontSize: '12px', color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>
                         {new Date(tx.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' })}
                         <br />
                         <span style={{ fontSize: '11px' }}>{new Date(tx.created_at).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}</span>
                       </td>
                       <td>
-                        <p style={{ fontSize: '12px', color: '#0a0a0a', fontWeight: 500 }}>{tx.description}</p>
-                        {tx.reference && <p style={{ fontSize: '11px', color: '#9a9a9a', fontFamily: 'ui-monospace, monospace', marginTop: '2px' }}>{tx.reference}</p>}
+                        <p style={{ fontSize: '12px', color: 'var(--text-primary)', fontWeight: 500 }}>{tx.description}</p>
+                        {tx.reference && <p style={{ fontSize: '11px', color: 'var(--text-secondary)', fontFamily: 'ui-monospace, monospace', marginTop: '2px' }}>{tx.reference}</p>}
                       </td>
                       <td>
                         <span style={{ padding: '3px 8px', borderRadius: '20px', fontSize: '11px', fontWeight: 600, background: info.bg, color: info.color, whiteSpace: 'nowrap' }}>
@@ -138,13 +138,13 @@ export default function StatementPage() {
 
             {/* Pagination */}
             {data.pages > 1 && (
-              <div style={{ padding: '14px 20px', borderTop: '1px solid #ebebeb', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <p style={{ fontSize: '12px', color: '#9a9a9a' }}>Page {page} of {data.pages} · {data.total} transactions</p>
+              <div style={{ padding: '14px 20px', borderTop: '1px solid var(--card-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>Page {page} of {data.pages} · {data.total} transactions</p>
                 <div style={{ display: 'flex', gap: '6px' }}>
                   <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}
-                    style={{ height: '30px', padding: '0 12px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '12px', cursor: 'pointer', background: '#fff', opacity: page === 1 ? 0.4 : 1 }}>← Prev</button>
+                    style={{ height: '30px', padding: '0 12px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '12px', cursor: 'pointer', background: 'var(--card-bg)', opacity: page === 1 ? 0.4 : 1 }}>← Prev</button>
                   <button onClick={() => setPage(p => Math.min(data.pages, p + 1))} disabled={page === data.pages}
-                    style={{ height: '30px', padding: '0 12px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '12px', cursor: 'pointer', background: '#fff', opacity: page === data.pages ? 0.4 : 1 }}>Next →</button>
+                    style={{ height: '30px', padding: '0 12px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '12px', cursor: 'pointer', background: 'var(--card-bg)', opacity: page === data.pages ? 0.4 : 1 }}>Next →</button>
                 </div>
               </div>
             )}
@@ -152,7 +152,7 @@ export default function StatementPage() {
         )}
       </div>
 
-      <p style={{ fontSize: '11px', color: '#9a9a9a', textAlign: 'center' }}>
+      <p style={{ fontSize: '11px', color: 'var(--text-secondary)', textAlign: 'center' }}>
         All amounts shown include VAT where applicable. For billing queries contact <a href="mailto:support@geig.co.uk" style={{ color: '#1a6ef5' }}>support@geig.co.uk</a>
       </p>
     </div>

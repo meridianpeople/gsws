@@ -131,7 +131,7 @@ export default function ApplicationsManager({ packageId, domainName, oneClicks, 
                 <p style={{ fontSize: '11px', color: '#f87171', marginTop: '2px' }}>⚠️ Save these credentials now — shown only once</p>
               </div>
             </div>
-            <button onClick={() => setInstallResult(null)} style={{ background: 'none', border: 'none', color: '#9a9a9a', cursor: 'pointer', fontSize: '20px' }}>×</button>
+            <button onClick={() => setInstallResult(null)} style={{ background: 'none', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', fontSize: '20px' }}>×</button>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
             {[
@@ -155,7 +155,7 @@ export default function ApplicationsManager({ packageId, domainName, oneClicks, 
               </div>
             ))}
           </div>
-          <p style={{ fontSize: '11px', color: '#9a9a9a', marginTop: '12px' }}>
+          <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '12px' }}>
             Installation runs in background and may take a few minutes. Visit the URL above once complete.
           </p>
         </div>
@@ -164,12 +164,12 @@ export default function ApplicationsManager({ packageId, domainName, oneClicks, 
       {/* Install modal */}
       {showInstall && (
         <div style={{ position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.5)', zIndex: 1000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
-          <div style={{ background: '#fff', borderRadius: '12px', padding: '24px', width: '100%', maxWidth: '480px', boxShadow: '0 20px 60px rgba(0,0,0,0.3)' }}>
+          <div style={{ background: 'var(--card-bg)', borderRadius: '12px', padding: '24px', width: '100%', maxWidth: '480px', boxShadow: '0 20px 60px rgba(0,0,0,0.3)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
               <span style={{ fontSize: '32px' }}>{APP_ICONS[showInstall.name] || '📦'}</span>
               <div>
-                <h3 style={{ fontSize: '16px', fontWeight: 700, color: '#0a0a0a' }}>Install {showInstall.displayName}</h3>
-                <p style={{ fontSize: '12px', color: '#9a9a9a', marginTop: '2px' }}>on {domainName}</p>
+                <h3 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)' }}>Install {showInstall.displayName}</h3>
+                <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>on {domainName}</p>
               </div>
             </div>
 
@@ -179,35 +179,35 @@ export default function ApplicationsManager({ packageId, domainName, oneClicks, 
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '16px' }}>
               <div>
-                <label style={{ fontSize: '11px', color: '#9a9a9a', display: 'block', marginBottom: '4px' }}>Install directory (leave empty for root)</label>
+                <label style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Install directory (leave empty for root)</label>
                 <input value={installForm.directory} onChange={e => setInstallForm(f => ({ ...f, directory: e.target.value }))}
                   placeholder="e.g. /blog or /shop (leave empty for root)"
-                  style={{ width: '100%', height: '34px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', fontFamily: 'ui-monospace, monospace', padding: '0 10px', boxSizing: 'border-box' }} />
+                  style={{ width: '100%', height: '34px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', fontFamily: 'ui-monospace, monospace', padding: '0 10px', boxSizing: 'border-box' }} />
               </div>
               <div>
-                <label style={{ fontSize: '11px', color: '#9a9a9a', display: 'block', marginBottom: '4px' }}>Admin email</label>
+                <label style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Admin email</label>
                 <input type="email" value={installForm.adminEmail} onChange={e => setInstallForm(f => ({ ...f, adminEmail: e.target.value }))}
                   placeholder="admin@example.com"
-                  style={{ width: '100%', height: '34px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', padding: '0 10px', boxSizing: 'border-box', fontFamily: 'inherit' }} />
+                  style={{ width: '100%', height: '34px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', padding: '0 10px', boxSizing: 'border-box', fontFamily: 'inherit' }} />
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
                 <div>
-                  <label style={{ fontSize: '11px', color: '#9a9a9a', display: 'block', marginBottom: '4px' }}>Admin username</label>
+                  <label style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Admin username</label>
                   <input value={installForm.adminUser} onChange={e => setInstallForm(f => ({ ...f, adminUser: e.target.value }))}
                     placeholder="admin"
-                    style={{ width: '100%', height: '34px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', padding: '0 10px', boxSizing: 'border-box', fontFamily: 'inherit' }} />
+                    style={{ width: '100%', height: '34px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', padding: '0 10px', boxSizing: 'border-box', fontFamily: 'inherit' }} />
                 </div>
                 <div>
-                  <label style={{ fontSize: '11px', color: '#9a9a9a', display: 'block', marginBottom: '4px' }}>Admin password</label>
+                  <label style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Admin password</label>
                   <input type="password" value={installForm.adminPassword} onChange={e => setInstallForm(f => ({ ...f, adminPassword: e.target.value }))}
                     placeholder="Strong password"
-                    style={{ width: '100%', height: '34px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', padding: '0 10px', boxSizing: 'border-box', fontFamily: 'inherit' }} />
+                    style={{ width: '100%', height: '34px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', padding: '0 10px', boxSizing: 'border-box', fontFamily: 'inherit' }} />
                 </div>
               </div>
             </div>
 
             {showInstall.avg_install_time && (
-              <p style={{ fontSize: '11px', color: '#9a9a9a', marginBottom: '14px' }}>
+              <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginBottom: '14px' }}>
                 ⏱️ Average install time: ~{Math.round(showInstall.avg_install_time)} minutes
               </p>
             )}
@@ -218,7 +218,7 @@ export default function ApplicationsManager({ packageId, domainName, oneClicks, 
                 {installing ? 'Installing…' : `Install ${showInstall.displayName}`}
               </button>
               <button onClick={() => setShowInstall(null)}
-                style={{ height: '38px', padding: '0 16px', background: '#fff', border: '1px solid #d4d4d4', borderRadius: '8px', fontSize: '13px', cursor: 'pointer', fontFamily: 'inherit' }}>
+                style={{ height: '38px', padding: '0 16px', background: 'var(--card-bg)', border: '1px solid var(--card-border-hover)', borderRadius: '8px', fontSize: '13px', cursor: 'pointer', fontFamily: 'inherit' }}>
                 Cancel
               </button>
             </div>
@@ -229,15 +229,15 @@ export default function ApplicationsManager({ packageId, domainName, oneClicks, 
       {/* Installed apps */}
       {installed.length > 0 && (
         <div className="gsws-card">
-          <h3 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '12px' }}>Installed applications ({installed.length})</h3>
+          <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '12px' }}>Installed applications ({installed.length})</h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {installed.map((app: any, i: number) => (
               <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', background: '#f0f9e8', border: '1px solid #c0dd97', borderRadius: '8px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <span style={{ fontSize: '20px' }}>{APP_ICONS[app.softwareId || app.name] || '📦'}</span>
                   <div>
-                    <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a' }}>{app.softwareName || app.name}</p>
-                    <p style={{ fontSize: '11px', color: '#9a9a9a' }}>{app.directory || '/'} · v{app.version || '—'}</p>
+                    <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>{app.softwareName || app.name}</p>
+                    <p style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{app.directory || '/'} · v{app.version || '—'}</p>
                   </div>
                 </div>
                 <span style={{ padding: '2px 8px', borderRadius: '20px', fontSize: '11px', fontWeight: 500, background: '#eaf3de', color: '#3b6d11' }}>Installed</span>
@@ -251,8 +251,8 @@ export default function ApplicationsManager({ packageId, domainName, oneClicks, 
       <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
         <input value={search} onChange={e => setSearch(e.target.value)}
           placeholder={`Search ${apps.length} applications…`}
-          style={{ flex: 1, height: '36px', border: '1px solid #d4d4d4', borderRadius: '8px', fontSize: '13px', padding: '0 12px', fontFamily: 'inherit' }} />
-        <span style={{ fontSize: '12px', color: '#9a9a9a', flexShrink: 0 }}>{filtered.length} apps</span>
+          style={{ flex: 1, height: '36px', border: '1px solid var(--card-border-hover)', borderRadius: '8px', fontSize: '13px', padding: '0 12px', fontFamily: 'inherit' }} />
+        <span style={{ fontSize: '12px', color: 'var(--text-secondary)', flexShrink: 0 }}>{filtered.length} apps</span>
       </div>
 
       {/* Category tabs */}
@@ -269,18 +269,18 @@ export default function ApplicationsManager({ packageId, domainName, oneClicks, 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
         {filtered.map(app => (
           <div key={app.name}
-            style={{ padding: '16px', background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', display: 'flex', flexDirection: 'column', gap: '8px', transition: 'border-color 0.15s, box-shadow 0.15s' }}
+            style={{ padding: '16px', background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '10px', display: 'flex', flexDirection: 'column', gap: '8px', transition: 'border-color 0.15s, box-shadow 0.15s' }}
             onMouseEnter={e => { e.currentTarget.style.borderColor = '#1a6ef5'; e.currentTarget.style.boxShadow = '0 2px 12px rgba(26,110,245,0.1)' }}
             onMouseLeave={e => { e.currentTarget.style.borderColor = '#ebebeb'; e.currentTarget.style.boxShadow = 'none' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <span style={{ fontSize: '24px' }}>{APP_ICONS[app.name] || '📦'}</span>
               <div style={{ flex: 1, minWidth: 0 }}>
-                <p style={{ fontSize: '12px', fontWeight: 700, color: '#0a0a0a', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{app.displayName}</p>
-                {app.latest && <p style={{ fontSize: '10px', color: '#9a9a9a' }}>v{app.latest}</p>}
+                <p style={{ fontSize: '12px', fontWeight: 700, color: 'var(--text-primary)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{app.displayName}</p>
+                {app.latest && <p style={{ fontSize: '10px', color: 'var(--text-secondary)' }}>v{app.latest}</p>}
               </div>
             </div>
             {app.description && (
-              <p style={{ fontSize: '11px', color: '#9a9a9a', lineHeight: 1.4, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' as any }}>
+              <p style={{ fontSize: '11px', color: 'var(--text-secondary)', lineHeight: 1.4, overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical' as any }}>
                 {app.description}
               </p>
             )}
@@ -291,7 +291,7 @@ export default function ApplicationsManager({ packageId, domainName, oneClicks, 
           </div>
         ))}
         {filtered.length === 0 && (
-          <div style={{ gridColumn: '1/-1', padding: '40px', textAlign: 'center', color: '#9a9a9a', fontSize: '13px' }}>
+          <div style={{ gridColumn: '1/-1', padding: '40px', textAlign: 'center', color: 'var(--text-secondary)', fontSize: '13px' }}>
             No applications found matching your search.
           </div>
         )}

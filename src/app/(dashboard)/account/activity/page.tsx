@@ -62,42 +62,42 @@ export default function ActivityPage() {
 
       {/* Header */}
       <div>
-        <div style={{ fontSize: '12px', color: '#9a9a9a', marginBottom: '4px' }}>
+        <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>
           <Link href="/dashboard" style={{ color: '#1a6ef5' }}>Dashboard</Link> › Activity log
         </div>
-        <h1 style={{ fontSize: '20px', fontWeight: 600, color: '#0a0a0a' }}>Activity log</h1>
-        <p style={{ fontSize: '13px', color: '#9a9a9a', marginTop: '3px' }}>
+        <h1 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text-primary)' }}>Activity log</h1>
+        <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '3px' }}>
           All account actions, sessions and security events.
         </p>
       </div>
 
       {/* Active sessions */}
       <div className="gsws-card">
-        <h2 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '14px' }}>
+        <h2 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '14px' }}>
           Active sessions ({sessions.length})
         </h2>
         {sessions.length === 0 ? (
-          <p style={{ fontSize: '12px', color: '#9a9a9a' }}>No active sessions.</p>
+          <p style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>No active sessions.</p>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {sessions.map((s, i) => (
-              <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', background: '#f7f7f7', borderRadius: '8px', border: '1px solid #ebebeb' }}>
+              <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '10px 14px', background: 'var(--card-bg-elevated)', borderRadius: '8px', border: '1px solid var(--card-border)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <span style={{ fontSize: '16px' }}>💻</span>
                   <div>
-                    <p style={{ fontSize: '12px', fontWeight: 600, color: '#0a0a0a' }}>
+                    <p style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-primary)' }}>
                       Session {i + 1} {i === 0 ? '(current)' : ''}
                     </p>
-                    <p style={{ fontSize: '11px', color: '#9a9a9a', fontFamily: 'ui-monospace, monospace' }}>
+                    <p style={{ fontSize: '11px', color: 'var(--text-secondary)', fontFamily: 'ui-monospace, monospace' }}>
                       Token: {s.token.substring(0, 16)}…
                     </p>
                   </div>
                 </div>
                 <div style={{ textAlign: 'right' }}>
-                  <p style={{ fontSize: '11px', color: '#9a9a9a' }}>
+                  <p style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
                     Created: {new Date(s.created_at).toLocaleString('en-GB')}
                   </p>
-                  <p style={{ fontSize: '11px', color: '#9a9a9a' }}>
+                  <p style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
                     Expires: {new Date(s.expires_at).toLocaleString('en-GB')}
                   </p>
                 </div>
@@ -108,7 +108,7 @@ export default function ActivityPage() {
       </div>
 
       {/* Filter tabs */}
-      <div style={{ display: 'flex', gap: '4px', borderBottom: '1px solid #ebebeb', paddingBottom: '0' }}>
+      <div style={{ display: 'flex', gap: '4px', borderBottom: '1px solid var(--card-border)', paddingBottom: '0' }}>
         {[
           { key: 'all', label: 'All activity' },
           { key: 'login', label: 'Auth events' },
@@ -125,18 +125,18 @@ export default function ActivityPage() {
       </div>
 
       {/* Log table */}
-      <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', overflow: 'hidden' }}>
-        <div style={{ padding: '14px 20px', borderBottom: '1px solid #ebebeb', background: '#f7f7f7', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h2 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a' }}>
+      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '10px', overflow: 'hidden' }}>
+        <div style={{ padding: '14px 20px', borderBottom: '1px solid var(--card-border)', background: 'var(--card-bg-elevated)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h2 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>
             {loading ? 'Loading…' : `${total} events total`}
           </h2>
-          <span style={{ fontSize: '11px', color: '#9a9a9a' }}>Page {page} of {Math.ceil(total / 20)}</span>
+          <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>Page {page} of {Math.ceil(total / 20)}</span>
         </div>
 
         {loading ? (
-          <div style={{ padding: '40px', textAlign: 'center', color: '#9a9a9a', fontSize: '13px' }}>Loading activity…</div>
+          <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-secondary)', fontSize: '13px' }}>Loading activity…</div>
         ) : filtered.length === 0 ? (
-          <div style={{ padding: '40px', textAlign: 'center', color: '#9a9a9a', fontSize: '13px' }}>No activity recorded yet.</div>
+          <div style={{ padding: '40px', textAlign: 'center', color: 'var(--text-secondary)', fontSize: '13px' }}>No activity recorded yet.</div>
         ) : (
           <table className="gsws-table">
             <thead>
@@ -163,23 +163,23 @@ export default function ActivityPage() {
                     <td style={{ fontSize: '12px', color: '#5a5a5a' }}>
                       <span style={{ fontWeight: 500 }}>{log.resource_type}</span>
                       {log.resource_name && log.resource_name !== log.resource_type && (
-                        <span style={{ color: '#9a9a9a' }}> / {log.resource_name}</span>
+                        <span style={{ color: 'var(--text-secondary)' }}> / {log.resource_name}</span>
                       )}
                     </td>
-                    <td style={{ fontSize: '11px', color: '#9a9a9a', maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    <td style={{ fontSize: '11px', color: 'var(--text-secondary)', maxWidth: '200px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {log.detail || '—'}
                     </td>
-                    <td style={{ fontFamily: 'ui-monospace, monospace', fontSize: '11px', color: '#9a9a9a' }}>
+                    <td style={{ fontFamily: 'ui-monospace, monospace', fontSize: '11px', color: 'var(--text-secondary)' }}>
                       {log.session_token || '—'}
                     </td>
-                    <td style={{ fontFamily: 'ui-monospace, monospace', fontSize: '12px', color: '#0a0a0a' }}>
+                    <td style={{ fontFamily: 'ui-monospace, monospace', fontSize: '12px', color: 'var(--text-primary)' }}>
                       {log.ip_address || '—'}
                     </td>
-                    <td style={{ fontSize: '11px', color: '#9a9a9a' }}>
+                    <td style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>
                       {getBrowser(log.user_agent)}
                       {getOS(log.user_agent) && <span style={{ color: '#d4d4d4' }}> · {getOS(log.user_agent)}</span>}
                     </td>
-                    <td style={{ fontSize: '11px', color: '#9a9a9a', whiteSpace: 'nowrap' }}>
+                    <td style={{ fontSize: '11px', color: 'var(--text-secondary)', whiteSpace: 'nowrap' }}>
                       {new Date(log.created_at).toLocaleString('en-GB', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' })}
                     </td>
                   </tr>
@@ -191,13 +191,13 @@ export default function ActivityPage() {
 
         {/* Pagination */}
         {total > 20 && (
-          <div style={{ padding: '12px 20px', borderTop: '1px solid #ebebeb', display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
+          <div style={{ padding: '12px 20px', borderTop: '1px solid var(--card-border)', display: 'flex', gap: '8px', justifyContent: 'flex-end' }}>
             <button onClick={() => setPage(p => Math.max(1, p - 1))} disabled={page === 1}
-              style={{ height: '28px', padding: '0 12px', border: '1px solid #d4d4d4', borderRadius: '4px', fontSize: '12px', cursor: page === 1 ? 'not-allowed' : 'pointer', opacity: page === 1 ? 0.5 : 1, background: '#fff', fontFamily: 'inherit' }}>
+              style={{ height: '28px', padding: '0 12px', border: '1px solid var(--card-border-hover)', borderRadius: '4px', fontSize: '12px', cursor: page === 1 ? 'not-allowed' : 'pointer', opacity: page === 1 ? 0.5 : 1, background: 'var(--card-bg)', fontFamily: 'inherit' }}>
               ← Prev
             </button>
             <button onClick={() => setPage(p => p + 1)} disabled={page >= Math.ceil(total / 20)}
-              style={{ height: '28px', padding: '0 12px', border: '1px solid #d4d4d4', borderRadius: '4px', fontSize: '12px', cursor: page >= Math.ceil(total / 20) ? 'not-allowed' : 'pointer', opacity: page >= Math.ceil(total / 20) ? 0.5 : 1, background: '#fff', fontFamily: 'inherit' }}>
+              style={{ height: '28px', padding: '0 12px', border: '1px solid var(--card-border-hover)', borderRadius: '4px', fontSize: '12px', cursor: page >= Math.ceil(total / 20) ? 'not-allowed' : 'pointer', opacity: page >= Math.ceil(total / 20) ? 0.5 : 1, background: 'var(--card-bg)', fontFamily: 'inherit' }}>
               Next →
             </button>
           </div>

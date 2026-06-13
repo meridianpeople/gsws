@@ -41,7 +41,7 @@ export default function ProfilePage() {
   }
 
   if (loading) return (
-    <div style={{ padding: '48px', textAlign: 'center', color: '#9a9a9a', fontSize: '13px' }}>Loading…</div>
+    <div style={{ padding: '48px', textAlign: 'center', color: 'var(--text-secondary)', fontSize: '13px' }}>Loading…</div>
   )
 
   const initials = user?.name?.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2) || '?'
@@ -51,11 +51,11 @@ export default function ProfilePage() {
 
       {/* Header */}
       <div>
-        <div style={{ fontSize: '12px', color: '#9a9a9a', marginBottom: '4px' }}>
+        <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>
           <Link href="/dashboard" style={{ color: '#1a6ef5' }}>Dashboard</Link> › Account
         </div>
-        <h1 style={{ fontSize: '20px', fontWeight: 600, color: '#0a0a0a' }}>Account & profile</h1>
-        <p style={{ fontSize: '13px', color: '#9a9a9a', marginTop: '3px' }}>Manage your GeiG SWS account details.</p>
+        <h1 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text-primary)' }}>Account & profile</h1>
+        <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '3px' }}>Manage your GeiG SWS account details.</p>
       </div>
 
       {success && (
@@ -72,15 +72,15 @@ export default function ProfilePage() {
               {initials}
             </div>
             <div>
-              <p style={{ fontSize: '16px', fontWeight: 700, color: '#0a0a0a' }}>{user?.name}</p>
-              <p style={{ fontSize: '13px', color: '#9a9a9a' }}>{user?.email}</p>
-              <p style={{ fontSize: '11px', color: '#9a9a9a', marginTop: '2px' }}>
+              <p style={{ fontSize: '16px', fontWeight: 700, color: 'var(--text-primary)' }}>{user?.name}</p>
+              <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>{user?.email}</p>
+              <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '2px' }}>
                 Member since {new Date(user?.created_at).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}
               </p>
             </div>
           </div>
           <button onClick={() => setEditing(!editing)}
-            style={{ height: '32px', padding: '0 16px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '12px', cursor: 'pointer', background: '#fff', fontFamily: 'inherit', color: '#0a0a0a' }}>
+            style={{ height: '32px', padding: '0 16px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '12px', cursor: 'pointer', background: 'var(--card-bg)', fontFamily: 'inherit', color: 'var(--text-primary)' }}>
             {editing ? 'Cancel' : 'Edit profile'}
           </button>
         </div>
@@ -89,20 +89,20 @@ export default function ProfilePage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
               <div>
-                <label style={{ fontSize: '11px', fontWeight: 500, color: '#9a9a9a', display: 'block', marginBottom: '4px' }}>First name</label>
+                <label style={{ fontSize: '11px', fontWeight: 500, color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>First name</label>
                 <input value={form.first_name} onChange={e => setForm(f => ({ ...f, first_name: e.target.value }))}
-                  style={{ width: '100%', height: '36px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', padding: '0 10px', fontFamily: 'inherit', boxSizing: 'border-box' }} />
+                  style={{ width: '100%', height: '36px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', padding: '0 10px', fontFamily: 'inherit', boxSizing: 'border-box' }} />
               </div>
               <div>
-                <label style={{ fontSize: '11px', fontWeight: 500, color: '#9a9a9a', display: 'block', marginBottom: '4px' }}>Last name</label>
+                <label style={{ fontSize: '11px', fontWeight: 500, color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Last name</label>
                 <input value={form.last_name} onChange={e => setForm(f => ({ ...f, last_name: e.target.value }))}
-                  style={{ width: '100%', height: '36px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', padding: '0 10px', fontFamily: 'inherit', boxSizing: 'border-box' }} />
+                  style={{ width: '100%', height: '36px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', padding: '0 10px', fontFamily: 'inherit', boxSizing: 'border-box' }} />
               </div>
             </div>
             <div>
-              <label style={{ fontSize: '11px', fontWeight: 500, color: '#9a9a9a', display: 'block', marginBottom: '4px' }}>Display name</label>
+              <label style={{ fontSize: '11px', fontWeight: 500, color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Display name</label>
               <input value={form.name} onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
-                style={{ width: '100%', height: '36px', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '13px', padding: '0 10px', fontFamily: 'inherit', boxSizing: 'border-box' }} />
+                style={{ width: '100%', height: '36px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', padding: '0 10px', fontFamily: 'inherit', boxSizing: 'border-box' }} />
             </div>
             <div style={{ display: 'flex', gap: '8px' }}>
               <button onClick={handleSave} disabled={saving}
@@ -121,9 +121,9 @@ export default function ProfilePage() {
               ['Account role', user?.role],
               ['WP user ID', `#${user?.wp_user_id}`],
             ].map(([label, value]) => (
-              <div key={label} style={{ padding: '8px 0', borderBottom: '1px solid #ebebeb', display: 'flex', gap: '12px' }}>
-                <span style={{ fontSize: '12px', color: '#9a9a9a', width: '120px', flexShrink: 0 }}>{label}</span>
-                <span style={{ fontSize: '12px', fontWeight: 500, color: '#0a0a0a' }}>{value}</span>
+              <div key={label} style={{ padding: '8px 0', borderBottom: '1px solid var(--card-border)', display: 'flex', gap: '12px' }}>
+                <span style={{ fontSize: '12px', color: 'var(--text-secondary)', width: '120px', flexShrink: 0 }}>{label}</span>
+                <span style={{ fontSize: '12px', fontWeight: 500, color: 'var(--text-primary)' }}>{value}</span>
               </div>
             ))}
           </div>
@@ -137,10 +137,10 @@ export default function ProfilePage() {
           { label: 'Domains', value: stats.domainCount, sub: 'Registered domains', href: '/domains', cta: 'Manage' },
           { label: 'Packages', value: stats.packageCount, sub: 'Hosting packages', href: '/packages', cta: 'Manage' },
         ].map(s => (
-          <div key={s.label} style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', padding: '16px 20px' }}>
-            <p style={{ fontSize: '11px', color: '#9a9a9a', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '6px' }}>{s.label}</p>
-            <p style={{ fontSize: '24px', fontWeight: 700, color: '#0a0a0a', letterSpacing: '-0.5px', lineHeight: 1 }}>{s.value}</p>
-            <p style={{ fontSize: '11px', color: '#9a9a9a', marginTop: '4px', marginBottom: '12px' }}>{s.sub}</p>
+          <div key={s.label} style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '10px', padding: '16px 20px' }}>
+            <p style={{ fontSize: '11px', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '6px' }}>{s.label}</p>
+            <p style={{ fontSize: '24px', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.5px', lineHeight: 1 }}>{s.value}</p>
+            <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '4px', marginBottom: '12px' }}>{s.sub}</p>
             <Link href={s.href} style={{ fontSize: '12px', color: '#1a6ef5', fontWeight: 500, textDecoration: 'none' }}>{s.cta} →</Link>
           </div>
         ))}
@@ -149,14 +149,14 @@ export default function ProfilePage() {
       {/* Credit history */}
       <div className="gsws-card">
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-          <h2 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a' }}>Credit history</h2>
+          <h2 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>Credit history</h2>
           <Link href="/account/topup"
             style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', height: '30px', padding: '0 14px', background: '#1a6ef5', color: '#fff', borderRadius: '6px', fontSize: '12px', fontWeight: 600, textDecoration: 'none' }}>
             + Top up credit
           </Link>
         </div>
         {topups.length === 0 ? (
-          <p style={{ fontSize: '13px', color: '#9a9a9a', textAlign: 'center', padding: '24px 0' }}>No credit history yet.</p>
+          <p style={{ fontSize: '13px', color: 'var(--text-secondary)', textAlign: 'center', padding: '24px 0' }}>No credit history yet.</p>
         ) : (
           <table className="gsws-table">
             <thead>
@@ -166,9 +166,9 @@ export default function ProfilePage() {
               {topups.map((t: any, i: number) => (
                 <tr key={i}>
                   <td style={{ fontWeight: 700, color: '#3b6d11', fontSize: '14px' }}>+£{Number(t.amount).toFixed(2)}</td>
-                  <td style={{ fontFamily: 'ui-monospace, monospace', fontSize: '12px', color: '#9a9a9a' }}>{t.reference}</td>
+                  <td style={{ fontFamily: 'ui-monospace, monospace', fontSize: '12px', color: 'var(--text-secondary)' }}>{t.reference}</td>
                   <td><span style={{ padding: '2px 8px', borderRadius: '20px', fontSize: '11px', fontWeight: 500, background: t.status === 'completed' ? '#eaf3de' : '#faeeda', color: t.status === 'completed' ? '#3b6d11' : '#854f0b' }}>{t.status}</span></td>
-                  <td style={{ fontSize: '12px', color: '#9a9a9a' }}>{new Date(t.created_at).toLocaleDateString('en-GB')}</td>
+                  <td style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{new Date(t.created_at).toLocaleDateString('en-GB')}</td>
                 </tr>
               ))}
             </tbody>
@@ -178,7 +178,7 @@ export default function ProfilePage() {
 
       {/* Account links */}
       <div>
-        <h2 style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a', marginBottom: '10px' }}>Account</h2>
+        <h2 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '10px' }}>Account</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
           {[
             { label: 'Statement', desc: 'Full transaction history and balance', href: '/account/statement', icon: '📄' },
@@ -188,11 +188,11 @@ export default function ProfilePage() {
             { label: 'Top up credit', desc: 'Add credit to your account', href: '/account/topup', icon: '💳' },
           ].map(l => (
             <Link key={l.href} href={l.href}
-              style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '14px 16px', background: '#fff', border: '1px solid #ebebeb', borderRadius: '8px', textDecoration: 'none' }}>
+              style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '14px 16px', background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '8px', textDecoration: 'none' }}>
               <span style={{ fontSize: '20px' }}>{l.icon}</span>
               <div>
-                <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a' }}>{l.label}</p>
-                <p style={{ fontSize: '11px', color: '#9a9a9a' }}>{l.desc}</p>
+                <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>{l.label}</p>
+                <p style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{l.desc}</p>
               </div>
             </Link>
           ))}
@@ -201,7 +201,7 @@ export default function ProfilePage() {
 
       {/* Security links */}
       <div>
-        <h2 style={{ fontSize: '14px', fontWeight: 600, color: '#0a0a0a', marginBottom: '10px' }}>Security</h2>
+        <h2 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '10px' }}>Security</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
           {[
             { label: 'Spend PIN', desc: 'Require a PIN for purchases above a threshold', href: '/account/security', icon: '🔐' },
@@ -210,11 +210,11 @@ export default function ProfilePage() {
             { label: 'Active sessions', desc: 'View and revoke active login sessions', href: '/account/security#sessions', icon: '🖥️' },
           ].map(l => (
             <Link key={l.href} href={l.href}
-              style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '14px 16px', background: '#fff', border: '1px solid #ebebeb', borderRadius: '8px', textDecoration: 'none' }}>
+              style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '14px 16px', background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '8px', textDecoration: 'none' }}>
               <span style={{ fontSize: '20px' }}>{l.icon}</span>
               <div>
-                <p style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a' }}>{l.label}</p>
-                <p style={{ fontSize: '11px', color: '#9a9a9a' }}>{l.desc}</p>
+                <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>{l.label}</p>
+                <p style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{l.desc}</p>
               </div>
             </Link>
           ))}

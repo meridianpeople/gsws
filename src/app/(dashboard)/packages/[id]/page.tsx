@@ -59,22 +59,22 @@ export default async function PackageDetailPage({ params }: { params: Promise<{ 
 
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
         <div>
-          <div style={{ fontSize: '12px', color: '#9a9a9a', marginBottom: '4px' }}>
+          <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>
             <Link href="/packages" style={{ color: '#1a6ef5' }}>Packages</Link> › {pkg.domain_name}
           </div>
-          <h1 style={{ fontSize: '20px', fontWeight: 600, color: '#0a0a0a', fontFamily: 'ui-monospace, monospace' }}>
+          <h1 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text-primary)', fontFamily: 'ui-monospace, monospace' }}>
             {pkg.domain_name}
           </h1>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '6px' }}>
             <span style={{ padding: '2px 8px', borderRadius: '20px', fontSize: '11px', fontWeight: 500, background: pkg.package_type === 'wordpress' ? '#e6f1fb' : pkg.package_type === 'windows' ? '#faeeda' : '#f1efe8', color: pkg.package_type === 'wordpress' ? '#185fa5' : pkg.package_type === 'windows' ? '#854f0b' : '#5a5a5a' }}>{pkg.package_label}</span>
             <span style={{ padding: '2px 8px', borderRadius: '20px', fontSize: '11px', fontWeight: 500, background: '#eaf3de', color: '#3b6d11' }}>Active</span>
-            {info.zone && <span style={{ fontSize: '11px', color: '#9a9a9a' }}>📍 {info.zone}</span>}
+            {info.zone && <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>📍 {info.zone}</span>}
           </div>
         </div>
         <div style={{ display: 'flex', gap: '8px' }}>
           {info.temporaryUrls && Object.values(info.temporaryUrls)[0] && (
             <a href={`https://${Object.values(info.temporaryUrls)[0]}`} target="_blank"
-              style={{ height: '34px', padding: '0 14px', display: 'inline-flex', alignItems: 'center', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '12px', color: '#0a0a0a', textDecoration: 'none', background: '#fff' }}>
+              style={{ height: '34px', padding: '0 14px', display: 'inline-flex', alignItems: 'center', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '12px', color: 'var(--text-primary)', textDecoration: 'none', background: 'var(--card-bg)' }}>
               Preview ↗
             </a>
           )}
@@ -95,7 +95,7 @@ export default async function PackageDetailPage({ params }: { params: Promise<{ 
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
         <div className="gsws-card">
-          <h2 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '14px' }}>Package info</h2>
+          <h2 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '14px' }}>Package info</h2>
           {[
             ['Domain', pkg.domain_name],
             ['Package type', pkg.package_label],
@@ -107,39 +107,39 @@ export default async function PackageDetailPage({ params }: { params: Promise<{ 
             ['Home directory', info.homeDirectory || '—'],
             ['Created', new Date(pkg.created_at).toLocaleDateString('en-GB')],
           ].map(([label, value]) => (
-            <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid #ebebeb', fontSize: '12px' }}>
-              <span style={{ color: '#9a9a9a' }}>{label}</span>
-              <span style={{ fontWeight: 500, color: '#0a0a0a', fontFamily: ['IPv4 address','IPv6 address','Home directory'].includes(label as string) ? 'ui-monospace, monospace' : 'inherit', fontSize: '12px' }}>{value as string}</span>
+            <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--card-border)', fontSize: '12px' }}>
+              <span style={{ color: 'var(--text-secondary)' }}>{label}</span>
+              <span style={{ fontWeight: 500, color: 'var(--text-primary)', fontFamily: ['IPv4 address','IPv6 address','Home directory'].includes(label as string) ? 'ui-monospace, monospace' : 'inherit', fontSize: '12px' }}>{value as string}</span>
             </div>
           ))}
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <div className="gsws-card">
-            <h2 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '14px' }}>Usage</h2>
+            <h2 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '14px' }}>Usage</h2>
             {[
               ['Databases', info.usage?.MySqlDatabases || 0],
               ['Domain aliases', info.usage?.ServerAliases || 0],
               ['SSL certificates', sslDomains.length],
               ['FTP accounts', ftpUsers.length],
             ].map(([label, value]) => (
-              <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid #ebebeb', fontSize: '12px' }}>
-                <span style={{ color: '#9a9a9a' }}>{label}</span>
-                <span style={{ fontWeight: 600, color: '#0a0a0a' }}>{value as number} / ∞</span>
+              <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--card-border)', fontSize: '12px' }}>
+                <span style={{ color: 'var(--text-secondary)' }}>{label}</span>
+                <span style={{ fontWeight: 600, color: 'var(--text-primary)' }}>{value as number} / ∞</span>
               </div>
             ))}
           </div>
 
           <div className="gsws-card">
-            <h2 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '14px' }}>FTP access</h2>
+            <h2 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '14px' }}>FTP access</h2>
             {[
               ['FTP server', info.ftpserver || 'ftp.gb.stackcp.com'],
               ['Protocol', info.ftpProtocol || 'FTP'],
               ['Username', ftpUsers[0]?.Username || pkg.domain_name],
             ].map(([label, value]) => (
-              <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid #ebebeb', fontSize: '12px' }}>
-                <span style={{ color: '#9a9a9a' }}>{label}</span>
-                <span style={{ fontWeight: 500, color: '#0a0a0a', fontFamily: 'ui-monospace, monospace', fontSize: '11px' }}>{value as string}</span>
+              <div key={label} style={{ display: 'flex', justifyContent: 'space-between', padding: '6px 0', borderBottom: '1px solid var(--card-border)', fontSize: '12px' }}>
+                <span style={{ color: 'var(--text-secondary)' }}>{label}</span>
+                <span style={{ fontWeight: 500, color: 'var(--text-primary)', fontFamily: 'ui-monospace, monospace', fontSize: '11px' }}>{value as string}</span>
               </div>
             ))}
             <Link href={`/packages/${id}/files`} style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', marginTop: '10px', fontSize: '12px', color: '#1a6ef5', textDecoration: 'none', fontWeight: 500 }}>
@@ -151,7 +151,7 @@ export default async function PackageDetailPage({ params }: { params: Promise<{ 
 
       {sslDomains.length > 0 && (
         <div className="gsws-card">
-          <h2 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '14px' }}>SSL certificates</h2>
+          <h2 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '14px' }}>SSL certificates</h2>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
             {sslDomains.map((d: string) => (
               <div key={d} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '4px 12px', background: '#eaf3de', border: '1px solid #c0dd97', borderRadius: '20px' }}>
@@ -167,11 +167,11 @@ export default async function PackageDetailPage({ params }: { params: Promise<{ 
 
       {names.length > 0 && (
         <div className="gsws-card">
-          <h2 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a', marginBottom: '14px' }}>Domain names ({names.length})</h2>
+          <h2 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '14px' }}>Domain names ({names.length})</h2>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
             {names.map((n: string) => (
-              <div key={n} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '4px 12px', background: '#f7f7f7', border: '1px solid #ebebeb', borderRadius: '20px' }}>
-                <span style={{ fontSize: '11px', fontWeight: 500, color: '#0a0a0a', fontFamily: 'ui-monospace, monospace' }}>{n}</span>
+              <div key={n} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '4px 12px', background: 'var(--card-bg-elevated)', border: '1px solid var(--card-border)', borderRadius: '20px' }}>
+                <span style={{ fontSize: '11px', fontWeight: 500, color: 'var(--text-primary)', fontFamily: 'ui-monospace, monospace' }}>{n}</span>
               </div>
             ))}
           </div>
@@ -191,9 +191,9 @@ export default async function PackageDetailPage({ params }: { params: Promise<{ 
           { label: 'Applications', href: `/packages/${id}/applications`, icon: '📦' },
         ].map(a => (
           <Link key={a.href} href={a.href}
-            style={{ display: 'flex', flexDirection: 'column', gap: '6px', padding: '14px', background: '#fff', border: '1px solid #ebebeb', borderRadius: '8px', textDecoration: 'none' }}>
+            style={{ display: 'flex', flexDirection: 'column', gap: '6px', padding: '14px', background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '8px', textDecoration: 'none' }}>
             <span style={{ fontSize: '18px' }}>{a.icon}</span>
-            <span style={{ fontSize: '12px', fontWeight: 600, color: '#0a0a0a' }}>{a.label}</span>
+            <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-primary)' }}>{a.label}</span>
           </Link>
         ))}
       </div>
