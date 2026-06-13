@@ -301,3 +301,17 @@ body {
     grid-template-columns: repeat(2, 1fr) !important;
   }
 }
+
+/* Wide tables: horizontal scroll on mobile instead of squeeze */
+@media (max-width: 768px) {
+  .gsws-table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  .gsws-table thead, .gsws-table tbody, .gsws-table tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+}
