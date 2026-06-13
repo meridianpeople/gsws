@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
+import { useMobileNav } from './MobileNavContext'
 
 function Icon({ d, d2 }: { d: string; d2?: string }) {
   return (
@@ -126,9 +127,13 @@ export default function Sidebar() {
     p.label.toLowerCase().includes(search.toLowerCase())
   )
 
+  const { open, setOpen } = useMobileNav()
+
   return (
+    <>
+    {open && <div className="gsws-sidebar-overlay" onClick={() => setOpen(false)} />}
     <aside
-      className="fixed left-0 bottom-0 flex flex-col overflow-y-auto sidebar-scroll"
+      className={`fixed left-0 bottom-0 flex flex-col overflow-y-auto sidebar-scroll gsws-sidebar ${open ? 'open' : ''}`}
       style={{
         top: isMember ? '78px' : '52px',
         width: '232px',
@@ -244,5 +249,6 @@ export default function Sidebar() {
 
 
     </aside>
+    </>
   )
 }

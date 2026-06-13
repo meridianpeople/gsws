@@ -3,6 +3,7 @@ import { useTheme } from './ThemeProvider'
 import Link from 'next/link'
 import { useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
+import { useMobileNav } from './MobileNavContext'
 
 interface SessionUser {
   id: number
@@ -46,6 +47,7 @@ export default function Topbar() {
   const router = useRouter()
   const [user, setUser] = useState<SessionUser | null>(null)
   const [open, setOpen] = useState(false)
+  const { open: mobileOpen, setOpen: setMobileOpen } = useMobileNav()
   const [bellOpen, setBellOpen] = useState(false)
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [unreadCount, setUnreadCount] = useState(0)
@@ -148,13 +150,17 @@ export default function Topbar() {
       display: 'flex', alignItems: 'center',
       background: 'var(--g-topbar-bg)', borderBottom: '1px solid var(--g-topbar-border)',
     }}>
+      {/* Hamburger (mobile) */}
+      <button className="gsws-hamburger" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Toggle menu">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+      </button>
       {/* Logo */}
-      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '0 20px', width: '232px', height: '100%', flexShrink: 0, borderRight: '1px solid var(--g-topbar-border)' }}>
+      <div className="gsws-topbar-logo" style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '0 20px', width: '232px', height: '100%', flexShrink: 0, borderRight: '1px solid var(--g-topbar-border)' }}>
         <img src="https://geig.co.uk/_next/image?url=%2Fgeig-logo.png&w=256&q=75" alt="GeiG" style={{ height: '30px', width: 'auto', objectFit: 'contain' }} />
       </div>
 
       {/* Search */}
-      <div style={{ flex: 1, display: 'flex', alignItems: 'center', padding: '0 16px' }}>
+      <div className="gsws-topbar-search" style={{ flex: 1, display: 'flex', alignItems: 'center', padding: '0 16px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px', height: '32px', padding: '0 12px', borderRadius: '6px', background: '#1a1a1a', border: '1px solid #2a2a2a', maxWidth: '320px', width: '100%' }}>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#555" strokeWidth="2">
             <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
@@ -182,7 +188,7 @@ export default function Topbar() {
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
           )}
         </button>
-        <span style={{ fontSize: '11px', color: '#555' }}>sws.geig.co.uk</span>
+        <span className="gsws-topbar-domain" style={{ fontSize: '11px', color: '#555' }}>sws.geig.co.uk</span>
 
         {/* Bell */}
         <div ref={bellRef} style={{ position: 'relative' }}>

@@ -11,14 +11,14 @@ export default function MainContent({ children }: { children: React.ReactNode })
   }, [])
 
   return (
-    <main style={{
+    <main className="gsws-main-content" style={{
       paddingTop: isMember ? '78px' : '52px',
       marginLeft: '232px',
       minHeight: '100vh',
       background: 'var(--page-bg)',
-      transition: 'padding-top 0.1s',
+      transition: 'padding-top 0.1s, margin-left 0.2s',
     }}>
-      <div style={{ padding: '28px 32px', width: '100%' }}>
+      <div className="gsws-page-padding" style={{ padding: '28px 32px', width: '100%', boxSizing: 'border-box' }}>
         {children}
       </div>
     </main>
