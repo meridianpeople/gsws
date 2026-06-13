@@ -173,7 +173,7 @@ export default function TasksPage() {
             </thead>
             <tbody>
               {tasks.map((task, i) => (
-                <tr key={task.Id} style={{ borderBottom: i < tasks.length - 1 ? '1px solid #f3f4f6' : 'none' }}>
+                <tr key={task.Id} style={{ borderBottom: i < tasks.length - 1 ? '1px solid var(--card-border)' : 'none' }}>
                   <td style={{ padding: '12px 16px', fontSize: '12px', fontFamily: 'monospace', color: 'var(--text-primary)', maxWidth: '260px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{task.Command}</td>
                   <td style={{ padding: '12px 16px', fontSize: '12px', fontFamily: 'monospace', color: 'var(--text-secondary)' }}>{task.TimeSpec}</td>
                   <td style={{ padding: '12px 16px', fontSize: '12px', color: 'var(--text-secondary)' }}>{task.MailTo || '—'}</td>

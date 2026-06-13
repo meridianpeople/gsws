@@ -188,7 +188,7 @@ const METHOD_COLORS: Record<string, { bg: string; text: string }> = {
   PUT:    { bg: '#fef9c3', text: '#92400e' },
   PATCH:  { bg: '#fef3c7', text: '#b45309' },
   DELETE: { bg: '#fee2e2', text: '#991b1b' },
-  HEAD:   { bg: '#f3f4f6', text: '#374151' },
+  HEAD:   { bg: 'var(--card-border)', text: 'var(--text-secondary)' },
 }
 
 export default function APIReferencePage() {
