@@ -158,8 +158,8 @@ export default function PackageDNSManager({
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '16px' }}>
           {/* GeiG option */}
           <div onClick={() => setNsMode('geig')}
-            style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', padding: '12px 16px', borderRadius: '8px', cursor: 'pointer', border: `1.5px solid ${nsMode === 'geig' ? '#1a6ef5' : '#ebebeb'}`, background: nsMode === 'geig' ? '#e8f0fe' : '#fff' }}>
-            <div style={{ width: '16px', height: '16px', borderRadius: '50%', border: `2px solid ${nsMode === 'geig' ? '#1a6ef5' : '#d4d4d4'}`, background: nsMode === 'geig' ? '#1a6ef5' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '1px' }}>
+            style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', padding: '12px 16px', borderRadius: '8px', cursor: 'pointer', border: `1.5px solid ${nsMode === 'geig' ? '#1a6ef5' : 'var(--card-border)'}`, background: nsMode === 'geig' ? '#e8f0fe' : 'var(--card-bg)' }}>
+            <div style={{ width: '16px', height: '16px', borderRadius: '50%', border: `2px solid ${nsMode === 'geig' ? '#1a6ef5' : 'var(--card-border-hover)'}`, background: nsMode === 'geig' ? '#1a6ef5' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '1px' }}>
               {nsMode === 'geig' && <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--card-bg)' }} />}
             </div>
             <div style={{ flex: 1 }}>
@@ -167,7 +167,7 @@ export default function PackageDNSManager({
               <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '2px' }}>DNS records managed here in GSWS control panel</p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '8px' }}>
                 {GEIG_NS.map((ns, i) => (
-                  <span key={ns} style={{ fontSize: '11px', fontFamily: 'ui-monospace, monospace', color: '#5a5a5a' }}>NS{i + 1}: {ns}</span>
+                  <span key={ns} style={{ fontSize: '11px', fontFamily: 'ui-monospace, monospace', color: 'var(--text-secondary)' }}>NS{i + 1}: {ns}</span>
                 ))}
               </div>
             </div>
@@ -175,8 +175,8 @@ export default function PackageDNSManager({
 
           {/* Custom option */}
           <div onClick={() => setNsMode('custom')}
-            style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', padding: '12px 16px', borderRadius: '8px', cursor: 'pointer', border: `1.5px solid ${nsMode === 'custom' ? '#1a6ef5' : '#ebebeb'}`, background: nsMode === 'custom' ? '#e8f0fe' : '#fff' }}>
-            <div style={{ width: '16px', height: '16px', borderRadius: '50%', border: `2px solid ${nsMode === 'custom' ? '#1a6ef5' : '#d4d4d4'}`, background: nsMode === 'custom' ? '#1a6ef5' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '1px' }}>
+            style={{ display: 'flex', alignItems: 'flex-start', gap: '12px', padding: '12px 16px', borderRadius: '8px', cursor: 'pointer', border: `1.5px solid ${nsMode === 'custom' ? '#1a6ef5' : 'var(--card-border)'}`, background: nsMode === 'custom' ? '#e8f0fe' : 'var(--card-bg)' }}>
+            <div style={{ width: '16px', height: '16px', borderRadius: '50%', border: `2px solid ${nsMode === 'custom' ? '#1a6ef5' : 'var(--card-border-hover)'}`, background: nsMode === 'custom' ? '#1a6ef5' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '1px' }}>
               {nsMode === 'custom' && <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--card-bg)' }} />}
             </div>
             <div style={{ flex: 1 }}>

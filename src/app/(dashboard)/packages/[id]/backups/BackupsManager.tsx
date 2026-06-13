@@ -57,8 +57,8 @@ export default function BackupsManager({ packageId, backupData, webJobs, domainN
             { value: 'both', label: 'Files & Databases', desc: 'Full backup of files and databases' },
           ].map(opt => (
             <div key={opt.value} onClick={() => setBackupType(opt.value as any)}
-              style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 14px', borderRadius: '8px', cursor: 'pointer', border: `1.5px solid ${backupType === opt.value ? '#1a6ef5' : '#ebebeb'}`, background: backupType === opt.value ? '#e8f0fe' : '#fff' }}>
-              <div style={{ width: '16px', height: '16px', borderRadius: '50%', border: `2px solid ${backupType === opt.value ? '#1a6ef5' : '#d4d4d4'}`, background: backupType === opt.value ? '#1a6ef5' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 14px', borderRadius: '8px', cursor: 'pointer', border: `1.5px solid ${backupType === opt.value ? '#1a6ef5' : 'var(--card-border)'}`, background: backupType === opt.value ? '#e8f0fe' : 'var(--card-bg)' }}>
+              <div style={{ width: '16px', height: '16px', borderRadius: '50%', border: `2px solid ${backupType === opt.value ? '#1a6ef5' : 'var(--card-border-hover)'}`, background: backupType === opt.value ? '#1a6ef5' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                 {backupType === opt.value && <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--card-bg)' }} />}
               </div>
               <div>
