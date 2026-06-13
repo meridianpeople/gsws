@@ -74,7 +74,7 @@ export default async function DomainManagePage({ params }: { params: Promise<{ n
       </div>
 
       {/* Domain info */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+      <div className="gsws-grid-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
         <div className="gsws-card">
           <h2 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '14px' }}>Domain info</h2>
           {[

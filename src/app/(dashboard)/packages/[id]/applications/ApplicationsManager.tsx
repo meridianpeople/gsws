@@ -190,7 +190,7 @@ export default function ApplicationsManager({ packageId, domainName, oneClicks, 
                   placeholder="admin@example.com"
                   style={{ width: '100%', height: '34px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', padding: '0 10px', boxSizing: 'border-box', fontFamily: 'inherit' }} />
               </div>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+              <div className="gsws-grid-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
                 <div>
                   <label style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Admin username</label>
                   <input value={installForm.adminUser} onChange={e => setInstallForm(f => ({ ...f, adminUser: e.target.value }))}

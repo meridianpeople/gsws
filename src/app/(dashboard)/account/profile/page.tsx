@@ -87,7 +87,7 @@ export default function ProfilePage() {
 
         {editing ? (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+            <div className="gsws-grid-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
               <div>
                 <label style={{ fontSize: '11px', fontWeight: 500, color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>First name</label>
                 <input value={form.first_name} onChange={e => setForm(f => ({ ...f, first_name: e.target.value }))}
@@ -112,7 +112,7 @@ export default function ProfilePage() {
             </div>
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0' }}>
+          <div className="gsws-grid-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0' }}>
             {[
               ['Email', user?.email],
               ['Display name', user?.name],
@@ -179,7 +179,7 @@ export default function ProfilePage() {
       {/* Account links */}
       <div>
         <h2 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '10px' }}>Account</h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
+        <div className="gsws-grid-2col" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
           {[
             { label: 'Statement', desc: 'Full transaction history and balance', href: '/account/statement', icon: '📄' },
             { label: 'Renewals', desc: 'Manage service renewals and auto-renew', href: '/renewals', icon: '🔄' },
@@ -202,7 +202,7 @@ export default function ProfilePage() {
       {/* Security links */}
       <div>
         <h2 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '10px' }}>Security</h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
+        <div className="gsws-grid-2col" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '10px' }}>
           {[
             { label: 'Spend PIN', desc: 'Require a PIN for purchases above a threshold', href: '/account/security', icon: '🔐' },
             { label: 'API Credentials', desc: 'Manage API keys and access tokens', href: '/account/api', icon: '🔑' },

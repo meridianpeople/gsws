@@ -381,7 +381,7 @@ export default function VPSPage() {
       {/* Step 6: Login config */}
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '12px', padding: '20px', marginBottom: '16px' }}>
         <h3 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 14px' }}>6. Server configuration</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+        <div className="gsws-grid-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
           <div>
             <label style={{ fontSize: '12px', fontWeight: 600, color: '#444', display: 'block', marginBottom: '6px' }}>Display name</label>
             <input type="text" placeholder="e.g. My Web Server" value={displayName} onChange={e => setDisplayName(e.target.value)}

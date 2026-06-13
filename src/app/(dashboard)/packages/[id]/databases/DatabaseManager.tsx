@@ -167,7 +167,7 @@ export default function DatabaseManager({ packageId, initialDatabases, storedDbs
       {showCreate && (
         <div className="gsws-card" style={{ border: '2px solid #1a6ef5' }}>
           <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '14px' }}>Create MySQL database</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '12px' }}>
+          <div className="gsws-grid-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '12px' }}>
             <div>
               <label style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Database name</label>
               <input value={newDb.name} onChange={e => setNewDb(d => ({ ...d, name: e.target.value.replace(/[^a-zA-Z0-9_]/g, '') }))}

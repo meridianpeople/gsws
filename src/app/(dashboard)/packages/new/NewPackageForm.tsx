@@ -219,7 +219,7 @@ export default function NewPackageForm() {
                 <span style={{ width: '22px', height: '22px', borderRadius: '50%', background: '#1a6ef5', color: 'var(--card-bg)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 700 }}>3</span>
                 {selectedPkg ? `Included with ${selectedPkg.label}` : "What's included"}
               </h2>
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px', marginBottom: '14px' }}>
+              <div className="gsws-grid-2col" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px', marginBottom: '14px' }}>
                 {features.map((f, i) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 12px', background: 'var(--card-bg-elevated)', borderRadius: '6px' }}>
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#3b6d11" strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>

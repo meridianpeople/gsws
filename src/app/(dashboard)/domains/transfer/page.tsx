@@ -219,7 +219,7 @@ export default function DomainTransferPage() {
           )}
 
           {!rule && (
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '14px' }}>
+            <div className="gsws-grid-2col" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '14px' }}>
               {[
                 { icon: '🇬🇧', title: 'UK domains (.co.uk, .uk, .org.uk)', desc: 'Free transfer via IPS Tag change to STACK. No EPP code needed. Usually instant.', badge: 'Free · IPS Tag', bc: '#3b6d11', bb: '#eaf3de' },
                 { icon: '🔑', title: 'Generic domains (.com, .net, .org)', desc: 'Requires EPP code. Unlock domain, get code from registrar, approve email. Takes 2-5 days.', badge: 'From £13.99 · EPP Code', bc: '#854f0b', bb: '#faeeda' },
@@ -325,7 +325,7 @@ export default function DomainTransferPage() {
               <div>
                 <h3 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '4px' }}>Step 3 — Choose how to point your domain</h3>
                 <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '14px' }}>Two options — nameservers is simpler and recommended.</p>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                <div className="gsws-grid-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
                   {[
                     { id: 'ns', label: 'Option A — Change Nameservers', recommended: true, desc: 'Simplest. Point your nameservers to ours and we manage all DNS automatically.', pro: 'We manage all DNS records', con: 'All DNS must be managed here' },
                     { id: 'a', label: 'Option B — Update A Records only', recommended: false, desc: 'Keep your existing DNS at your registrar and just point the website IP here.', pro: 'Keep email and other DNS elsewhere', con: 'Manual DNS management required' },

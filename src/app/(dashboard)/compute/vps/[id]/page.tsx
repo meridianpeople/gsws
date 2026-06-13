@@ -206,7 +206,7 @@ export default function VPSDetailPage() {
       {/* OVERVIEW */}
       {tab === 'Overview' && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
+          <div className="gsws-grid-multi" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
             {[
               { icon: ICON.ip, label: 'IP ADDRESS', value: ip, mono: true },
               { icon: ICON.cpu, label: 'vCPU', value: pd?.cpuCores ? `${pd.cpuCores} cores` : '—' },
@@ -532,7 +532,7 @@ export default function VPSDetailPage() {
             <p style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)' }}>Actions</p>
             <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>Manage your VPS lifecycle and recovery options</p>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+          <div className="gsws-grid-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
             {[
               { icon: ICON.camera, label: 'Create Snapshot', category: 'BACKUP', desc: 'Save the current disk state for later restore', action: 'snapshot', accent: '#15803d', accentBg: '#f0fdf4' },
               { icon: ICON.zap, label: 'Graceful Shutdown', category: 'POWER', desc: 'Send ACPI signal — OS shuts down cleanly', action: 'shutdown', accent: '#854d0e', accentBg: '#fefce8' },
@@ -570,7 +570,7 @@ export default function VPSDetailPage() {
               </button>
             </div>
             {showUpgrade && (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '8px' }}>
+              <div className="gsws-grid-multi" style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '8px' }}>
                 {[
                   { id: 'V92', label: 'VPS 10', cpu: 4, ram: 8, disk: 150, price: '£6.80' },
                   { id: 'V95', label: 'VPS 20', cpu: 6, ram: 12, disk: 200, price: '£6.80' },
@@ -618,7 +618,7 @@ export default function VPSDetailPage() {
 
       {/* Network tab */}
       {tab === 'Network' && (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+        <div className="gsws-grid-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
           {[
             { label: 'IPv4', value: ip, mono: true },
             { label: 'IPv6', value: pd?.ipConfig?.v6?.ip || '—', mono: true },

@@ -287,3 +287,17 @@ body {
   .gsws-package-tabs::-webkit-scrollbar { display: none; }
   .gsws-package-tabs { scrollbar-width: none; }
 }
+
+/* Stack 2-column grids on mobile */
+@media (max-width: 768px) {
+  .gsws-grid-2col {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Multi-column metric/stat grids -> 2 columns on mobile */
+@media (max-width: 768px) {
+  .gsws-grid-multi {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}

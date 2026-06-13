@@ -267,7 +267,7 @@ export default function EmailManager({
           {showAdd && (
             <div className="gsws-card" style={{ border: '2px solid #1a6ef5' }}>
               <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '14px' }}>Create email account</h3>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '12px' }}>
+              <div className="gsws-grid-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '12px' }}>
                 <div>
                   <label style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Username</label>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>

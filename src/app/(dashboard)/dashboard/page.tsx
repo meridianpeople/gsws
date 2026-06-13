@@ -66,7 +66,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* Metrics — 6 col */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '12px' }}>
+      <div className="gsws-grid-multi" style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '12px' }}>
         {metrics.map(m => (
           <div key={m.label} style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '12px', padding: '18px 16px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
@@ -82,7 +82,7 @@ export default async function DashboardPage() {
       {/* Provisioned Services */}
       <div>
         <h2 style={{ fontSize: '15px', fontWeight: 600, color: '#fff', marginBottom: '14px' }}>Provisioned Services</h2>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '12px' }}>
+        <div className="gsws-grid-multi" style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '12px' }}>
           {services.map(s => (
             <div key={s.title} style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', opacity: s.active ? 1 : 0.6, transition: 'border-color 0.2s' }}>
               <div>
@@ -163,7 +163,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* Quick actions — 5 col */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '12px' }}>
+      <div className="gsws-grid-multi" style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '12px' }}>
         {[
           { label: 'Register domain', desc: 'Find & register a new domain', href: '/domains/search', iconColor: '#1a6ef5', iconBg: 'rgba(26,110,245,0.1)', icon: 'M12 2a10 10 0 100 20A10 10 0 0012 2zM2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20' },
           { label: 'Add hosting', desc: 'Create a hosting package', href: '/packages/new', iconColor: '#1a6ef5', iconBg: 'rgba(26,110,245,0.1)', icon: 'M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10' },

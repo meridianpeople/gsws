@@ -52,7 +52,7 @@ export default function AppPoolManager({ packageId, domainName, config }: {
 
       <div className="gsws-card">
         <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '14px' }}>Application Pool configuration</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '16px' }}>
+        <div className="gsws-grid-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px', marginBottom: '16px' }}>
           <div>
             <label style={{ fontSize: '11px', color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Pipeline mode</label>
             <select value={pipeline} onChange={e => setPipeline(e.target.value)}
