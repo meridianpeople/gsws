@@ -3,6 +3,14 @@ import { cookies } from 'next/headers'
 import { getGswsSession } from '@/lib/session'
 import db from '@/lib/db'
 
+function MetricIcon({ d, d2 }: { d: string; d2?: string }) {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+      <path d={d} />{d2 && <path d={d2} />}
+    </svg>
+  )
+}
+
 export default async function DashboardPage() {
   const cookieStore = await cookies()
   const user = await getGswsSession()
@@ -23,12 +31,12 @@ export default async function DashboardPage() {
   const firstName = user?.name ? user.name.split(' ')[0] : ''
 
   const metrics = [
-    { label: 'Active Packages', value: packages.length, sub: 'Hosting packages' },
-    { label: 'Domains', value: domains.length, sub: 'Registered' },
-    { label: 'VPS Instances', value: 0, sub: 'Provisioned' },
-    { label: 'GPU Compute', value: 0, sub: 'Active nodes' },
-    { label: 'WordPress Sites', value: wpCount, sub: 'Managed WP' },
-    { label: 'Account Credit', value: `£${credit}`, sub: 'Available balance' },
+    { label: 'Active Packages', value: packages.length, sub: 'Hosting packages', icon: <MetricIcon d="M22 12H2M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z" />, color: '#60a5fa' },
+    { label: 'Domains', value: domains.length, sub: 'Registered', icon: <MetricIcon d="M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20M2 12h20" d2="M12 2a10 10 0 100 20 10 10 0 000-20z" />, color: '#4ade80' },
+    { label: 'VPS Instances', value: 0, sub: 'Provisioned', icon: <MetricIcon d="M5 2h14a1 1 0 011 1v6H4V3a1 1 0 011-1z" d2="M4 9h16v6H4zM4 15h16v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM8 5h.01M8 12h.01M8 19h.01" />, color: '#f59e0b' },
+    { label: 'GPU Compute', value: 0, sub: 'Active nodes', icon: <MetricIcon d="M4 4h16v16H4z" d2="M9 9h6v6H9zM9 1v3M15 1v3M9 20v3M15 20v3M1 9h3M1 15h3M20 9h3M20 15h3" />, color: '#a78bfa' },
+    { label: 'WordPress Sites', value: wpCount, sub: 'Managed WP', icon: <MetricIcon d="M12 2a10 10 0 100 20 10 10 0 000-20z" d2="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z" />, color: '#22d3ee' },
+    { label: 'Account Credit', value: `£${credit}`, sub: 'Available balance', icon: <MetricIcon d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" />, color: '#34d399' },
   ]
 
   const services = [
@@ -61,7 +69,10 @@ export default async function DashboardPage() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '12px' }}>
         {metrics.map(m => (
           <div key={m.label} style={{ background: '#111', border: '1px solid #1e1e1e', borderRadius: '12px', padding: '18px 16px' }}>
-            <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '9px', textTransform: 'uppercase', letterSpacing: '0.12em', color: '#555', marginBottom: '10px' }}>{m.label}</p>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
+              <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '9px', textTransform: 'uppercase', letterSpacing: '0.12em', color: '#555' }}>{m.label}</p>
+              <span style={{ color: m.color }}>{m.icon}</span>
+            </div>
             <p style={{ fontSize: '26px', fontWeight: 700, color: '#fff', letterSpacing: '-0.5px', lineHeight: 1 }}>{m.value}</p>
             <p style={{ fontSize: '11px', color: '#555', marginTop: '6px' }}>{m.sub}</p>
           </div>
