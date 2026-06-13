@@ -61,7 +61,7 @@ export default function MssqlManager({ packageId, initialDatabases, creditBalanc
           <button
             onClick={() => setShowModal(true)}
             disabled={!canAfford}
-            style={{ height: '36px', padding: '0 18px', background: !canAfford ? '#ccc' : '#1a6ef5', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: 600, cursor: !canAfford ? 'not-allowed' : 'pointer' }}
+            style={{ height: '36px', padding: '0 18px', background: !canAfford ? '#ccc' : '#1a6ef5', color: 'var(--card-bg)', border: 'none', borderRadius: '8px', fontSize: '13px', fontWeight: 600, cursor: !canAfford ? 'not-allowed' : 'pointer' }}
           >
             + Add MSSQL · £{PRICE.toFixed(2)}/yr
           </button>
@@ -99,7 +99,7 @@ export default function MssqlManager({ packageId, initialDatabases, creditBalanc
             </thead>
             <tbody>
               {databases.map((m: any) => (
-                <tr key={m.id} style={{ borderBottom: '1px solid #f0f0f0' }}>
+                <tr key={m.id} style={{ borderBottom: '1px solid var(--card-border)' }}>
                   <td style={{ padding: '12px 16px', fontWeight: 600, color: 'var(--text-primary)', fontFamily: 'monospace' }}>{m.id}</td>
                   <td style={{ padding: '12px 16px', color: 'var(--text-secondary)' }}>{m.packageName || '—'}</td>
                   <td style={{ padding: '12px 16px' }}>

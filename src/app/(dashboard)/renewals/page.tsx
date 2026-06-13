@@ -22,7 +22,7 @@ const URGENCY_INFO: Record<string, { label: string; color: string; bg: string }>
   ok:       { label: 'Active',   color: '#3b6d11', bg: '#eaf3de' },
   warning:  { label: 'Due soon', color: '#854f0b', bg: '#faeeda' },
   critical: { label: 'Due soon', color: '#a32d2d', bg: '#fcebeb' },
-  overdue:  { label: 'Overdue',  color: '#fff',    bg: '#a32d2d' },
+  overdue:  { label: 'Overdue',  color: 'var(--card-bg)',    bg: '#a32d2d' },
 }
 
 export default function RenewalsPage() {
@@ -67,7 +67,7 @@ export default function RenewalsPage() {
           <h1 style={{ fontSize: '22px', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.02em', margin: 0 }}>Renewals</h1>
           <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '4px' }}>Manage renewal settings for all your services. Auto-renew charges your credit balance.</p>
         </div>
-        <Link href="/account/topup" style={{ display: 'inline-flex', alignItems: 'center', gap: '7px', height: '38px', padding: '0 18px', background: '#0a0a0a', color: '#fff', borderRadius: '9px', fontSize: '13px', fontWeight: 600, textDecoration: 'none' }}>
+        <Link href="/account/topup" style={{ display: 'inline-flex', alignItems: 'center', gap: '7px', height: '38px', padding: '0 18px', background: '#0a0a0a', color: 'var(--card-bg)', borderRadius: '9px', fontSize: '13px', fontWeight: 600, textDecoration: 'none' }}>
           <IconMoney /> Top up credit
         </Link>
       </div>
@@ -100,7 +100,7 @@ export default function RenewalsPage() {
             { period: 'EXPIRY DATE', title: 'Auto-renew', desc: 'Credit charged if auto-renew on', color: '#3b6d11' },
             { period: '30 DAYS AFTER', title: 'Suspension', desc: 'Service suspended if unpaid', color: '#a32d2d' },
           ].map(({ period, title, desc, color }) => (
-            <div key={period} style={{ borderRight: '1px solid #f0f0f0', paddingRight: '16px', marginRight: '16px' }}>
+            <div key={period} style={{ borderRight: '1px solid var(--card-border)', paddingRight: '16px', marginRight: '16px' }}>
               <p style={{ fontSize: '10px', fontWeight: 700, letterSpacing: '0.08em', color, marginBottom: '4px' }}>{period}</p>
               <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '2px' }}>{title}</p>
               <p style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{desc}</p>
@@ -113,7 +113,7 @@ export default function RenewalsPage() {
       <div style={{ display: 'flex', gap: '6px' }}>
         {[['all', 'All services'], ['due', 'Due this month'], ['overdue', 'Overdue']].map(([key, label]) => (
           <button key={key} onClick={() => setFilter(key)}
-            style={{ height: '32px', padding: '0 14px', background: filter === key ? '#0a0a0a' : '#f7f7f7', color: filter === key ? '#fff' : '#555', border: `1px solid ${filter === key ? '#0a0a0a' : '#d4d4d4'}`, borderRadius: '7px', fontSize: '12px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
+            style={{ height: '32px', padding: '0 14px', background: filter === key ? '#0a0a0a' : 'var(--card-bg-elevated)', color: filter === key ? 'var(--page-bg)' : 'var(--text-tertiary)', border: `1px solid ${filter === key ? '#0a0a0a' : 'var(--card-border-hover)'}`, borderRadius: '7px', fontSize: '12px', fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' }}>
             {label}
           </button>
         ))}
@@ -125,7 +125,7 @@ export default function RenewalsPage() {
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
           {filtered.map((r: any) => {
-            const meta = TYPE_META[r.resource_type] || { label: 'Service', color: 'var(--text-tertiary)', bg: '#f7f7f7', Icon: IconBox }
+            const meta = TYPE_META[r.resource_type] || { label: 'Service', color: 'var(--text-tertiary)', bg: 'var(--card-bg-elevated)', Icon: IconBox }
             const urgency = getUrgency(r)
             const urg = URGENCY_INFO[urgency]
             const Icon = meta.Icon
@@ -160,7 +160,7 @@ export default function RenewalsPage() {
                 {/* Auto-renew toggle */}
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '3px', flexShrink: 0 }}>
                   <button onClick={() => toggleAutoRenew(r.id, !!r.auto_renew)}
-                    style={{ width: '44px', height: '24px', borderRadius: '12px', border: 'none', cursor: 'pointer', background: r.auto_renew ? '#0a0a0a' : '#d4d4d4', position: 'relative', transition: 'background 0.2s', flexShrink: 0 }}>
+                    style={{ width: '44px', height: '24px', borderRadius: '12px', border: 'none', cursor: 'pointer', background: r.auto_renew ? '#0a0a0a' : 'var(--card-border-hover)', position: 'relative', transition: 'background 0.2s', flexShrink: 0 }}>
                     <span style={{ position: 'absolute', top: '3px', left: r.auto_renew ? '23px' : '3px', width: '18px', height: '18px', borderRadius: '50%', background: 'var(--card-bg)', transition: 'left 0.2s', display: 'block' }} />
                   </button>
                   <p style={{ fontSize: '9px', fontWeight: 700, letterSpacing: '0.08em', textTransform: 'uppercase', color: 'var(--text-secondary)' }}>AUTO</p>

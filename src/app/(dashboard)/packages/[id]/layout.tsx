@@ -45,10 +45,10 @@ export default async function PackageLayout({
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
         <div>
-          <div style={{ fontSize: '12px', color: '#9a9a9a', marginBottom: '4px' }}>
+          <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>
             <Link href="/packages" style={{ color: '#1a6ef5' }}>Packages</Link> › {pkg?.domain_name}
           </div>
-          <h1 style={{ fontSize: '20px', fontWeight: 600, color: '#0a0a0a', fontFamily: 'ui-monospace, monospace' }}>
+          <h1 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text-primary)', fontFamily: 'ui-monospace, monospace' }}>
             {pkg?.domain_name}
           </h1>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '6px' }}>
@@ -60,7 +60,7 @@ export default async function PackageLayout({
         </div>
         <div style={{ display: 'flex', gap: '8px' }}>
           <a href={`https://${pkg?.domain_name}`} target="_blank"
-            style={{ height: '34px', padding: '0 14px', display: 'inline-flex', alignItems: 'center', background: '#1a6ef5', color: '#fff', borderRadius: '6px', fontSize: '12px', fontWeight: 600, textDecoration: 'none' }}>
+            style={{ height: '34px', padding: '0 14px', display: 'inline-flex', alignItems: 'center', background: '#1a6ef5', color: 'var(--card-bg)', borderRadius: '6px', fontSize: '12px', fontWeight: 600, textDecoration: 'none' }}>
             Visit site ↗
           </a>
         </div>

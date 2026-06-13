@@ -138,18 +138,18 @@ export default function DomainSearchPage() {
                 placeholder="Type a domain name to search…"
                 style={{
                   width: '100%', height: '52px', paddingLeft: '46px', paddingRight: '16px',
-                  border: '1.5px solid #d4d4d4', borderRadius: '8px', fontSize: '15px',
+                  border: '1.5px solid var(--input-border)', borderRadius: '8px', fontSize: '15px',
                   fontFamily: 'inherit', color: 'var(--text-primary)', background: 'var(--card-bg)', outline: 'none',
                 }}
                 onFocus={e => e.target.style.borderColor = '#1a6ef5'}
-                onBlur={e => e.target.style.borderColor = '#d4d4d4'}
+                onBlur={e => e.target.style.borderColor = 'var(--input-border)'}
               />
             </div>
             <button
               type="submit"
               disabled={searching || !query.trim()}
               style={{
-                height: '52px', padding: '0 28px', background: '#1a6ef5', color: '#fff',
+                height: '52px', padding: '0 28px', background: '#1a6ef5', color: 'var(--card-bg)',
                 border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: 600,
                 cursor: searching || !query.trim() ? 'not-allowed' : 'pointer',
                 opacity: searching || !query.trim() ? 0.7 : 1, fontFamily: 'inherit',
@@ -171,7 +171,7 @@ export default function DomainSearchPage() {
               }}
               style={{
                 padding: '3px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 500,
-                background: '#ebebeb', color: '#5a5a5a', border: '1px solid var(--card-border-hover)',
+                background: 'var(--card-border)', color: 'var(--text-secondary)', border: '1px solid var(--card-border-hover)',
                 cursor: 'pointer', fontFamily: 'inherit',
               }}>
               {tld}
@@ -226,7 +226,7 @@ export default function DomainSearchPage() {
             <div key={result.name} style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               padding: '14px 20px',
-              borderBottom: i < results.length - 1 ? '1px solid #ebebeb' : 'none',
+              borderBottom: i < results.length - 1 ? '1px solid var(--card-border)' : 'none',
               background: 'var(--card-bg)',
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -243,7 +243,7 @@ export default function DomainSearchPage() {
                 </div>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                <span style={{ fontSize: '13px', fontWeight: 500, color: '#5a5a5a' }}>
+                <span style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text-secondary)' }}>
                   {result.price ? `£${result.price.toFixed(2)}` : '—'}/yr
                 </span>
                 <span style={{ fontSize: '11px', fontWeight: 500, color: balance !== null && (result.price || 0) > balance ? '#a32d2d' : '#3b6d11' }}>
@@ -253,7 +253,7 @@ export default function DomainSearchPage() {
                   onClick={() => openModal(result)}
                   disabled={registering === result.name || !!registered || (balance !== null && (result.price || 0) > balance)}
                   style={{
-                    height: '34px', padding: '0 20px', background: '#1a6ef5', color: '#fff',
+                    height: '34px', padding: '0 20px', background: '#1a6ef5', color: 'var(--card-bg)',
                     border: 'none', borderRadius: '6px', fontSize: '13px', fontWeight: 600,
                     cursor: registering === result.name ? 'wait' : 'pointer',
                     opacity: registering === result.name ? 0.7 : 1, fontFamily: 'inherit',
@@ -269,12 +269,12 @@ export default function DomainSearchPage() {
             <div key={result.name} style={{
               display: 'flex', alignItems: 'center', justifyContent: 'space-between',
               padding: '12px 20px',
-              borderBottom: i < unavailable.length - 1 ? '1px solid #ebebeb' : 'none',
+              borderBottom: i < unavailable.length - 1 ? '1px solid var(--card-border)' : 'none',
               background: 'var(--card-bg-elevated)',
             }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#d4d4d4', flexShrink: 0 }} />
-                <span style={{ fontSize: '14px', fontWeight: 500, color: '#5a5a5a', fontFamily: 'ui-monospace, monospace' }}>
+                <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: 'var(--card-border-hover)', flexShrink: 0 }} />
+                <span style={{ fontSize: '14px', fontWeight: 500, color: 'var(--text-secondary)', fontFamily: 'ui-monospace, monospace' }}>
                   {result.name}
                 </span>
               </div>
@@ -326,24 +326,24 @@ export default function DomainSearchPage() {
             {/* Price summary */}
             <div style={{ background: 'var(--card-bg-elevated)', borderRadius: '8px', padding: '14px 16px', marginBottom: '20px' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                <span style={{ fontSize: '13px', color: '#5a5a5a' }}>Domain registration (1 year)</span>
+                <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>Domain registration (1 year)</span>
                 <span style={{ fontSize: '13px', fontWeight: 600 }}>£{modalDomain.price?.toFixed(2)}</span>
               </div>
               {addPrivacy && (
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                  <span style={{ fontSize: '13px', color: '#5a5a5a' }}>WHOIS privacy protection</span>
+                  <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>WHOIS privacy protection</span>
                   <span style={{ fontSize: '13px', fontWeight: 600 }}>£5.00</span>
                 </div>
               )}
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                <span style={{ fontSize: '13px', color: '#5a5a5a' }}>Subtotal (ex. VAT)</span>
+                <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>Subtotal (ex. VAT)</span>
                 <span style={{ fontSize: '13px', fontWeight: 600 }}>£{((modalDomain.price || 0) + (addPrivacy ? 5 : 0)).toFixed(2)}</span>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                <span style={{ fontSize: '13px', color: '#5a5a5a' }}>VAT (20%)</span>
+                <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>VAT (20%)</span>
                 <span style={{ fontSize: '13px', fontWeight: 600 }}>£{(((modalDomain.price || 0) + (addPrivacy ? 5 : 0)) * 0.20).toFixed(2)}</span>
               </div>
-              <div style={{ borderTop: '1px solid #d4d4d4', marginTop: '8px', paddingTop: '8px', display: 'flex', justifyContent: 'space-between' }}>
+              <div style={{ borderTop: '1px solid var(--card-border-hover)', marginTop: '8px', paddingTop: '8px', display: 'flex', justifyContent: 'space-between' }}>
                 <span style={{ fontSize: '13px', fontWeight: 700 }}>Total charged from credit</span>
                 <span style={{ fontSize: '14px', fontWeight: 700, color: '#1a6ef5' }}>£{(((modalDomain.price || 0) + (addPrivacy ? 5 : 0)) * 1.20).toFixed(2)}</span>
               </div>
@@ -362,10 +362,10 @@ export default function DomainSearchPage() {
                     <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>🔒 WHOIS Privacy Protection</p>
                     <span style={{ fontSize: '12px', fontWeight: 700, color: '#1a6ef5' }}>£5.00/yr</span>
                   </div>
-                  <p style={{ fontSize: '11px', color: '#5a5a5a', marginTop: '6px', lineHeight: '1.6' }}>
+                  <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '6px', lineHeight: '1.6' }}>
                     Without privacy, your full name, address, phone and email are <strong>publicly searchable</strong> by anyone worldwide. With privacy enabled:
                   </p>
-                  <ul style={{ margin: '6px 0 0 0', padding: '0 0 0 16px', fontSize: '11px', color: '#5a5a5a', lineHeight: '1.8' }}>
+                  <ul style={{ margin: '6px 0 0 0', padding: '0 0 0 16px', fontSize: '11px', color: 'var(--text-secondary)', lineHeight: '1.8' }}>
                     <li>Your domain is registered under <strong>our trusted company</strong> — your identity stays private</li>
                     <li>Protection from spam, cold calls and unsolicited marketing</li>
                     <li>Shields against identity theft, phishing and domain hijacking</li>
@@ -395,12 +395,12 @@ export default function DomainSearchPage() {
             {differentEntity && (
               <div style={{ background: 'var(--card-bg-elevated)', borderRadius: '8px', padding: '14px', marginBottom: '14px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 <div>
-                  <label style={{ fontSize: '11px', fontWeight: 500, color: '#5a5a5a', display: 'block', marginBottom: '4px' }}>Legal entity / company name</label>
+                  <label style={{ fontSize: '11px', fontWeight: 500, color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Legal entity / company name</label>
                   <input value={entityName} onChange={e => setEntityName(e.target.value)} placeholder="Acme Ltd"
                     style={{ width: '100%', height: '32px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', padding: '0 10px', fontFamily: 'inherit', boxSizing: 'border-box' }} />
                 </div>
                 <div>
-                  <label style={{ fontSize: '11px', fontWeight: 500, color: '#5a5a5a', display: 'block', marginBottom: '4px' }}>Registrant email address</label>
+                  <label style={{ fontSize: '11px', fontWeight: 500, color: 'var(--text-secondary)', display: 'block', marginBottom: '4px' }}>Registrant email address</label>
                   <input value={entityEmail} onChange={e => setEntityEmail(e.target.value)} placeholder="admin@acme.com" type="email"
                     style={{ width: '100%', height: '32px', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '13px', padding: '0 10px', fontFamily: 'inherit', boxSizing: 'border-box' }} />
                 </div>
@@ -428,11 +428,11 @@ export default function DomainSearchPage() {
             <div style={{ display: 'flex', gap: '10px' }}>
               <button onClick={() => handleRegister()}
                 disabled={!agreedTerms || (differentEntity && (!entityName || !entityEmail))}
-                style={{ flex: 1, height: '40px', background: '#1a6ef5', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: 600, cursor: !agreedTerms ? 'not-allowed' : 'pointer', fontFamily: 'inherit', opacity: !agreedTerms ? 0.5 : 1 }}>
+                style={{ flex: 1, height: '40px', background: '#1a6ef5', color: 'var(--card-bg)', border: 'none', borderRadius: '8px', fontSize: '14px', fontWeight: 600, cursor: !agreedTerms ? 'not-allowed' : 'pointer', fontFamily: 'inherit', opacity: !agreedTerms ? 0.5 : 1 }}>
                 Confirm & Register {modalDomain.name}
               </button>
               <button onClick={() => setModalDomain(null)}
-                style={{ height: '40px', padding: '0 20px', background: 'var(--card-bg)', border: '1px solid var(--card-border-hover)', borderRadius: '8px', fontSize: '13px', cursor: 'pointer', fontFamily: 'inherit', color: '#5a5a5a' }}>
+                style={{ height: '40px', padding: '0 20px', background: 'var(--card-bg)', border: '1px solid var(--card-border-hover)', borderRadius: '8px', fontSize: '13px', cursor: 'pointer', fontFamily: 'inherit', color: 'var(--text-secondary)' }}>
                 Cancel
               </button>
             </div>

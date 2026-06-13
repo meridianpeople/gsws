@@ -108,7 +108,7 @@ export default function NewPackageForm() {
               <p style={{ fontSize: '12px', color: '#854f0b', lineHeight: 1.6, marginBottom: '14px' }}>{warning.message}</p>
               <div style={{ display: 'flex', gap: '10px' }}>
                 <button onClick={() => handleCreate(true)} disabled={creating}
-                  style={{ height: '34px', padding: '0 20px', background: '#854f0b', color: '#fff', border: 'none', borderRadius: '6px', fontSize: '12.5px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
+                  style={{ height: '34px', padding: '0 20px', background: '#854f0b', color: 'var(--card-bg)', border: 'none', borderRadius: '6px', fontSize: '12.5px', fontWeight: 700, cursor: 'pointer', fontFamily: 'inherit' }}>
                   {creating ? 'Creating…' : 'Yes, replace package'}
                 </button>
                 <button onClick={() => setWarning(null)}
@@ -128,7 +128,7 @@ export default function NewPackageForm() {
           {/* Step 1 — Domain */}
           <div className="gsws-card">
             <h2 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ width: '22px', height: '22px', borderRadius: '50%', background: activeDomain ? '#1a6ef5' : '#ebebeb', color: activeDomain ? '#fff' : '#9a9a9a', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 700 }}>
+              <span style={{ width: '22px', height: '22px', borderRadius: '50%', background: activeDomain ? '#1a6ef5' : 'var(--card-border)', color: activeDomain ? '#fff' : '#9a9a9a', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 700 }}>
                 {activeDomain ? '✓' : '1'}
               </span>
               Select domain
@@ -138,7 +138,7 @@ export default function NewPackageForm() {
             <div style={{ display: 'flex', gap: '0', border: '1px solid var(--card-border)', borderRadius: '8px', overflow: 'hidden', marginBottom: '14px', width: 'fit-content' }}>
               {[false, true].map(isExt => (
                 <button key={String(isExt)} onClick={() => { setExternalDomain(isExt); setSelectedDomain(''); setExternalDomainInput('') }}
-                  style={{ padding: '7px 16px', background: externalDomain === isExt ? '#1a6ef5' : '#fff', color: externalDomain === isExt ? '#fff' : '#5a5a5a', border: 'none', cursor: 'pointer', fontSize: '12px', fontWeight: 600, fontFamily: 'inherit', borderRight: !isExt ? '1px solid #ebebeb' : 'none' }}>
+                  style={{ padding: '7px 16px', background: externalDomain === isExt ? '#1a6ef5' : 'var(--card-bg)', color: externalDomain === isExt ? '#fff' : '#5a5a5a', border: 'none', cursor: 'pointer', fontSize: '12px', fontWeight: 600, fontFamily: 'inherit', borderRight: !isExt ? '1px solid var(--card-border)' : 'none' }}>
                   {isExt ? '🌐 External domain (DNS pointing)' : '✅ My registered domains'}
                 </button>
               ))}
@@ -148,14 +148,14 @@ export default function NewPackageForm() {
               domains.length === 0 ? (
                 <div style={{ textAlign: 'center', padding: '24px', border: '1px dashed var(--card-border-hover)', borderRadius: '8px' }}>
                   <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '10px' }}>No domains yet.</p>
-                  <Link href="/domains/search" style={{ display: 'inline-flex', padding: '0 16px', height: '34px', alignItems: 'center', background: '#1a6ef5', color: '#fff', borderRadius: '6px', fontSize: '13px', fontWeight: 600, textDecoration: 'none' }}>Register a domain →</Link>
+                  <Link href="/domains/search" style={{ display: 'inline-flex', padding: '0 16px', height: '34px', alignItems: 'center', background: '#1a6ef5', color: 'var(--card-bg)', borderRadius: '6px', fontSize: '13px', fontWeight: 600, textDecoration: 'none' }}>Register a domain →</Link>
                 </div>
               ) : (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                   {domains.map((d: any) => (
                     <div key={d.name} onClick={() => setSelectedDomain(d.name)}
-                      style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 14px', borderRadius: '8px', cursor: 'pointer', background: selectedDomain === d.name ? '#e8f0fe' : '#f7f7f7', border: `1px solid ${selectedDomain === d.name ? '#1a6ef5' : '#ebebeb'}` }}>
-                      <div style={{ width: '16px', height: '16px', borderRadius: '50%', border: `2px solid ${selectedDomain === d.name ? '#1a6ef5' : '#d4d4d4'}`, background: selectedDomain === d.name ? '#1a6ef5' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                      style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '10px 14px', borderRadius: '8px', cursor: 'pointer', background: selectedDomain === d.name ? '#e8f0fe' : 'var(--card-bg-elevated)', border: `1px solid ${selectedDomain === d.name ? '#1a6ef5' : 'var(--card-border)'}` }}>
+                      <div style={{ width: '16px', height: '16px', borderRadius: '50%', border: `2px solid ${selectedDomain === d.name ? '#1a6ef5' : 'var(--card-border-hover)'}`, background: selectedDomain === d.name ? '#1a6ef5' : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
                         {selectedDomain === d.name && <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--card-bg)' }} />}
                       </div>
                       <span style={{ fontSize: '13px', fontWeight: 600, fontFamily: 'ui-monospace, monospace' }}>{d.name}</span>
@@ -169,9 +169,9 @@ export default function NewPackageForm() {
                 <label style={{ fontSize: '12px', fontWeight: 600, color: 'var(--text-primary)', display: 'block', marginBottom: '6px' }}>Enter your external domain name</label>
                 <input value={externalDomainInput} onChange={e => setExternalDomainInput(e.target.value.toLowerCase().trim())}
                   placeholder="e.g. yourdomain.co.uk"
-                  style={{ width: '100%', height: '40px', border: '1.5px solid #d4d4d4', borderRadius: '8px', fontSize: '14px', padding: '0 14px', fontFamily: 'ui-monospace, monospace', boxSizing: 'border-box', outline: 'none' }}
+                  style={{ width: '100%', height: '40px', border: '1.5px solid var(--input-border)', borderRadius: '8px', fontSize: '14px', padding: '0 14px', fontFamily: 'ui-monospace, monospace', boxSizing: 'border-box', outline: 'none' }}
                   onFocus={e => e.target.style.borderColor = '#1a6ef5'}
-                  onBlur={e => e.target.style.borderColor = '#d4d4d4'} />
+                  onBlur={e => e.target.style.borderColor = 'var(--input-border)'} />
                 <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '6px' }}>
                   Make sure you have updated DNS to point to our servers first. <Link href="/domains/transfer" style={{ color: '#1a6ef5' }}>See DNS instructions →</Link>
                 </p>
@@ -182,7 +182,7 @@ export default function NewPackageForm() {
           {/* Step 2 — Plan */}
           <div className="gsws-card">
             <h2 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ width: '22px', height: '22px', borderRadius: '50%', background: selectedType ? '#1a6ef5' : '#ebebeb', color: selectedType ? '#fff' : '#9a9a9a', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 700 }}>
+              <span style={{ width: '22px', height: '22px', borderRadius: '50%', background: selectedType ? '#1a6ef5' : 'var(--card-border)', color: selectedType ? '#fff' : '#9a9a9a', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 700 }}>
                 {selectedType ? '✓' : '2'}
               </span>
               Choose hosting plan
@@ -193,7 +193,7 @@ export default function NewPackageForm() {
                 const selected = selectedType === pkg.id
                 return (
                   <div key={pkg.id} onClick={() => setSelectedType(pkg.id)}
-                    style={{ padding: '18px', borderRadius: '10px', cursor: 'pointer', border: `2px solid ${selected ? info.color : '#ebebeb'}`, background: selected ? info.bg : '#fff', transition: 'all 0.15s', position: 'relative' }}>
+                    style={{ padding: '18px', borderRadius: '10px', cursor: 'pointer', border: `2px solid ${selected ? info.color : 'var(--card-border)'}`, background: selected ? info.bg : 'var(--card-bg)', transition: 'all 0.15s', position: 'relative' }}>
                     {selected && (
                       <div style={{ position: 'absolute', top: '12px', right: '12px' }}>
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={info.color} strokeWidth="2.5"><polyline points="20 6 9 17 4 12"/></svg>
@@ -216,7 +216,7 @@ export default function NewPackageForm() {
           {selectedType && (
             <div className="gsws-card">
               <h2 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ width: '22px', height: '22px', borderRadius: '50%', background: '#1a6ef5', color: '#fff', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 700 }}>3</span>
+                <span style={{ width: '22px', height: '22px', borderRadius: '50%', background: '#1a6ef5', color: 'var(--card-bg)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 700 }}>3</span>
                 {selectedPkg ? `Included with ${selectedPkg.label}` : "What's included"}
               </h2>
               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px', marginBottom: '14px' }}>
@@ -237,20 +237,20 @@ export default function NewPackageForm() {
           {activeDomain && selectedType && selectedPkg && (
             <div className="gsws-card" style={{ border: '1.5px solid #1a6ef5' }}>
               <h2 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '14px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span style={{ width: '22px', height: '22px', borderRadius: '50%', background: '#1a6ef5', color: '#fff', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 700 }}>4</span>
+                <span style={{ width: '22px', height: '22px', borderRadius: '50%', background: '#1a6ef5', color: 'var(--card-bg)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 700 }}>4</span>
                 Order summary
               </h2>
 
               <div style={{ background: 'var(--card-bg-elevated)', borderRadius: '8px', padding: '14px', marginBottom: '16px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
-                  <span style={{ fontSize: '13px', color: '#5a5a5a' }}>{selectedPkg.label} — {activeDomain}</span>
+                  <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>{selectedPkg.label} — {activeDomain}</span>
                   <span style={{ fontSize: '13px' }}>£{selectedPkg.monthlyExVat.toFixed(2)}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
                   <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>VAT (20%)</span>
                   <span style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>£{(selectedPkg.monthlyIncVat - selectedPkg.monthlyExVat).toFixed(2)}</span>
                 </div>
-                <div style={{ borderTop: '1px solid #d4d4d4', paddingTop: '8px', display: 'flex', justifyContent: 'space-between' }}>
+                <div style={{ borderTop: '1px solid var(--card-border-hover)', paddingTop: '8px', display: 'flex', justifyContent: 'space-between' }}>
                   <span style={{ fontSize: '13px', fontWeight: 700 }}>First month (from credit)</span>
                   <span style={{ fontSize: '15px', fontWeight: 800, color: '#1a6ef5' }}>£{selectedPkg.monthlyIncVat.toFixed(2)}</span>
                 </div>
@@ -280,7 +280,7 @@ export default function NewPackageForm() {
               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
                 <Link href="/packages" style={{ padding: '0 16px', height: '40px', display: 'inline-flex', alignItems: 'center', border: '1px solid var(--card-border-hover)', borderRadius: '8px', fontSize: '13px', color: 'var(--text-primary)', textDecoration: 'none', background: 'var(--card-bg)' }}>Cancel</Link>
                 <button onClick={() => handleCreate(false)} disabled={!activeDomain || !selectedType || creating || !agreedTerms || !canAfford}
-                  style={{ height: '40px', padding: '0 28px', background: '#1a6ef5', color: '#fff', border: 'none', borderRadius: '8px', fontSize: '13.5px', fontWeight: 700, cursor: (!activeDomain || !selectedType || creating || !agreedTerms || !canAfford) ? 'not-allowed' : 'pointer', opacity: (!activeDomain || !selectedType || !agreedTerms || !canAfford) ? 0.5 : 1, fontFamily: 'inherit' }}>
+                  style={{ height: '40px', padding: '0 28px', background: '#1a6ef5', color: 'var(--card-bg)', border: 'none', borderRadius: '8px', fontSize: '13.5px', fontWeight: 700, cursor: (!activeDomain || !selectedType || creating || !agreedTerms || !canAfford) ? 'not-allowed' : 'pointer', opacity: (!activeDomain || !selectedType || !agreedTerms || !canAfford) ? 0.5 : 1, fontFamily: 'inherit' }}>
                   {creating ? 'Creating…' : `Create package — £${selectedPkg.monthlyIncVat.toFixed(2)}`}
                 </button>
               </div>
