@@ -8,7 +8,7 @@ export default function PackageTabs({ tabs }: { tabs: Tab[] }) {
   const pathname = usePathname()
 
   return (
-    <div style={{ display: 'flex', gap: '2px', borderBottom: '1px solid var(--card-border)', overflowX: 'auto' }}>
+    <div className="gsws-package-tabs" style={{ display: 'flex', gap: '2px', borderBottom: '1px solid var(--card-border)', overflowX: 'auto' }}>
       {tabs.map(tab => {
         const active = pathname === tab.href
         return (

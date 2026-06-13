@@ -150,7 +150,8 @@ export default function BackupsManager({ packageId, backupData, webJobs, domainN
             <span style={{ fontSize: '16px' }}>🗄️</span>
             <h3 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>Databases</h3>
           </div>
-          <table className="gsws-table">
+          <div style={{ overflowX: 'auto' }}>
+          <table className="gsws-table" style={{ minWidth: '500px' }}>
             <thead><tr><th>Database</th><th>Last snapshot</th><th>Snapshots</th><th></th></tr></thead>
             <tbody>
               {databases.map((d: any) => {
@@ -164,7 +165,7 @@ export default function BackupsManager({ packageId, backupData, webJobs, domainN
                     <td style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>{d.snapshotTimes?.length || 0}</td>
                     <td>
                       <button onClick={() => handleCreateBackup('database', d.id)} disabled={creating}
-                        style={{ padding: '0 10px', height: '24px', border: '1px solid #1a6ef5', borderRadius: '4px', fontSize: '11px', color: '#1a6ef5', background: 'var(--card-bg)', cursor: 'pointer', fontFamily: 'inherit' }}>
+                        style={{ padding: '0 10px', height: '24px', border: '1px solid #1a6ef5', borderRadius: '4px', fontSize: '11px', color: '#1a6ef5', background: 'var(--card-bg)', cursor: 'pointer', fontFamily: 'inherit', whiteSpace: 'nowrap' }}>
                         Backup now
                       </button>
                     </td>
@@ -173,6 +174,7 @@ export default function BackupsManager({ packageId, backupData, webJobs, domainN
               })}
             </tbody>
           </table>
+          </div>
         </div>
       )}
 

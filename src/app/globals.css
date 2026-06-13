@@ -281,3 +281,9 @@ body {
   color: var(--text-secondary, #aaa);
   flex-shrink: 0;
 }
+
+/* Hide horizontal scrollbar on package tabs (mobile) */
+@media (max-width: 768px) {
+  .gsws-package-tabs::-webkit-scrollbar { display: none; }
+  .gsws-package-tabs { scrollbar-width: none; }
+}
