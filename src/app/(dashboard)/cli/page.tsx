@@ -247,8 +247,8 @@ export default function TerminalPage() {
       {/* Toolbar */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 0 10px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-          <h1 style={{ fontSize: '15px', fontWeight: 700, color: '#111', margin: 0 }}>Terminal</h1>
-          <span style={{ fontSize: '11px', color: '#999', background: '#f3f4f6', padding: '2px 8px', borderRadius: '20px' }}>
+          <h1 style={{ fontSize: '15px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>Terminal</h1>
+          <span style={{ fontSize: '11px', color: '#999', background: 'var(--card-bg-elevated)', padding: '2px 8px', borderRadius: '20px' }}>
             {mode === 'ssh' ? (connected ? '● Connected' : connecting ? '◌ Connecting...' : '○ Disconnected') : '● SWS CLI'}
           </span>
         </div>
@@ -266,14 +266,14 @@ export default function TerminalPage() {
             </button>
 
             {dropOpen && (
-              <div style={{ position: 'absolute', right: 0, top: '36px', background: 'var(--card-bg)', border: '1px solid #e5e7eb', borderRadius: '8px', minWidth: '220px', boxShadow: '0 8px 24px rgba(0,0,0,0.12)', zIndex: 100, overflow: 'hidden' }}>
+              <div style={{ position: 'absolute', right: 0, top: '36px', background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '8px', minWidth: '220px', boxShadow: '0 8px 24px rgba(0,0,0,0.12)', zIndex: 100, overflow: 'hidden' }}>
                 {services.map(svc => (
                   <div
                     key={svc.id}
                     onClick={() => handleServiceSelect(svc)}
-                    style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 12px', fontSize: '12px', cursor: 'pointer', color: selectedService?.id === svc.id ? '#111' : '#555', background: selectedService?.id === svc.id ? '#f3f4f6' : 'transparent', borderBottom: '1px solid #f3f4f6' }}
-                    onMouseEnter={e => (e.currentTarget.style.background = '#f9fafb')}
-                    onMouseLeave={e => (e.currentTarget.style.background = selectedService?.id === svc.id ? '#f3f4f6' : 'transparent')}
+                    style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 12px', fontSize: '12px', cursor: 'pointer', color: selectedService?.id === svc.id ? 'var(--text-primary)' : 'var(--text-tertiary)', background: selectedService?.id === svc.id ? 'var(--card-border)' : 'transparent', borderBottom: '1px solid var(--card-border)' }}
+                    onMouseEnter={e => (e.currentTarget.style.background = 'var(--card-bg-elevated)')}
+                    onMouseLeave={e => (e.currentTarget.style.background = selectedService?.id === svc.id ? 'var(--card-border)' : 'transparent')}
                   >
                     <span style={{ color: svc.type === 'cli' ? '#6366f1' : svc.type === 'vps' ? '#f59e0b' : svc.type === 'gpu' ? '#ef4444' : '#10b981' }}>{svcIcon(svc.type)}</span>
                     <div>

@@ -211,20 +211,20 @@ export default function APIReferencePage() {
   return (
     <div style={{ maxWidth: '960px' }}>
       <div style={{ marginBottom: '24px' }}>
-        <h1 style={{ fontSize: '22px', fontWeight: 700, color: '#111', margin: 0 }}>API Reference</h1>
+        <h1 style={{ fontSize: '22px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>API Reference</h1>
         <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '4px' }}>
-          {ROUTES.length} endpoints · All routes require session cookie unless marked public · Base URL: <code style={{ background: '#f3f4f6', padding: '1px 5px', borderRadius: '3px', fontSize: '12px' }}>https://sws.geig.co.uk</code>
+          {ROUTES.length} endpoints · All routes require session cookie unless marked public · Base URL: <code style={{ background: 'var(--card-bg-elevated)', padding: '1px 5px', borderRadius: '3px', fontSize: '12px' }}>https://sws.geig.co.uk</code>
         </p>
       </div>
 
       {/* Search + filter */}
       <div style={{ display: 'flex', gap: '10px', marginBottom: '20px', flexWrap: 'wrap' }}>
         <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Search endpoints..."
-          style={{ flex: 1, minWidth: '200px', padding: '9px 14px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px' }} />
+          style={{ flex: 1, minWidth: '200px', padding: '9px 14px', border: '1px solid var(--card-border)', borderRadius: '8px', fontSize: '13px' }} />
         <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
           {['All', ...GROUPS].map(g => (
             <button key={g} onClick={() => setActiveGroup(g)}
-              style={{ padding: '8px 12px', background: activeGroup === g ? '#1a6ef5' : '#f3f4f6', color: activeGroup === g ? '#fff' : '#444', border: 'none', borderRadius: '6px', fontSize: '12px', cursor: 'pointer', fontWeight: 600, whiteSpace: 'nowrap' }}>
+              style={{ padding: '8px 12px', background: activeGroup === g ? '#1a6ef5' : 'var(--card-border)', color: activeGroup === g ? '#fff' : 'var(--text-secondary)', border: 'none', borderRadius: '6px', fontSize: '12px', cursor: 'pointer', fontWeight: 600, whiteSpace: 'nowrap' }}>
               {g}
             </button>
           ))}
@@ -234,7 +234,7 @@ export default function APIReferencePage() {
       {/* Routes */}
       {Object.entries(grouped).map(([group, routes]) => (
         <div key={group} style={{ marginBottom: '24px' }}>
-          <h2 style={{ fontSize: '14px', fontWeight: 700, color: '#111', margin: '0 0 10px', paddingBottom: '8px', borderBottom: '2px solid #f3f4f6' }}>
+          <h2 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 10px', paddingBottom: '8px', borderBottom: '2px solid var(--card-border)' }}>
             {group} <span style={{ fontWeight: 400, color: 'var(--text-secondary)', fontSize: '12px' }}>({routes.length})</span>
           </h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -243,7 +243,7 @@ export default function APIReferencePage() {
               const isOpen = expanded === key
               const mc = METHOD_COLORS[r.method] || METHOD_COLORS.GET
               return (
-                <div key={i} style={{ border: '1px solid #e5e7eb', borderRadius: '8px', overflow: 'hidden' }}>
+                <div key={i} style={{ border: '1px solid var(--card-border)', borderRadius: '8px', overflow: 'hidden' }}>
                   <button onClick={() => setExpanded(isOpen ? null : key)}
                     style={{ width: '100%', padding: '10px 14px', background: isOpen ? '#f8faff' : '#fff', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '10px', textAlign: 'left' }}>
                     <span style={{ fontSize: '11px', fontWeight: 700, padding: '2px 7px', borderRadius: '4px', background: mc.bg, color: mc.text, minWidth: '52px', textAlign: 'center', flexShrink: 0 }}>
@@ -256,23 +256,23 @@ export default function APIReferencePage() {
                   </button>
 
                   {isOpen && (
-                    <div style={{ padding: '14px 16px', background: '#f9fafb', borderTop: '1px solid #f3f4f6' }}>
+                    <div style={{ padding: '14px 16px', background: 'var(--card-bg-elevated)', borderTop: '1px solid var(--card-border)' }}>
                       <div style={{ display: 'grid', gridTemplateColumns: r.body ? '1fr 1fr' : '1fr', gap: '12px' }}>
                         {r.params && (
                           <div>
                             <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '6px', textTransform: 'uppercase' }}>Query Params</div>
-                            <pre style={{ margin: 0, fontSize: '11px', background: 'var(--card-bg)', border: '1px solid #e5e7eb', borderRadius: '6px', padding: '8px 10px', overflow: 'auto' }}>{r.params}</pre>
+                            <pre style={{ margin: 0, fontSize: '11px', background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '6px', padding: '8px 10px', overflow: 'auto' }}>{r.params}</pre>
                           </div>
                         )}
                         {r.body && (
                           <div>
                             <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '6px', textTransform: 'uppercase' }}>Request Body</div>
-                            <pre style={{ margin: 0, fontSize: '11px', background: 'var(--card-bg)', border: '1px solid #e5e7eb', borderRadius: '6px', padding: '8px 10px', overflow: 'auto' }}>{r.body}</pre>
+                            <pre style={{ margin: 0, fontSize: '11px', background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '6px', padding: '8px 10px', overflow: 'auto' }}>{r.body}</pre>
                           </div>
                         )}
                         <div>
                           <div style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-secondary)', marginBottom: '6px', textTransform: 'uppercase' }}>Response</div>
-                          <pre style={{ margin: 0, fontSize: '11px', background: 'var(--card-bg)', border: '1px solid #e5e7eb', borderRadius: '6px', padding: '8px 10px', overflow: 'auto' }}>{r.response}</pre>
+                          <pre style={{ margin: 0, fontSize: '11px', background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '6px', padding: '8px 10px', overflow: 'auto' }}>{r.response}</pre>
                         </div>
                       </div>
                       <div style={{ marginTop: '10px', fontSize: '11px', color: 'var(--text-secondary)' }}>

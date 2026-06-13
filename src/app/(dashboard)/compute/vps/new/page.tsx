@@ -197,7 +197,7 @@ export default function VPSPage() {
           <span style={{ color: 'var(--text-secondary)' }}>›</span>
           <span style={{ fontSize: '13px', color: 'var(--text-primary)' }}>Order new VPS</span>
         </div>
-        <h1 style={{ fontSize: '22px', fontWeight: 700, color: '#111', margin: 0 }}>Order new VPS</h1>
+        <h1 style={{ fontSize: '22px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>Order new VPS</h1>
         <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '4px' }}>High-performance virtual servers  — EU, UK, US, Singapore, Australia</p>
       </div>
 
@@ -207,13 +207,13 @@ export default function VPSPage() {
 
       {/* Active VPS */}
       {orders.length > 0 && (
-        <div style={{ background: 'var(--card-bg)', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', marginBottom: '16px' }}>
-          <h3 style={{ fontSize: '13px', fontWeight: 700, color: '#111', margin: '0 0 14px' }}>Your VPS Instances</h3>
+        <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '12px', padding: '20px', marginBottom: '16px' }}>
+          <h3 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 14px' }}>Your VPS Instances</h3>
           {orders.map(o => {
             const pd = o.provider_data ? JSON.parse(o.provider_data) : null
             const ip = pd?.ipConfig?.v4?.ip || null
             return (
-              <div key={o.id} style={{ border: '1px solid #f3f4f6', borderRadius: '8px', marginBottom: '8px', overflow: 'hidden' }}>
+              <div key={o.id} style={{ border: '1px solid var(--card-border)', borderRadius: '8px', marginBottom: '8px', overflow: 'hidden' }}>
                 <div style={{ padding: '14px', display: 'grid', gridTemplateColumns: '1.5fr 1fr 1fr 1fr auto', gap: '12px', alignItems: 'center' }}>
                   <div>
                     <Link href={`/compute/vps/${o.id}`} style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', textDecoration: 'none' }}>{pd?.productName || o.service_key.toUpperCase()}</Link>
@@ -228,7 +228,7 @@ export default function VPSPage() {
                     <div style={{ color: 'var(--text-secondary)' }}>{pd?.defaultUser || 'admin'} user</div>
                   </div>
                   <span style={{ fontSize: '11px', fontWeight: 700, padding: '3px 8px', borderRadius: '4px',
-                    background: o.status === 'active' ? '#dcfce7' : o.status === 'pending' ? '#fef9c3' : '#f3f4f6',
+                    background: o.status === 'active' ? '#dcfce7' : o.status === 'pending' ? '#fef9c3' : 'var(--card-border)',
                     color: o.status === 'active' ? '#166534' : o.status === 'pending' ? '#92400e' : '#666' }}>
                     {o.status}
                   </span>
@@ -236,7 +236,7 @@ export default function VPSPage() {
                     {o.provider_instance_id && (
                       <>
                         <button onClick={() => handleAction(o.provider_instance_id, 'restart')}
-                          style={{ padding: '5px 8px', background: '#f3f4f6', border: '1px solid #e5e7eb', borderRadius: '5px', fontSize: '11px', cursor: 'pointer' }}>↺</button>
+                          style={{ padding: '5px 8px', background: 'var(--card-bg-elevated)', border: '1px solid var(--card-border)', borderRadius: '5px', fontSize: '11px', cursor: 'pointer' }}>↺</button>
                         <button onClick={() => handleAction(o.provider_instance_id, 'stop')}
                           style={{ padding: '5px 8px', background: '#fef9c3', border: '1px solid #fde68a', borderRadius: '5px', fontSize: '11px', cursor: 'pointer' }}>■</button>
                         <button onClick={() => handleAction(o.provider_instance_id, 'start')}
@@ -248,22 +248,22 @@ export default function VPSPage() {
                       </>
                     )}
                     <button onClick={() => cancelVPS(o.provider_instance_id || '')}
-                      style={{ padding: '5px 8px', background: '#f3f4f6', border: '1px solid #e5e7eb', borderRadius: '5px', fontSize: '11px', cursor: 'pointer' }}>✕</button>
+                      style={{ padding: '5px 8px', background: 'var(--card-bg-elevated)', border: '1px solid var(--card-border)', borderRadius: '5px', fontSize: '11px', cursor: 'pointer' }}>✕</button>
                   </div>
                 </div>
                 {showSnapshots === o.provider_instance_id && (
-                  <div style={{ padding: '14px', background: '#f9fafb', borderTop: '1px solid #f3f4f6' }}>
+                  <div style={{ padding: '14px', background: 'var(--card-bg-elevated)', borderTop: '1px solid var(--card-border)' }}>
                     <div style={{ fontSize: '12px', fontWeight: 700, marginBottom: '10px' }}>Snapshots</div>
                     <div style={{ display: 'flex', gap: '8px', marginBottom: '10px' }}>
                       <input value={snapshotName} onChange={e => setSnapshotName(e.target.value)} placeholder="Snapshot name"
-                        style={{ flex: 1, padding: '7px 10px', border: '1px solid #e5e7eb', borderRadius: '6px', fontSize: '12px' }} />
+                        style={{ flex: 1, padding: '7px 10px', border: '1px solid var(--card-border)', borderRadius: '6px', fontSize: '12px' }} />
                       <button onClick={() => createSnapshot(o.provider_instance_id)}
                         style={{ padding: '7px 14px', background: '#1a6ef5', color: '#fff', border: 'none', borderRadius: '6px', fontSize: '12px', cursor: 'pointer', fontWeight: 600 }}>+ Create</button>
                     </div>
                     {(snapshots[o.provider_instance_id] || []).length === 0 ? (
                       <div style={{ fontSize: '12px', color: 'var(--text-secondary)' }}>No snapshots yet</div>
                     ) : (snapshots[o.provider_instance_id] || []).map((snap: any) => (
-                      <div key={snap.snapshotId} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid #f3f4f6' }}>
+                      <div key={snap.snapshotId} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '8px 0', borderBottom: '1px solid var(--card-border)' }}>
                         <div>
                           <div style={{ fontSize: '12px', fontWeight: 600 }}>{snap.name}</div>
                           <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{snap.createdDate ? new Date(snap.createdDate).toLocaleDateString('en-GB') : ''}</div>
@@ -285,29 +285,29 @@ export default function VPSPage() {
       )}
 
       {/* Step 1: Plan */}
-      <div style={{ background: 'var(--card-bg)', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', marginBottom: '16px' }}>
-        <h3 style={{ fontSize: '13px', fontWeight: 700, color: '#111', margin: '0 0 14px' }}>1. Select plan</h3>
+      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '12px', padding: '20px', marginBottom: '16px' }}>
+        <h3 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 14px' }}>1. Select plan</h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '8px' }}>
           {PLANS.map(p => (
             <button key={p.key} onClick={() => setSelectedPlan(p.key)}
-              style={{ padding: '14px 10px', border: `2px solid ${selectedPlan === p.key ? p.color : '#e5e7eb'}`, borderRadius: '10px', background: selectedPlan === p.key ? `${p.color}15` : '#fff', cursor: 'pointer', textAlign: 'center' }}>
+              style={{ padding: '14px 10px', border: `2px solid ${selectedPlan === p.key ? p.color : 'var(--card-border)'}`, borderRadius: '10px', background: selectedPlan === p.key ? `${p.color}15` : '#fff', cursor: 'pointer', textAlign: 'center' }}>
               <div style={{ fontSize: '12px', fontWeight: 700, color: selectedPlan === p.key ? p.color : '#111' }}>{p.label}</div>
               <div style={{ fontSize: '10px', color: 'var(--text-secondary)', marginTop: '6px', lineHeight: '1.7' }}>
                 {p.cpu} vCPU<br/>{p.ram}GB RAM<br/>{p.disk}GB {p.storage}<br/>{p.snapshots} Snapshots
               </div>
-              <div style={{ fontSize: '13px', fontWeight: 700, color: '#111', marginTop: '8px' }}>£{p.price}/mo</div>
+              <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', marginTop: '8px' }}>£{p.price}/mo</div>
             </button>
           ))}
         </div>
       </div>
 
       {/* Step 2: Region */}
-      <div style={{ background: 'var(--card-bg)', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', marginBottom: '16px' }}>
-        <h3 style={{ fontSize: '13px', fontWeight: 700, color: '#111', margin: '0 0 14px' }}>2. Region</h3>
+      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '12px', padding: '20px', marginBottom: '16px' }}>
+        <h3 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 14px' }}>2. Region</h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
           {REGIONS.map(r => (
             <button key={r.key} onClick={() => setSelectedRegion(r.key)}
-              style={{ padding: '12px', border: `2px solid ${selectedRegion === r.key ? '#1a6ef5' : '#e5e7eb'}`, borderRadius: '8px', background: selectedRegion === r.key ? '#e8f0fe' : '#fff', cursor: 'pointer', textAlign: 'left', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              style={{ padding: '12px', border: `2px solid ${selectedRegion === r.key ? '#1a6ef5' : 'var(--card-border)'}`, borderRadius: '8px', background: selectedRegion === r.key ? '#e8f0fe' : '#fff', cursor: 'pointer', textAlign: 'left', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <span style={{ fontSize: '18px' }}>{r.flag}</span>
                 <span style={{ fontSize: '13px', fontWeight: 600, color: selectedRegion === r.key ? '#1a6ef5' : '#111' }}>{r.label}</span>
@@ -319,12 +319,12 @@ export default function VPSPage() {
       </div>
 
       {/* Step 3: OS */}
-      <div style={{ background: 'var(--card-bg)', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', marginBottom: '16px' }}>
-        <h3 style={{ fontSize: '13px', fontWeight: 700, color: '#111', margin: '0 0 14px' }}>3. Operating system</h3>
+      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '12px', padding: '20px', marginBottom: '16px' }}>
+        <h3 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 14px' }}>3. Operating system</h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
           {IMAGES.map(img => (
             <button key={img.key} onClick={() => setSelectedImage(img.key)}
-              style={{ padding: '12px', border: `2px solid ${selectedImage === img.key ? '#1a6ef5' : '#e5e7eb'}`, borderRadius: '8px', background: selectedImage === img.key ? '#e8f0fe' : '#fff', cursor: 'pointer', textAlign: 'left' }}>
+              style={{ padding: '12px', border: `2px solid ${selectedImage === img.key ? '#1a6ef5' : 'var(--card-border)'}`, borderRadius: '8px', background: selectedImage === img.key ? '#e8f0fe' : '#fff', cursor: 'pointer', textAlign: 'left' }}>
               <div style={{ fontSize: '18px', marginBottom: '4px' }}>{img.icon}</div>
               <div style={{ fontSize: '12px', fontWeight: 600, color: selectedImage === img.key ? '#1a6ef5' : '#111' }}>{img.label}</div>
               <div style={{ fontSize: '10px', color: 'var(--text-secondary)', marginTop: '2px' }}>{img.type}</div>
@@ -334,12 +334,12 @@ export default function VPSPage() {
       </div>
 
       {/* Step 4: Contract period */}
-      <div style={{ background: 'var(--card-bg)', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', marginBottom: '16px' }}>
-        <h3 style={{ fontSize: '13px', fontWeight: 700, color: '#111', margin: '0 0 14px' }}>4. Contract period</h3>
+      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '12px', padding: '20px', marginBottom: '16px' }}>
+        <h3 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 14px' }}>4. Contract period</h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px' }}>
           {PERIODS.map(p => (
             <button key={p.value} onClick={() => setSelectedPeriod(p.value)}
-              style={{ padding: '12px', border: `2px solid ${selectedPeriod === p.value ? '#1a6ef5' : '#e5e7eb'}`, borderRadius: '8px', background: selectedPeriod === p.value ? '#e8f0fe' : '#fff', cursor: 'pointer', textAlign: 'center' }}>
+              style={{ padding: '12px', border: `2px solid ${selectedPeriod === p.value ? '#1a6ef5' : 'var(--card-border)'}`, borderRadius: '8px', background: selectedPeriod === p.value ? '#e8f0fe' : '#fff', cursor: 'pointer', textAlign: 'center' }}>
               <div style={{ fontSize: '13px', fontWeight: 700, color: selectedPeriod === p.value ? '#1a6ef5' : '#111' }}>{p.label}</div>
               <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>£{(plan.price * (1 - p.discount/100)).toFixed(2)}/mo</div>
               {p.discount > 0 && <div style={{ fontSize: '10px', color: '#16a34a', fontWeight: 600, marginTop: '2px' }}>Save {p.discount}%</div>}
@@ -349,11 +349,11 @@ export default function VPSPage() {
       </div>
 
       {/* Step 5: Add-ons */}
-      <div style={{ background: 'var(--card-bg)', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', marginBottom: '16px' }}>
-        <h3 style={{ fontSize: '13px', fontWeight: 700, color: '#111', margin: '0 0 14px' }}>5. Add-ons <span style={{ fontWeight: 400, color: 'var(--text-secondary)' }}>(optional)</span></h3>
+      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '12px', padding: '20px', marginBottom: '16px' }}>
+        <h3 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 14px' }}>5. Add-ons <span style={{ fontWeight: 400, color: 'var(--text-secondary)' }}>(optional)</span></h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
           <button onClick={() => setAddBackup(!addBackup)}
-            style={{ padding: '14px 16px', border: `2px solid ${addBackup ? '#1a6ef5' : '#e5e7eb'}`, borderRadius: '8px', background: addBackup ? '#e8f0fe' : '#fff', cursor: 'pointer', textAlign: 'left', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            style={{ padding: '14px 16px', border: `2px solid ${addBackup ? '#1a6ef5' : 'var(--card-border)'}`, borderRadius: '8px', background: addBackup ? '#e8f0fe' : '#fff', cursor: 'pointer', textAlign: 'left', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <span style={{ fontSize: '13px', fontWeight: 600, color: addBackup ? '#1a6ef5' : '#111' }}>💾 Auto Backup</span>
@@ -365,7 +365,7 @@ export default function VPSPage() {
           </button>
 
           <button onClick={() => setAddPrivateNet(!addPrivateNet)}
-            style={{ padding: '14px 16px', border: `2px solid ${addPrivateNet ? '#1a6ef5' : '#e5e7eb'}`, borderRadius: '8px', background: addPrivateNet ? '#e8f0fe' : '#fff', cursor: 'pointer', textAlign: 'left', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            style={{ padding: '14px 16px', border: `2px solid ${addPrivateNet ? '#1a6ef5' : 'var(--card-border)'}`, borderRadius: '8px', background: addPrivateNet ? '#e8f0fe' : '#fff', cursor: 'pointer', textAlign: 'left', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                 <span style={{ fontSize: '13px', fontWeight: 600, color: addPrivateNet ? '#1a6ef5' : '#111' }}>🔒 Private Networking</span>
@@ -379,18 +379,18 @@ export default function VPSPage() {
       </div>
 
       {/* Step 6: Login config */}
-      <div style={{ background: 'var(--card-bg)', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', marginBottom: '16px' }}>
-        <h3 style={{ fontSize: '13px', fontWeight: 700, color: '#111', margin: '0 0 14px' }}>6. Server configuration</h3>
+      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '12px', padding: '20px', marginBottom: '16px' }}>
+        <h3 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 14px' }}>6. Server configuration</h3>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
           <div>
             <label style={{ fontSize: '12px', fontWeight: 600, color: '#444', display: 'block', marginBottom: '6px' }}>Display name</label>
             <input type="text" placeholder="e.g. My Web Server" value={displayName} onChange={e => setDisplayName(e.target.value)}
-              style={{ width: '100%', padding: '10px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box' }} />
+              style={{ width: '100%', padding: '10px 12px', border: '1px solid var(--card-border)', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box' }} />
           </div>
           <div>
             <label style={{ fontSize: '12px', fontWeight: 600, color: '#444', display: 'block', marginBottom: '6px' }}>Default user</label>
             <select value={defaultUser} onChange={e => setDefaultUser(e.target.value)}
-              style={{ width: '100%', padding: '10px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box', background: 'var(--card-bg)' }}>
+              style={{ width: '100%', padding: '10px 12px', border: '1px solid var(--card-border)', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box', background: 'var(--card-bg)' }}>
               <option value="root">root</option>
               <option value="admin">admin</option>
             </select>
@@ -403,7 +403,7 @@ export default function VPSPage() {
 
       {/* Order summary */}
       <div style={{ background: '#0a1628', borderRadius: '12px', padding: '20px', color: '#fff' }}>
-        <h3 style={{ fontSize: '13px', fontWeight: 700, margin: '0 0 14px', color: '#e5e7eb' }}>Order summary</h3>
+        <h3 style={{ fontSize: '13px', fontWeight: 700, margin: '0 0 14px', color: 'var(--card-border)' }}>Order summary</h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '16px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px' }}>
             <span style={{ color: '#9ca3af' }}>{plan.label} — {plan.cpu} vCPU, {plan.ram}GB RAM, {plan.disk}GB {plan.storage}</span>

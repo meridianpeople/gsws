@@ -148,7 +148,7 @@ export default function GPUComputePage() {
   return (
     <div style={{ maxWidth: '960px' }}>
       <div style={{ marginBottom: '24px' }}>
-        <h1 style={{ fontSize: '22px', fontWeight: 700, color: '#111', margin: 0 }}>Raw GPU Compute</h1>
+        <h1 style={{ fontSize: '22px', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>Raw GPU Compute</h1>
         <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '4px' }}>High-performance GPU instances via Vast.ai — hourly, daily, weekly, monthly or annual</p>
       </div>
 
@@ -157,15 +157,15 @@ export default function GPUComputePage() {
 
       {/* Active GPU Orders */}
       {/* Step 1: GPU Class */}
-      <div style={{ background: 'var(--card-bg)', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', marginBottom: '16px' }}>
-        <h3 style={{ fontSize: '13px', fontWeight: 700, color: '#111', margin: '0 0 14px' }}>1. Select GPU class</h3>
+      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '12px', padding: '20px', marginBottom: '16px' }}>
+        <h3 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 14px' }}>1. Select GPU class</h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
           {TIERS.map(t => (
             <button key={t.key} onClick={() => setSelectedTier(t.key)}
-              style={{ padding: '14px 16px', border: `2px solid ${selectedTier === t.key ? t.color : '#e5e7eb'}`, borderRadius: '10px', background: selectedTier === t.key ? `${t.color}15` : '#fff', cursor: 'pointer', textAlign: 'left' }}>
+              style={{ padding: '14px 16px', border: `2px solid ${selectedTier === t.key ? t.color : 'var(--card-border)'}`, borderRadius: '10px', background: selectedTier === t.key ? `${t.color}15` : '#fff', cursor: 'pointer', textAlign: 'left' }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
                 <div style={{ fontSize: '13px', fontWeight: 700, color: selectedTier === t.key ? t.color : '#111' }}>{t.label}</div>
-                <span style={{ fontSize: '11px', fontWeight: 700, background: selectedTier === t.key ? t.color : '#f3f4f6', color: selectedTier === t.key ? '#fff' : '#666', padding: '2px 6px', borderRadius: '4px' }}>{t.vram}</span>
+                <span style={{ fontSize: '11px', fontWeight: 700, background: selectedTier === t.key ? t.color : 'var(--card-border)', color: selectedTier === t.key ? '#fff' : 'var(--text-secondary)', padding: '2px 6px', borderRadius: '4px' }}>{t.vram}</span>
               </div>
               <div style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '4px', lineHeight: '1.4' }}>{t.desc}</div>
               <div style={{ fontSize: '12px', fontWeight: 600, color: '#444', marginTop: '8px' }}>from £{t.pricing.hourly}/hr</div>
@@ -175,15 +175,15 @@ export default function GPUComputePage() {
       </div>
 
       {/* Step 2: Select Node */}
-      <div style={{ background: 'var(--card-bg)', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', marginBottom: '16px' }}>
-        <h3 style={{ fontSize: '13px', fontWeight: 700, color: '#111', margin: '0 0 4px' }}>
+      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '12px', padding: '20px', marginBottom: '16px' }}>
+        <h3 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 4px' }}>
           2. Select a node
           {loadingOffers && <span style={{ color: 'var(--text-secondary)', fontWeight: 400, fontSize: '12px' }}> — loading...</span>}
         </h3>
         <p style={{ fontSize: '11px', color: 'var(--text-secondary)', margin: '0 0 14px' }}>Pick a specific node or leave on auto for best available at provisioning</p>
 
         <button onClick={() => setSelectedOffer(null)}
-          style={{ width: '100%', padding: '12px 16px', border: `2px solid ${!selectedOffer ? '#1a6ef5' : '#e5e7eb'}`, borderRadius: '8px', background: !selectedOffer ? '#e8f0fe' : '#f9fafb', cursor: 'pointer', textAlign: 'left', marginBottom: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          style={{ width: '100%', padding: '12px 16px', border: `2px solid ${!selectedOffer ? '#1a6ef5' : 'var(--card-border)'}`, borderRadius: '8px', background: !selectedOffer ? '#e8f0fe' : 'var(--card-bg-elevated)', cursor: 'pointer', textAlign: 'left', marginBottom: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
             <span style={{ fontSize: '13px', fontWeight: 600, color: !selectedOffer ? '#1a6ef5' : '#111' }}>Auto-assign best node</span>
             <span style={{ fontSize: '12px', color: 'var(--text-secondary)', marginLeft: '8px' }}>We pick the most reliable available instance</span>
@@ -195,7 +195,7 @@ export default function GPUComputePage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             {offers.map(o => (
               <button key={o.id} onClick={() => setSelectedOffer(selectedOffer?.id === o.id ? null : o)}
-                style={{ padding: '12px 16px', border: `2px solid ${selectedOffer?.id === o.id ? '#1a6ef5' : '#e5e7eb'}`, borderRadius: '8px', background: selectedOffer?.id === o.id ? '#e8f0fe' : '#fff', cursor: 'pointer', textAlign: 'left', display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr 1fr 1fr', gap: '8px', alignItems: 'center' }}>
+                style={{ padding: '12px 16px', border: `2px solid ${selectedOffer?.id === o.id ? '#1a6ef5' : 'var(--card-border)'}`, borderRadius: '8px', background: selectedOffer?.id === o.id ? '#e8f0fe' : '#fff', cursor: 'pointer', textAlign: 'left', display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr 1fr 1fr 1fr', gap: '8px', alignItems: 'center' }}>
                 <div>
                   <div style={{ fontSize: '12px', fontWeight: 700, color: selectedOffer?.id === o.id ? '#1a6ef5' : '#111' }}>{o.gpu_name}</div>
                   <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{o.gpu_ram_gb}GB VRAM</div>
@@ -236,12 +236,12 @@ export default function GPUComputePage() {
       </div>
 
       {/* Step 3: Billing period */}
-      <div style={{ background: 'var(--card-bg)', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', marginBottom: '16px' }}>
-        <h3 style={{ fontSize: '13px', fontWeight: 700, color: '#111', margin: '0 0 14px' }}>3. Billing period</h3>
+      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '12px', padding: '20px', marginBottom: '16px' }}>
+        <h3 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 14px' }}>3. Billing period</h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '8px' }}>
           {BILLING_PERIODS.map(p => (
             <button key={p.key} onClick={() => setSelectedPeriod(p.key)}
-              style={{ padding: '12px 8px', border: `2px solid ${selectedPeriod === p.key ? '#1a6ef5' : '#e5e7eb'}`, borderRadius: '8px', background: selectedPeriod === p.key ? '#e8f0fe' : '#fff', cursor: 'pointer', textAlign: 'center' }}>
+              style={{ padding: '12px 8px', border: `2px solid ${selectedPeriod === p.key ? '#1a6ef5' : 'var(--card-border)'}`, borderRadius: '8px', background: selectedPeriod === p.key ? '#e8f0fe' : '#fff', cursor: 'pointer', textAlign: 'center' }}>
               <div style={{ fontSize: '13px', fontWeight: 700, color: selectedPeriod === p.key ? '#1a6ef5' : '#111' }}>{p.label}</div>
               <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginTop: '2px' }}>
                 £{selectedOffer
@@ -256,12 +256,12 @@ export default function GPUComputePage() {
       </div>
 
       {/* Step 4: Managed add-on */}
-      <div style={{ background: 'var(--card-bg)', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', marginBottom: '16px' }}>
-        <h3 style={{ fontSize: '13px', fontWeight: 700, color: '#111', margin: '0 0 14px' }}>4. Managed add-on <span style={{ fontWeight: 400, color: 'var(--text-secondary)' }}>(optional)</span></h3>
+      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '12px', padding: '20px', marginBottom: '16px' }}>
+        <h3 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 14px' }}>4. Managed add-on <span style={{ fontWeight: 400, color: 'var(--text-secondary)' }}>(optional)</span></h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
           {MANAGED_LEVELS.map(m => (
             <button key={m.key} onClick={() => setSelectedManaged(m.key)}
-              style={{ padding: '12px 16px', border: `2px solid ${selectedManaged === m.key ? '#1a6ef5' : '#e5e7eb'}`, borderRadius: '8px', background: selectedManaged === m.key ? '#e8f0fe' : '#fff', cursor: 'pointer', textAlign: 'left', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              style={{ padding: '12px 16px', border: `2px solid ${selectedManaged === m.key ? '#1a6ef5' : 'var(--card-border)'}`, borderRadius: '8px', background: selectedManaged === m.key ? '#e8f0fe' : '#fff', cursor: 'pointer', textAlign: 'left', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
                 <span style={{ fontSize: '13px', fontWeight: 600, color: selectedManaged === m.key ? '#1a6ef5' : '#111' }}>{m.label}</span>
                 <span style={{ fontSize: '12px', color: 'var(--text-secondary)', marginLeft: '8px' }}>{m.desc}</span>
@@ -273,16 +273,16 @@ export default function GPUComputePage() {
       </div>
 
       {/* Step 5: Environment template */}
-      <div style={{ background: 'var(--card-bg)', border: '1px solid #e5e7eb', borderRadius: '12px', padding: '20px', marginBottom: '16px' }}>
-        <h3 style={{ fontSize: '13px', fontWeight: 700, color: '#111', margin: '0 0 14px' }}>5. Environment template</h3>
+      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '12px', padding: '20px', marginBottom: '16px' }}>
+        <h3 style={{ fontSize: '13px', fontWeight: 700, color: 'var(--text-primary)', margin: '0 0 14px' }}>5. Environment template</h3>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
           {TEMPLATES.map(t => (
             <button key={t.key} onClick={() => setSelectedTemplate(t.key)}
-              style={{ padding: '12px', border: `2px solid ${selectedTemplate === t.key ? t.color : '#e5e7eb'}`, borderRadius: '8px', background: selectedTemplate === t.key ? `${t.color}12` : '#fff', cursor: 'pointer', textAlign: 'left' }}>
+              style={{ padding: '12px', border: `2px solid ${selectedTemplate === t.key ? t.color : 'var(--card-border)'}`, borderRadius: '8px', background: selectedTemplate === t.key ? `${t.color}12` : '#fff', cursor: 'pointer', textAlign: 'left' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
                 <span style={{ fontSize: '12px', fontWeight: 700, color: selectedTemplate === t.key ? t.color : '#111' }}>{t.label}</span>
                 {t.tags.map(tag => (
-                  <span key={tag} style={{ fontSize: '9px', background: '#f3f4f6', color: 'var(--text-secondary)', padding: '1px 5px', borderRadius: '3px', fontWeight: 600 }}>{tag}</span>
+                  <span key={tag} style={{ fontSize: '9px', background: 'var(--card-bg-elevated)', color: 'var(--text-secondary)', padding: '1px 5px', borderRadius: '3px', fontWeight: 600 }}>{tag}</span>
                 ))}
               </div>
               <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{t.desc}</div>
@@ -292,17 +292,17 @@ export default function GPUComputePage() {
         {selectedTemplate === 'custom' && (
           <div style={{ marginTop: '12px' }}>
             <input type="text" placeholder="e.g. myrepo/myimage:latest" value={customImage} onChange={e => setCustomImage(e.target.value)}
-              style={{ width: '100%', padding: '10px 12px', border: '1px solid #e5e7eb', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box' }} />
+              style={{ width: '100%', padding: '10px 12px', border: '1px solid var(--card-border)', borderRadius: '8px', fontSize: '13px', boxSizing: 'border-box' }} />
           </div>
         )}
-        <div style={{ marginTop: '10px', padding: '8px 12px', background: '#f9fafb', borderRadius: '6px', fontSize: '11px', color: 'var(--text-secondary)', fontFamily: 'monospace' }}>
+        <div style={{ marginTop: '10px', padding: '8px 12px', background: 'var(--card-bg-elevated)', borderRadius: '6px', fontSize: '11px', color: 'var(--text-secondary)', fontFamily: 'monospace' }}>
           {selectedTemplate === 'custom' ? (customImage || 'Enter Docker image above') : TEMPLATES.find(t => t.key === selectedTemplate)?.image}
         </div>
       </div>
 
       {/* Order summary */}
       <div style={{ background: '#0a1628', borderRadius: '12px', padding: '20px', color: '#fff' }}>
-        <h3 style={{ fontSize: '13px', fontWeight: 700, margin: '0 0 14px', color: '#e5e7eb' }}>Order summary</h3>
+        <h3 style={{ fontSize: '13px', fontWeight: 700, margin: '0 0 14px', color: 'var(--card-border)' }}>Order summary</h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '16px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px' }}>
             <span style={{ color: '#9ca3af' }}>{tier.label} {tier.vram} ({selectedPeriod})</span>

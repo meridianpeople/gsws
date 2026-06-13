@@ -92,7 +92,7 @@ export default function SecurityPage() {
               </p>
             </div>
           </div>
-          <span style={{ padding: '3px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 600, background: pinEnabled ? '#eaf3de' : '#f3f4f6', color: pinEnabled ? '#3b6d11' : '#9a9a9a' }}>
+          <span style={{ padding: '3px 10px', borderRadius: '20px', fontSize: '11px', fontWeight: 600, background: pinEnabled ? '#eaf3de' : 'var(--card-border)', color: pinEnabled ? '#3b6d11' : '#9a9a9a' }}>
             {pinEnabled ? 'Enabled' : 'Disabled'}
           </span>
         </div>

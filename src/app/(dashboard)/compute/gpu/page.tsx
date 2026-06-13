@@ -55,7 +55,7 @@ export default function GPUPage() {
       {orders.length === 0 && !loading && (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '10px' }}>
           {[
-            { label: 'Entry', vram: '16GB', desc: 'RTX 5060 Ti · RTX 5070 Ti', from: '£0.27/hr', color: '#6b7280', bg: '#f9fafb' },
+            { label: 'Entry', vram: '16GB', desc: 'RTX 5060 Ti · RTX 5070 Ti', from: '£0.27/hr', color: '#6b7280', bg: 'var(--card-bg-elevated)' },
             { label: 'Workstation', vram: '24–32GB', desc: 'RTX PRO 4000 · RTX 5090', from: '£0.74/hr', color: '#3b82f6', bg: '#eff6ff' },
             { label: 'Pro', vram: '45–48GB', desc: 'L40 · L40S · RTX 4090', from: '£0.86/hr', color: '#8b5cf6', bg: '#f5f3ff' },
             { label: 'Data Centre', vram: '80GB', desc: 'A100 · H100 SXM', from: '£2.20/hr', color: '#f59e0b', bg: '#fffbeb' },
