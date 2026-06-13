@@ -1,6 +1,7 @@
 @import "tailwindcss";
 
-:root {
+:root,
+[data-theme="dark"] {
   --g-black: #0a0a0a;
   --g-white: #ffffff;
   --g-gray-50: #f7f7f7;
@@ -25,6 +26,42 @@
   --g-sidebar-item-active: #ffffff;
   --g-topbar-bg: #0a0a0a;
   --g-topbar-border: #1e1e1e;
+
+  /* Theme-aware semantic tokens */
+  --page-bg: #0a0a0a;
+  --card-bg: #111111;
+  --card-bg-elevated: #1a1a1a;
+  --card-border: #1e1e1e;
+  --card-border-hover: #2a2a2a;
+  --text-primary: #ffffff;
+  --text-secondary: #9a9a9a;
+  --text-tertiary: #555555;
+  --table-row-border: #161616;
+  --input-bg: #1a1a1a;
+  --input-border: #2a2a2a;
+}
+
+[data-theme="light"] {
+  --g-sidebar-bg: #111111;
+  --g-sidebar-border: #1e1e1e;
+  --g-sidebar-item: #666666;
+  --g-sidebar-item-hover: #cccccc;
+  --g-sidebar-item-active: #ffffff;
+  --g-topbar-bg: #0a0a0a;
+  --g-topbar-border: #1e1e1e;
+
+  /* Theme-aware semantic tokens — light mode */
+  --page-bg: #f5f5f5;
+  --card-bg: #ffffff;
+  --card-bg-elevated: #fafafa;
+  --card-border: #ebebeb;
+  --card-border-hover: #d4d4d4;
+  --text-primary: #0a0a0a;
+  --text-secondary: #5a5a5a;
+  --text-tertiary: #9a9a9a;
+  --table-row-border: #f0f0f0;
+  --input-bg: #fafafa;
+  --input-border: #e5e5e5;
 }
 
 * {

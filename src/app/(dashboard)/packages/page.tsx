@@ -24,7 +24,7 @@ export default async function PackagesPage({ searchParams }: { searchParams: Pro
 
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
         <div>
-          <h1 style={{ fontSize: '20px', fontWeight: 600, color: '#0a0a0a' }}>Hosting packages</h1>
+          <h1 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text-primary)' }}>Hosting packages</h1>
           <p style={{ fontSize: '13px', color: '#9a9a9a', marginTop: '3px' }}>
             {packages.length > 0
               ? `${packages.length} package${packages.length !== 1 ? 's' : ''} across ${domains.length} domain${domains.length !== 1 ? 's' : ''}`
@@ -46,8 +46,8 @@ export default async function PackagesPage({ searchParams }: { searchParams: Pro
 
       {/* No domain gate */}
       {domains.length === 0 && (
-        <div style={{ background: '#fff', border: '1px dashed #d4d4d4', borderRadius: '10px', padding: '48px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
-          <p style={{ fontSize: '15px', fontWeight: 600, color: '#0a0a0a' }}>No domains yet</p>
+        <div style={{ background: 'var(--card-bg)', border: '1px dashed var(--card-border-hover)', borderRadius: '10px', padding: '48px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+          <p style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text-primary)' }}>No domains yet</p>
           <p style={{ fontSize: '13px', color: '#9a9a9a', maxWidth: '340px' }}>
             You need at least one domain before creating a hosting package.
           </p>
@@ -60,8 +60,8 @@ export default async function PackagesPage({ searchParams }: { searchParams: Pro
 
       {/* Has domains but no packages */}
       {domains.length > 0 && packages.length === 0 && (
-        <div style={{ background: '#fff', border: '1px dashed #d4d4d4', borderRadius: '10px', padding: '48px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
-          <p style={{ fontSize: '15px', fontWeight: 600, color: '#0a0a0a' }}>No packages yet</p>
+        <div style={{ background: 'var(--card-bg)', border: '1px dashed var(--card-border-hover)', borderRadius: '10px', padding: '48px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
+          <p style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text-primary)' }}>No packages yet</p>
           <p style={{ fontSize: '13px', color: '#9a9a9a', maxWidth: '340px' }}>
             Create your first hosting package for one of your domains.
           </p>
@@ -74,9 +74,9 @@ export default async function PackagesPage({ searchParams }: { searchParams: Pro
 
       {/* Packages table */}
       {packages.length > 0 && (
-        <div style={{ background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', overflow: 'hidden' }}>
+        <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '10px', overflow: 'hidden' }}>
           <div style={{ padding: '14px 20px', borderBottom: '1px solid #ebebeb', background: '#f7f7f7' }}>
-            <h2 style={{ fontSize: '13px', fontWeight: 600, color: '#0a0a0a' }}>
+            <h2 style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>
               {packages.length} active package{packages.length !== 1 ? 's' : ''}
             </h2>
           </div>
@@ -93,7 +93,7 @@ export default async function PackagesPage({ searchParams }: { searchParams: Pro
             <tbody>
               {packages.map((pkg: any) => (
                 <tr key={pkg.id}>
-                  <td style={{ fontWeight: 600, color: '#0a0a0a', fontFamily: 'ui-monospace, monospace', fontSize: '13px' }}>
+                  <td style={{ fontWeight: 600, color: 'var(--text-primary)', fontFamily: 'ui-monospace, monospace', fontSize: '13px' }}>
                     {pkg.name}
                   </td>
                   <td>
@@ -115,7 +115,7 @@ export default async function PackagesPage({ searchParams }: { searchParams: Pro
                   </td>
                   <td>
                     <Link href={`/packages/${pkg.id}`}
-                      style={{ padding: '0 12px', height: '26px', display: 'inline-flex', alignItems: 'center', border: '1px solid #d4d4d4', borderRadius: '6px', fontSize: '12px', color: '#0a0a0a', textDecoration: 'none', background: '#fff' }}>
+                      style={{ padding: '0 12px', height: '26px', display: 'inline-flex', alignItems: 'center', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '12px', color: 'var(--text-primary)', textDecoration: 'none', background: 'var(--card-bg)' }}>
                       Manage
                     </Link>
                   </td>
@@ -135,7 +135,7 @@ export default async function PackagesPage({ searchParams }: { searchParams: Pro
             { type: 'Windows Unlimited', desc: 'IIS, ASP.NET, MSSQL', href: '/packages/new?type=windows', bg: '#faeeda', color: '#854f0b' },
           ].map(ht => (
             <Link key={ht.type} href={ht.href}
-              style={{ display: 'flex', flexDirection: 'column', gap: '6px', padding: '16px 20px', background: '#fff', border: '1px solid #ebebeb', borderRadius: '10px', textDecoration: 'none', transition: 'border-color 0.15s' }}>
+              style={{ display: 'flex', flexDirection: 'column', gap: '6px', padding: '16px 20px', background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '10px', textDecoration: 'none', transition: 'border-color 0.15s' }}>
               <span style={{ fontSize: '11px', fontWeight: 600, padding: '2px 8px', borderRadius: '20px', background: ht.bg, color: ht.color, alignSelf: 'flex-start' }}>{ht.type}</span>
               <p style={{ fontSize: '12px', color: '#9a9a9a' }}>{ht.desc}</p>
               <p style={{ fontSize: '12px', color: '#1a6ef5', fontWeight: 500 }}>Add package →</p>

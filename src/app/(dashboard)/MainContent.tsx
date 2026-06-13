@@ -15,7 +15,7 @@ export default function MainContent({ children }: { children: React.ReactNode })
       paddingTop: isMember ? '78px' : '52px',
       marginLeft: '232px',
       minHeight: '100vh',
-      background: '#0a0a0a',
+      background: 'var(--page-bg)',
       transition: 'padding-top 0.1s',
     }}>
       <div style={{ padding: '28px 32px', width: '100%' }}>
