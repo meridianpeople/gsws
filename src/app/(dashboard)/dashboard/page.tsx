@@ -53,7 +53,7 @@ export default async function DashboardPage() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '16px' }}>
         <div>
-          <h1 style={{ fontSize: '22px', fontWeight: 700, color: '#fff', letterSpacing: '-0.3px', marginBottom: '4px' }}>
+          <h1 style={{ fontSize: '22px', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.3px', marginBottom: '4px' }}>
             Welcome back{firstName ? `, ${firstName}` : ''}
           </h1>
           <p style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
@@ -73,7 +73,7 @@ export default async function DashboardPage() {
               <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '9px', textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--text-tertiary)' }}>{m.label}</p>
               <span style={{ color: m.color }}>{m.icon}</span>
             </div>
-            <p style={{ fontSize: '26px', fontWeight: 700, color: '#fff', letterSpacing: '-0.5px', lineHeight: 1 }}>{m.value}</p>
+            <p style={{ fontSize: '26px', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.5px', lineHeight: 1 }}>{m.value}</p>
             <p style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginTop: '6px' }}>{m.sub}</p>
           </div>
         ))}
@@ -81,12 +81,12 @@ export default async function DashboardPage() {
 
       {/* Provisioned Services */}
       <div>
-        <h2 style={{ fontSize: '15px', fontWeight: 600, color: '#fff', marginBottom: '14px' }}>Provisioned Services</h2>
+        <h2 style={{ fontSize: '15px', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '14px' }}>Provisioned Services</h2>
         <div className="gsws-grid-multi" style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '12px' }}>
           {services.map(s => (
             <div key={s.title} style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', opacity: s.active ? 1 : 0.6, transition: 'border-color 0.2s' }}>
               <div>
-                <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#fff', marginBottom: '4px' }}>{s.title}</h3>
+                <h3 style={{ fontSize: '14px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '4px' }}>{s.title}</h3>
                 <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '12px' }}>{s.sub}</p>
                 <span style={{ display: 'inline-block', padding: '3px 10px', borderRadius: '4px', fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.05em', color: s.badgeColor, background: s.badgeBg }}>
                   {s.badge}
@@ -102,8 +102,8 @@ export default async function DashboardPage() {
 
       {/* Hosting Packages Table */}
       <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '12px', overflow: 'hidden' }}>
-        <div style={{ padding: '16px 20px', borderBottom: '1px solid #1e1e1e', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h2 style={{ fontSize: '14px', fontWeight: 600, color: '#fff' }}>Your Hosting Packages</h2>
+        <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--card-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <h2 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)' }}>Your Hosting Packages</h2>
           <Link href="/packages" style={{ fontSize: '12px', color: '#1a6ef5', textDecoration: 'none' }}>View all →</Link>
         </div>
 
@@ -128,7 +128,7 @@ export default async function DashboardPage() {
           <div style={{ overflowX: 'auto' }}>
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '13px' }}>
               <thead>
-                <tr style={{ borderBottom: '1px solid #1e1e1e' }}>
+                <tr style={{ borderBottom: '1px solid var(--card-border)' }}>
                   {['Domain', 'Type', 'Status', 'Created', ''].map(h => (
                     <th key={h} style={{ padding: '10px 20px', textAlign: 'left', fontFamily: 'JetBrains Mono, monospace', fontSize: '9px', textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--text-tertiary)', fontWeight: 600, whiteSpace: 'nowrap' }}>{h}</th>
                   ))}
@@ -136,12 +136,12 @@ export default async function DashboardPage() {
               </thead>
               <tbody>
                 {packages.map((pkg: any) => (
-                  <tr key={pkg.id} style={{ borderBottom: '1px solid #161616' }}>
-                    <td style={{ padding: '14px 20px', fontWeight: 600, color: '#fff' }}>{pkg.name}</td>
+                  <tr key={pkg.id} style={{ borderBottom: '1px solid var(--table-row-border)' }}>
+                    <td style={{ padding: '14px 20px', fontWeight: 600, color: 'var(--text-primary)' }}>{pkg.name}</td>
                     <td style={{ padding: '14px 20px' }}>
                       <span style={{ padding: '3px 10px', borderRadius: '4px', fontSize: '11px', fontWeight: 600,
                         background: pkg.type === 'wordpress' ? 'rgba(30,64,175,0.2)' : pkg.type === 'windows' ? 'rgba(133,79,11,0.2)' : 'rgba(80,80,80,0.2)',
-                        color: pkg.type === 'wordpress' ? '#60a5fa' : pkg.type === 'windows' ? '#f59e0b' : '#aaa' }}>
+                        color: pkg.type === 'wordpress' ? '#60a5fa' : pkg.type === 'windows' ? '#f59e0b' : 'var(--text-secondary)' }}>
                         {pkg.label}
                       </span>
                     </td>
@@ -179,7 +179,7 @@ export default async function DashboardPage() {
               </svg>
             </div>
             <div>
-              <p style={{ fontSize: '13px', fontWeight: 600, color: '#fff' }}>{qa.label}</p>
+              <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>{qa.label}</p>
               <p style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginTop: '2px' }}>{qa.desc}</p>
             </div>
           </Link>
