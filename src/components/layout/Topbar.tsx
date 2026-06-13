@@ -1,4 +1,5 @@
 'use client'
+import { useTheme } from './ThemeProvider'
 import Link from 'next/link'
 import { useEffect, useState, useRef } from 'react'
 import { useRouter } from 'next/navigation'
@@ -40,7 +41,6 @@ function timeAgo(dateStr: string) {
   return `${days}d ago`
 }
 
-import { useTheme } from './ThemeProvider'
 
 export default function Topbar() {
   const router = useRouter()
@@ -120,6 +120,7 @@ export default function Topbar() {
   const impersonatingEmail = (user as any)?.impersonatingEmail
   const impersonationToken = (user as any)?.impersonationToken
   const ownerEmail = (user as any)?.ownerEmail
+  const { theme, toggleTheme } = useTheme()
 
   return (
     <div>
