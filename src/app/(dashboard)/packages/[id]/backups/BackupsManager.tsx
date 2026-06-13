@@ -62,8 +62,8 @@ export default function BackupsManager({ packageId, backupData, webJobs, domainN
                 {backupType === opt.value && <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--card-bg)' }} />}
               </div>
               <div>
-                <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>{opt.label}</p>
-                <p style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>{opt.desc}</p>
+                <p style={{ fontSize: '13px', fontWeight: 600, color: backupType === opt.value ? '#0a0a0a' : 'var(--text-primary)' }}>{opt.label}</p>
+                <p style={{ fontSize: '11px', color: backupType === opt.value ? '#5a5a5a' : 'var(--text-secondary)' }}>{opt.desc}</p>
               </div>
             </div>
           ))}

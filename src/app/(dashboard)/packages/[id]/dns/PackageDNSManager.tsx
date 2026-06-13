@@ -163,11 +163,11 @@ export default function PackageDNSManager({
               {nsMode === 'geig' && <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--card-bg)' }} />}
             </div>
             <div style={{ flex: 1 }}>
-              <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>GeiG SWS nameservers <span style={{ fontSize: '11px', fontWeight: 400, color: '#3b6d11' }}>(recommended)</span></p>
-              <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '2px' }}>DNS records managed here in GSWS control panel</p>
+              <p style={{ fontSize: '13px', fontWeight: 600, color: nsMode === 'geig' ? '#0a0a0a' : 'var(--text-primary)' }}>GeiG SWS nameservers <span style={{ fontSize: '11px', fontWeight: 400, color: '#3b6d11' }}>(recommended)</span></p>
+              <p style={{ fontSize: '11px', color: nsMode === 'geig' ? '#5a5a5a' : 'var(--text-secondary)', marginTop: '2px' }}>DNS records managed here in GSWS control panel</p>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', marginTop: '8px' }}>
                 {GEIG_NS.map((ns, i) => (
-                  <span key={ns} style={{ fontSize: '11px', fontFamily: 'ui-monospace, monospace', color: 'var(--text-secondary)' }}>NS{i + 1}: {ns}</span>
+                  <span key={ns} style={{ fontSize: '11px', fontFamily: 'ui-monospace, monospace', color: nsMode === 'geig' ? '#5a5a5a' : 'var(--text-secondary)' }}>NS{i + 1}: {ns}</span>
                 ))}
               </div>
             </div>
@@ -180,8 +180,8 @@ export default function PackageDNSManager({
               {nsMode === 'custom' && <div style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--card-bg)' }} />}
             </div>
             <div style={{ flex: 1 }}>
-              <p style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>Custom nameservers</p>
-              <p style={{ fontSize: '11px', color: 'var(--text-secondary)', marginTop: '2px' }}>Use Cloudflare, Route53 or your own DNS provider</p>
+              <p style={{ fontSize: '13px', fontWeight: 600, color: nsMode === 'custom' ? '#0a0a0a' : 'var(--text-primary)' }}>Custom nameservers</p>
+              <p style={{ fontSize: '11px', color: nsMode === 'custom' ? '#5a5a5a' : 'var(--text-secondary)', marginTop: '2px' }}>Use Cloudflare, Route53 or your own DNS provider</p>
               {nsMode === 'custom' && (
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginTop: '10px' }}>
                   {customNS.map((ns, i) => (
