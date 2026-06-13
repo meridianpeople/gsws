@@ -67,7 +67,7 @@ export default function RenewalsPage() {
           <h1 style={{ fontSize: '22px', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '-0.02em', margin: 0 }}>Renewals</h1>
           <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '4px' }}>Manage renewal settings for all your services. Auto-renew charges your credit balance.</p>
         </div>
-        <Link href="/account/topup" style={{ display: 'inline-flex', alignItems: 'center', gap: '7px', height: '38px', padding: '0 18px', background: '#0a0a0a', color: 'var(--card-bg)', borderRadius: '9px', fontSize: '13px', fontWeight: 600, textDecoration: 'none' }}>
+        <Link href="/account/topup" style={{ display: 'inline-flex', alignItems: 'center', gap: '7px', height: '38px', padding: '0 18px', background: 'var(--text-primary)', color: 'var(--page-bg)', borderRadius: '9px', fontSize: '13px', fontWeight: 600, textDecoration: 'none' }}>
           <IconMoney /> Top up credit
         </Link>
       </div>

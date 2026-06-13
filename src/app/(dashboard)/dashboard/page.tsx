@@ -68,7 +68,7 @@ export default async function DashboardPage() {
       {/* Metrics — 6 col */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: '12px' }}>
         {metrics.map(m => (
-          <div key={m.label} style={{ background: '#111', border: '1px solid #1e1e1e', borderRadius: '12px', padding: '18px 16px' }}>
+          <div key={m.label} style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '12px', padding: '18px 16px' }}>
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '10px' }}>
               <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '9px', textTransform: 'uppercase', letterSpacing: '0.12em', color: 'var(--text-tertiary)' }}>{m.label}</p>
               <span style={{ color: m.color }}>{m.icon}</span>
@@ -84,7 +84,7 @@ export default async function DashboardPage() {
         <h2 style={{ fontSize: '15px', fontWeight: 600, color: '#fff', marginBottom: '14px' }}>Provisioned Services</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '12px' }}>
           {services.map(s => (
-            <div key={s.title} style={{ background: '#111', border: '1px solid #1e1e1e', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', opacity: s.active ? 1 : 0.6, transition: 'border-color 0.2s' }}>
+            <div key={s.title} style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '12px', padding: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', opacity: s.active ? 1 : 0.6, transition: 'border-color 0.2s' }}>
               <div>
                 <h3 style={{ fontSize: '14px', fontWeight: 700, color: '#fff', marginBottom: '4px' }}>{s.title}</h3>
                 <p style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '12px' }}>{s.sub}</p>
@@ -92,7 +92,7 @@ export default async function DashboardPage() {
                   {s.badge}
                 </span>
               </div>
-              <Link href={s.href} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '20px', height: '34px', background: '#1a1a1a', border: '1px solid #2a2a2a', borderRadius: '6px', fontSize: '12px', fontWeight: 600, color: '#ccc', textDecoration: 'none', transition: 'border-color 0.15s, color 0.15s' }}>
+              <Link href={s.href} style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '20px', height: '34px', background: 'var(--card-bg-elevated)', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', textDecoration: 'none', transition: 'border-color 0.15s, color 0.15s' }}>
                 {s.cta}
               </Link>
             </div>
@@ -101,7 +101,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* Hosting Packages Table */}
-      <div style={{ background: '#111', border: '1px solid #1e1e1e', borderRadius: '12px', overflow: 'hidden' }}>
+      <div style={{ background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '12px', overflow: 'hidden' }}>
         <div style={{ padding: '16px 20px', borderBottom: '1px solid #1e1e1e', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <h2 style={{ fontSize: '14px', fontWeight: 600, color: '#fff' }}>Your Hosting Packages</h2>
           <Link href="/packages" style={{ fontSize: '12px', color: '#1a6ef5', textDecoration: 'none' }}>View all →</Link>
@@ -109,7 +109,7 @@ export default async function DashboardPage() {
 
         {packages.length === 0 ? (
           <div style={{ textAlign: 'center', padding: '48px 20px' }}>
-            <div style={{ width: '40px', height: '40px', background: '#1a1a1a', border: '1px solid #2a2a2a', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px' }}>
+            <div style={{ width: '40px', height: '40px', background: 'var(--card-bg-elevated)', border: '1px solid var(--card-border-hover)', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px' }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#555" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M22 12H2M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z"/>
               </svg>
@@ -119,7 +119,7 @@ export default async function DashboardPage() {
               <Link href="/domains/search" style={{ padding: '0 16px', height: '34px', display: 'inline-flex', alignItems: 'center', background: '#1a6ef5', color: '#fff', borderRadius: '6px', fontSize: '12.5px', fontWeight: 600, textDecoration: 'none' }}>
                 Register domain →
               </Link>
-              <Link href="/packages/new" style={{ padding: '0 16px', height: '34px', display: 'inline-flex', alignItems: 'center', background: '#1a1a1a', color: '#ccc', borderRadius: '6px', fontSize: '12.5px', border: '1px solid #2a2a2a', textDecoration: 'none' }}>
+              <Link href="/packages/new" style={{ padding: '0 16px', height: '34px', display: 'inline-flex', alignItems: 'center', background: 'var(--card-bg-elevated)', color: 'var(--text-secondary)', borderRadius: '6px', fontSize: '12.5px', border: '1px solid var(--card-border-hover)', textDecoration: 'none' }}>
                 Add hosting
               </Link>
             </div>
@@ -150,7 +150,7 @@ export default async function DashboardPage() {
                     </td>
                     <td style={{ padding: '14px 20px', fontSize: '12px', color: 'var(--text-tertiary)' }}>{new Date(pkg.created_at).toLocaleDateString('en-GB')}</td>
                     <td style={{ padding: '14px 20px', textAlign: 'right' }}>
-                      <Link href={`/packages/${pkg.id}`} style={{ padding: '0 14px', height: '28px', display: 'inline-flex', alignItems: 'center', background: '#1a1a1a', border: '1px solid #2a2a2a', borderRadius: '6px', fontSize: '12px', color: '#ccc', textDecoration: 'none' }}>
+                      <Link href={`/packages/${pkg.id}`} style={{ padding: '0 14px', height: '28px', display: 'inline-flex', alignItems: 'center', background: 'var(--card-bg-elevated)', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '12px', color: 'var(--text-secondary)', textDecoration: 'none' }}>
                         Manage
                       </Link>
                     </td>
@@ -171,7 +171,7 @@ export default async function DashboardPage() {
           { label: 'Launch GPU', desc: 'Deploy AI/ML compute', href: '/compute/gpu', iconColor: '#00C8FF', iconBg: 'rgba(0,200,255,0.1)', icon: 'M13 10V3L4 14h7v7l9-11h-7z' },
           { label: 'Top up credit', desc: `Balance: £${credit}`, href: '/account/topup', iconColor: '#1a6ef5', iconBg: 'rgba(26,110,245,0.1)', icon: 'M3 10h18M7 15h1m4 0h1m-7 4h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z' },
         ].map(qa => (
-          <Link key={qa.href} href={qa.href} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '16px', background: '#111', border: '1px solid #1e1e1e', borderRadius: '12px', textDecoration: 'none', transition: 'border-color 0.15s' }}
+          <Link key={qa.href} href={qa.href} style={{ display: 'flex', alignItems: 'center', gap: '12px', padding: '16px', background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '12px', textDecoration: 'none', transition: 'border-color 0.15s' }}
             onMouseEnter={undefined} onMouseLeave={undefined}>
             <div style={{ width: '38px', height: '38px', borderRadius: '8px', background: qa.iconBg, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={qa.iconColor} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
