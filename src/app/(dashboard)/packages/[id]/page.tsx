@@ -3,7 +3,6 @@ import { cookies } from 'next/headers'
 import { getGswsSession } from '@/lib/session'
 import db from '@/lib/db'
 import client from '@/lib/api/client'
-import PackageTabs from './PackageTabs'
 
 async function getPackageData(packageId: string) {
   try {
@@ -39,53 +38,13 @@ export default async function PackageDetailPage({ params }: { params: Promise<{ 
   const ssl = info.usage?.ServerAliasCertificates || {}
   const sslDomains = Object.values(ssl).flat() as string[]
 
-  const tabs = [
-    { label: 'Overview', href: `/packages/${id}` },
-    { label: 'Email', href: `/packages/${id}/email` },
-    { label: 'Files', href: `/packages/${id}/files` },
-    { label: 'DNS', href: `/packages/${id}/dns` },
-    { label: 'SSL', href: `/packages/${id}/ssl` },
-    { label: 'CDN', href: `/packages/${id}/cdn` },
-    { label: 'Databases', href: `/packages/${id}/databases` },
-    { label: 'PHP', href: `/packages/${id}/php` },
-    { label: 'Backups', href: `/packages/${id}/backups` },
-    { label: 'Security', href: `/packages/${id}/security` },
-    { label: 'Applications', href: `/packages/${id}/applications` },
-    ...(pkg.package_type === 'wordpress' ? [{ label: 'WordPress', href: `/packages/${id}/wordpress` }] : []),
-  ]
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
 
-      <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
-        <div>
-          <div style={{ fontSize: '12px', color: 'var(--text-secondary)', marginBottom: '4px' }}>
-            <Link href="/packages" style={{ color: '#1a6ef5' }}>Packages</Link> › {pkg.domain_name}
-          </div>
-          <h1 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text-primary)', fontFamily: 'ui-monospace, monospace' }}>
-            {pkg.domain_name}
-          </h1>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '6px' }}>
-            <span style={{ padding: '2px 8px', borderRadius: '20px', fontSize: '11px', fontWeight: 500, background: pkg.package_type === 'wordpress' ? '#e6f1fb' : pkg.package_type === 'windows' ? '#faeeda' : '#f1efe8', color: pkg.package_type === 'wordpress' ? '#185fa5' : pkg.package_type === 'windows' ? '#854f0b' : '#5a5a5a' }}>{pkg.package_label}</span>
-            <span style={{ padding: '2px 8px', borderRadius: '20px', fontSize: '11px', fontWeight: 500, background: '#eaf3de', color: '#3b6d11' }}>Active</span>
-            {info.zone && <span style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>📍 {info.zone}</span>}
-          </div>
-        </div>
-        <div style={{ display: 'flex', gap: '8px' }}>
-          {info.temporaryUrls && Object.values(info.temporaryUrls)[0] && (
-            <a href={`https://${Object.values(info.temporaryUrls)[0]}`} target="_blank"
-              style={{ height: '34px', padding: '0 14px', display: 'inline-flex', alignItems: 'center', border: '1px solid var(--card-border-hover)', borderRadius: '6px', fontSize: '12px', color: 'var(--text-primary)', textDecoration: 'none', background: 'var(--card-bg)' }}>
-              Preview ↗
-            </a>
-          )}
-          <a href={`https://${pkg.domain_name}`} target="_blank"
-            style={{ height: '34px', padding: '0 14px', display: 'inline-flex', alignItems: 'center', background: '#1a6ef5', color: '#fff', borderRadius: '6px', fontSize: '12px', fontWeight: 600, textDecoration: 'none' }}>
-            Visit site ↗
-          </a>
-        </div>
-      </div>
-
-      <PackageTabs tabs={tabs} />
+      {info.zone && (
+        <div style={{ fontSize: '11px', color: 'var(--text-secondary)' }}>📍 {info.zone}</div>
+      )}
 
       {error && (
         <div style={{ padding: '12px 16px', borderRadius: '8px', fontSize: '12px', background: '#fcebeb', color: '#a32d2d', border: '1px solid #f5c1c1' }}>
