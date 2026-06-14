@@ -290,7 +290,7 @@ export default function Topbar() {
                 { label: 'Renewals', href: '/renewals', icon: '🔄' },
                 { label: 'Team members', href: '/account/members', icon: '👥' },
                 { label: 'API Credentials', href: '/account/api', icon: '🔑' },
-                { label: 'Security', href: '/account/security', icon: '🛡️' },
+                { label: 'Credit Security', href: '/account/security', icon: '🛡️' },
                 { label: `Credit · £${Number(user?.creditBalance || 0).toFixed(2)}`, href: '/account/topup', icon: '💳', highlight: true },
               ].map(item => (
                 <Link key={item.href} href={item.href} onClick={() => setOpen(false)}

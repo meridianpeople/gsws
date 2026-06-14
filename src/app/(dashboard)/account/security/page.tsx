@@ -69,7 +69,7 @@ export default function SecurityPage() {
   return (
     <div style={{ maxWidth: '560px', display: 'flex', flexDirection: 'column', gap: '24px' }}>
       <div>
-        <h1 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text-primary)' }}>Security</h1>
+        <h1 style={{ fontSize: '20px', fontWeight: 600, color: 'var(--text-primary)' }}>Credit Security</h1>
         <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginTop: '3px' }}>Manage your account security settings</p>
       </div>
 
