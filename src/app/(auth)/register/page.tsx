@@ -219,6 +219,9 @@ export default function RegisterPage() {
                 <a href="/privacy" style={{ fontSize: '11px', color: '#A0A6AD', textDecoration: 'none', transition: 'color 0.15s' }}
                   onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
                   onMouseLeave={e => (e.currentTarget.style.color = '#A0A6AD')}>Privacy</a>
+                <a href="/api-reference" target="_blank" rel="noopener noreferrer" style={{ fontSize: '11px', color: '#A0A6AD', textDecoration: 'none', transition: 'color 0.15s' }}
+                  onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
+                  onMouseLeave={e => (e.currentTarget.style.color = '#A0A6AD')}>API</a>
                 <a href="/legal/sla" target="_blank" rel="noopener noreferrer" style={{ fontSize: '11px', color: '#A0A6AD', textDecoration: 'none', transition: 'color 0.15s' }}
                   onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
                   onMouseLeave={e => (e.currentTarget.style.color = '#A0A6AD')}>Status</a>

@@ -15,6 +15,8 @@ import { NextRequest, NextResponse } from 'next/server'
 const PUBLIC_PATHS = [
   '/api/health',
   '/icon.png',
+  '/api-reference',
+  '/api/docs/postman-collection',
   '/terms',
   '/privacy',
   '/legal',

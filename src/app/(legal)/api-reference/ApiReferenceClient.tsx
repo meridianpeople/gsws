@@ -13,7 +13,7 @@ const METHOD_COLORS: Record<string, { bg: string; text: string }> = {
   HEAD:   { bg: 'var(--card-border)', text: 'var(--text-secondary)' },
 }
 
-export default function APIReferencePage() {
+export default function ApiReferenceClient() {
   const [search, setSearch] = useState('')
   const [activeGroup, setActiveGroup] = useState('All')
   const [expanded, setExpanded] = useState<string | null>(null)

@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getGswsSession } from '@/lib/session'
 import { ROUTES, type ApiRoute } from '@/lib/api-routes'
 
 function pathToPostman(p: string) {
@@ -71,9 +70,7 @@ function buildItem(r: ApiRoute) {
 }
 
 export async function GET(req: NextRequest) {
-  const user = await getGswsSession(req)
-  if (!user) return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
-
+  // Public endpoint — no auth required to download the API reference collection
   const groups = [...new Set(ROUTES.map(r => r.group))]
 
   const collection = {
