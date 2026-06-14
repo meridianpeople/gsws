@@ -13,6 +13,7 @@ import { NextRequest, NextResponse } from 'next/server'
  */
 
 const PUBLIC_PATHS = [
+  '/api/health',
   '/login',
   '/register', 
   '/forgot-password',
