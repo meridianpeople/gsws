@@ -55,7 +55,7 @@ async function ensureBaUser(email: string, name: string, gswsUserId: number, wpU
 
 export async function POST(req: NextRequest) {
   // Rate limit: 10 attempts per 15 minutes per IP
-  const rl = rateLimit(getRateLimitKey(req, 'login'), 10, 15 * 60 * 1000)
+  const rl = await rateLimit(getRateLimitKey(req, 'login'), 10, 15 * 60 * 1000)
   if (!rl.allowed) {
     return NextResponse.json({ error: 'Too many login attempts. Please try again later.' }, {
       status: 429,
@@ -73,7 +73,7 @@ export async function POST(req: NextRequest) {
     const normalizedEmail = email.toLowerCase().trim()
 
     // Per-account rate limit: 5 failed attempts per 15 minutes, regardless of IP
-    const accountRl = rateLimit(`login:account:${normalizedEmail}`, 5, 15 * 60 * 1000)
+    const accountRl = await rateLimit(`login:account:${normalizedEmail}`, 5, 15 * 60 * 1000)
     if (!accountRl.allowed) {
       const lockedUser = db.prepare('SELECT id FROM gsws_users WHERE email = ?').get(normalizedEmail) as any
       if (lockedUser?.id) {

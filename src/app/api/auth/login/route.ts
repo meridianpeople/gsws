@@ -26,7 +26,7 @@ function getClientIP(req: NextRequest): string {
 }
 
 export async function POST(req: NextRequest) {
-  const rl = rateLimit(getRateLimitKey(req, 'wp-login'), 10, 15 * 60 * 1000)
+  const rl = await rateLimit(getRateLimitKey(req, 'wp-login'), 10, 15 * 60 * 1000)
   if (!rl.allowed) {
     return NextResponse.json({ error: 'Too many login attempts. Please try again later.' }, { status: 429 })
   }

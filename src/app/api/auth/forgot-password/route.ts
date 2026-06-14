@@ -8,7 +8,7 @@ const APP_URL = process.env.GSWS_URL || 'https://sws.geig.co.uk'
 
 export async function POST(req: NextRequest) {
   // Rate limit: 3 attempts per 15 minutes per IP
-  const rl = rateLimit(getRateLimitKey(req, 'forgot'), 3, 15 * 60 * 1000)
+  const rl = await rateLimit(getRateLimitKey(req, 'forgot'), 3, 15 * 60 * 1000)
   if (!rl.allowed) {
     return NextResponse.json({ success: true, message: 'If an account exists with this email, you will receive a reset link shortly.' })
   }
