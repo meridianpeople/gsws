@@ -4,6 +4,10 @@ cd ~/gsws
 
 echo "=== Building into .next-build (live .next stays untouched) ==="
 rm -rf .next-build
+# Remove stale TS typegen artifacts from the live .next dir — these are
+# typecheck-only (not used at runtime) and can reference paths that no
+# longer exist after files are moved/renamed, breaking the new build's typecheck.
+rm -rf .next/types .next/dev
 NEXT_DIST_DIR=.next-build npm run build
 
 if [ ! -f ".next-build/prerender-manifest.json" ]; then
