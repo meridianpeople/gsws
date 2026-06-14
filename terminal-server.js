@@ -4,6 +4,8 @@ const fs = require('fs')
 const http = require('http')
 const path = require('path')
 const crypto = require('crypto')
+const Redis = require('ioredis')
+const redis = new Redis({ host: '127.0.0.1', port: 6379 })
 
 // Load env
 const envPath = path.join(__dirname, '.env.local')
@@ -14,15 +16,14 @@ const TWENTYI_API_KEY = getEnv('TWENTYI_API_KEY')
 const SWS_PRIVATE_KEY_PATH = getEnv('SWS_SSH_PRIVATE_KEY_PATH') || '/home/ovie/.ssh/sws_terminal'
 const PORT = 3002
 
-// Rate limiting — max 3 concurrent WS connections per user
-const userConnections = new Map()
+// Rate limiting — max 3 concurrent WS connections per user (shared across cluster via Redis)
 const MAX_CONNECTIONS_PER_USER = 3
 
 // Session validation via DB
 async function validateSession(req) {
   try {
     const Database = require('better-sqlite3')
-    const db = new Database(path.join(__dirname, 'data/gsws.db'))
+    const db = new Database(path.join(__dirname, 'data/gsws.db')); db.pragma('busy_timeout = 5000')
     const cookieHeader = req.headers.cookie || ''
 
     // Try Better Auth session cookie
@@ -77,7 +78,7 @@ async function validateSession(req) {
 function isSessionStillValid(userId) {
   try {
     const Database = require('better-sqlite3')
-    const db = new Database(path.join(__dirname, 'data/gsws.db'))
+    const db = new Database(path.join(__dirname, 'data/gsws.db')); db.pragma('busy_timeout = 5000')
     const user = db.prepare('SELECT id FROM gsws_users WHERE id = ? AND is_active = 1').get(userId)
     db.close()
     return !!user
@@ -93,7 +94,7 @@ async function getHostingCredentials(packageId, userId) {
   })
 
   const Database = require('better-sqlite3')
-  const db = new Database(path.join(__dirname, 'data/gsws.db'))
+  const db = new Database(path.join(__dirname, 'data/gsws.db')); db.pragma('busy_timeout = 5000')
   const pkg = db.prepare('SELECT * FROM gsws_user_packages WHERE twentyi_package_id = ? AND user_id = ?').get(packageId, userId)
   db.close()
   if (!pkg) throw new Error('Access denied')
@@ -115,7 +116,7 @@ async function getHostingCredentials(packageId, userId) {
 
 async function getGpuCredentials(orderId, userId) {
   const Database = require('better-sqlite3')
-  const db = new Database(path.join(__dirname, 'data/gsws.db'))
+  const db = new Database(path.join(__dirname, 'data/gsws.db')); db.pragma('busy_timeout = 5000')
   const order = db.prepare("SELECT * FROM gsws_compute_orders WHERE id = ? AND user_id = ? AND resource_type = 'gpu'").get(orderId, userId)
   db.close()
   if (!order) throw new Error('Access denied')
@@ -129,7 +130,7 @@ async function getGpuCredentials(orderId, userId) {
 
 async function getVpsCredentials(orderId, userId) {
   const Database = require('better-sqlite3')
-  const db = new Database(path.join(__dirname, 'data/gsws.db'))
+  const db = new Database(path.join(__dirname, 'data/gsws.db')); db.pragma('busy_timeout = 5000')
   const order = db.prepare("SELECT * FROM gsws_compute_orders WHERE id = ? AND user_id = ? AND resource_type = 'vps'").get(orderId, userId)
   db.close()
   if (!order) throw new Error('Access denied')
@@ -148,13 +149,17 @@ async function getVpsCredentials(orderId, userId) {
 function auditLog(userId, action, detail) {
   try {
     const Database = require('better-sqlite3')
-    const db = new Database(path.join(__dirname, 'data/gsws.db'))
+    const db = new Database(path.join(__dirname, 'data/gsws.db')); db.pragma('busy_timeout = 5000')
     db.prepare(`INSERT INTO gsws_audit_log (user_id, action, resource_type, resource_name, detail) VALUES (?, ?, 'terminal', 'ssh', ?)`).run(userId, action, detail)
     db.close()
   } catch {}
 }
 
 const server = http.createServer((req, res) => {
+  if (req.url === '/health') {
+    res.writeHead(200, { 'Content-Type': 'application/json' })
+    return res.end(JSON.stringify({ status: 'ok', timestamp: new Date().toISOString(), pid: process.pid }))
+  }
   res.writeHead(200, { 'Content-Type': 'text/plain' })
   res.end('SWS Terminal Server')
 })
@@ -177,13 +182,15 @@ wss.on('connection', async (ws, req) => {
     return ws.close()
   }
 
-  // 2. Rate limit — max connections per user
-  const userConns = userConnections.get(session.user_id) || 0
-  if (userConns >= MAX_CONNECTIONS_PER_USER) {
+  // 2. Rate limit — max connections per user (shared across cluster via Redis)
+  const connKey = `terminal:conns:${session.user_id}`
+  const userConns = await redis.incr(connKey)
+  redis.expire(connKey, 3600).catch(() => {}) // safety TTL in case decrement is missed
+  if (userConns > MAX_CONNECTIONS_PER_USER) {
+    await redis.decr(connKey)
     sendCtrl('Too many active terminal sessions. Please disconnect an existing session first.')
     return ws.close()
   }
-  userConnections.set(session.user_id, userConns + 1)
 
   // 3. Get credentials
   sendCtrl(`Connecting to ${type === 'vps' ? 'VPS' : 'hosting package'}...`)
@@ -194,7 +201,7 @@ wss.on('connection', async (ws, req) => {
     else credentials = await getHostingCredentials(packageId, session.user_id)
   } catch (err) {
     sendCtrl(`Error: ${err.message}`)
-    userConnections.set(session.user_id, (userConnections.get(session.user_id) || 1) - 1)
+    await redis.decr(connKey)
     return ws.close()
   }
 
@@ -260,10 +267,7 @@ wss.on('connection', async (ws, req) => {
     clearInterval(sessionCheckInterval)
     if (stream) stream.close()
     ssh.end()
-    // Decrement connection count
-    const conns = userConnections.get(session.user_id) || 1
-    if (conns <= 1) userConnections.delete(session.user_id)
-    else userConnections.set(session.user_id, conns - 1)
+    redis.decr(connKey).catch(() => {})
     auditLog(session.user_id, 'terminal_disconnect', `SSH session ended for ${credentials?.domain || 'unknown'}`)
   })
 
