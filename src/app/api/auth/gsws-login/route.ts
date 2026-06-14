@@ -72,6 +72,19 @@ export async function POST(req: NextRequest) {
     }
     const normalizedEmail = email.toLowerCase().trim()
 
+    // Per-account rate limit: 5 failed attempts per 15 minutes, regardless of IP
+    const accountRl = rateLimit(`login:account:${normalizedEmail}`, 5, 15 * 60 * 1000)
+    if (!accountRl.allowed) {
+      const lockedUser = db.prepare('SELECT id FROM gsws_users WHERE email = ?').get(normalizedEmail) as any
+      if (lockedUser?.id) {
+        auditLog(lockedUser.id, `Account login locked (rate limit) for ${normalizedEmail} from ${ip}`, ip, ua)
+      }
+      return NextResponse.json({ error: 'Too many login attempts for this account. Please try again later.' }, {
+        status: 429,
+        headers: { 'Retry-After': String(Math.ceil((accountRl.resetAt - Date.now()) / 1000)) }
+      })
+    }
+
     // --- Path 1: GSWS-native user (bcrypt password in Better Auth account table) ---
     const nativeUser = db.prepare(`
       SELECT u.id as ba_id, u.gswsUserId as gsws_user_id, u.isActive as is_active, a.password as hash
@@ -87,6 +100,7 @@ export async function POST(req: NextRequest) {
       const bcrypt = await import('bcryptjs')
       const valid = await bcrypt.compare(password, nativeUser.hash)
       if (!valid) {
+        auditLog(nativeUser.gsws_user_id, `Failed login (bad password) for ${normalizedEmail} from ${ip}`, ip, ua)
         return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 })
       }
 
@@ -98,6 +112,7 @@ export async function POST(req: NextRequest) {
       })
 
       if (!signInRes.ok) {
+        auditLog(nativeUser.gsws_user_id, `Failed login (signIn rejected) for ${normalizedEmail} from ${ip}`, ip, ua)
         return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 })
       }
 
@@ -119,6 +134,10 @@ export async function POST(req: NextRequest) {
     // --- Path 2: WordPress user ---
     const wpAuth = await authenticateWithWordPress(normalizedEmail, password)
     if (!wpAuth) {
+      const failedUser = db.prepare('SELECT id FROM gsws_users WHERE email = ?').get(normalizedEmail) as any
+      if (failedUser?.id) {
+        auditLog(failedUser.id, `Failed login (WordPress auth rejected) for ${normalizedEmail} from ${ip}`, ip, ua)
+      }
       return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 })
     }
 
