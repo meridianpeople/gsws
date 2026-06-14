@@ -35,25 +35,12 @@ const nav = [
       { label: 'WordPress', href: '/wordpress', icon: <Icon d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" d2="M12 6v6l4 2" /> },
       { label: 'Windows Hosting', href: '/windows', icon: <Icon d="M3 5h8v8H3zM13 5h8v8h-8zM3 15h8v6H3zM13 15h8v6h-8z" /> },
       { label: 'Linux Hosting', href: '/packages?filter=linux', icon: <Icon d="M20 3H4a1 1 0 00-1 1v16a1 1 0 001 1h16a1 1 0 001-1V4a1 1 0 00-1-1z" d2="M8 10h8M8 14h4" /> },
-    ],
-  },
-  {
-    label: 'Email',
-    items: [
       { label: 'Email', href: '/email', icon: <Icon d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" d2="M22 6l-10 7L2 6" /> },
-    ],
-  },
-
-  {
-    label: 'Security',
-    items: [
-      { label: 'Security', href: '/security', icon: <Icon d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" d2="M9 12l2 2 4-4" /> },
-    ],
-  },
-  {
-    label: 'Databases',
-    items: [
       { label: 'Databases', href: '/databases', icon: <Icon d="M12 2C8.13 2 5 3.34 5 5v14c0 1.66 3.13 3 7 3s7-1.34 7-3V5c0-1.66-3.13-3-7-3z" d2="M5 5c0 1.66 3.13 3 7 3s7-1.34 7-3M5 12c0 1.66 3.13 3 7 3s7-1.34 7-3" /> },
+      { label: 'Backups', href: '/backups', icon: <Icon d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" d2="M7 10l5 5 5-5M12 15V3" /> },
+      { label: 'CDN', href: '/cdn', icon: <Icon d="M12 2a10 10 0 100 20A10 10 0 0012 2z" d2="M12 8v8M8 12h8" /> },
+      { label: 'SSL', href: '/ssl', icon: <Icon d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /> },
+      { label: 'Security', href: '/security', icon: <Icon d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" d2="M9 12l2 2 4-4" /> },
     ],
   },
   {
@@ -64,16 +51,8 @@ const nav = [
     ],
   },
   {
-    label: 'Backup & Recovery',
-    items: [
-      { label: 'Backups', href: '/backups', icon: <Icon d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" d2="M7 10l5 5 5-5M12 15V3" /> },
-    ],
-  },
-  {
     label: 'Tools',
     items: [
-      { label: 'CDN', href: '/cdn', icon: <Icon d="M12 2a10 10 0 100 20A10 10 0 0012 2z" d2="M12 8v8M8 12h8" /> },
-      { label: 'SSL', href: '/ssl', icon: <Icon d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /> },
       { label: 'Web CLI', href: '/cli', icon: <Icon d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /> },
       { label: 'API Reference', href: '/api-reference', icon: <Icon d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /> },
       { label: 'Credit Security', href: '/account/security', icon: <Icon d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /> },
