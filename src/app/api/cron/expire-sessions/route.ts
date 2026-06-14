@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import db from '@/lib/db'
 
-export async function GET(req: NextRequest) {
+async function handler(req: NextRequest) {
   const secret = req.headers.get('x-cron-secret')
   if (secret !== process.env.GSWS_BRIDGE_SECRET) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
@@ -26,3 +26,5 @@ export async function GET(req: NextRequest) {
 
   return NextResponse.json({ success: true, expired: count, timestamp: new Date().toISOString() })
 }
+
+export { handler as GET, handler as POST }
