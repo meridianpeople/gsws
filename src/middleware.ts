@@ -14,6 +14,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 const PUBLIC_PATHS = [
   '/api/health',
+  '/icon.png',
   '/terms',
   '/privacy',
   '/legal',

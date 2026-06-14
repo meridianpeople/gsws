@@ -5,7 +5,6 @@ import { ThemeProvider } from '@/components/layout/ThemeProvider'
 export const metadata: Metadata = {
   title: 'GeiG Simple Web Service',
   description: 'Manage your hosting, domains and services — powered by GeiG',
-  icons: { icon: '/favicon.ico' },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
