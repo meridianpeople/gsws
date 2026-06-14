@@ -197,7 +197,7 @@ wss.on('connection', async (ws, req) => {
   let credentials
   try {
     if (type === 'vps') credentials = await getVpsCredentials(orderId, session.user_id)
-    if (type === 'gpu') credentials = await getGpuCredentials(orderId, session.user_id)
+    else if (type === 'gpu') credentials = await getGpuCredentials(orderId, session.user_id)
     else credentials = await getHostingCredentials(packageId, session.user_id)
   } catch (err) {
     sendCtrl(`Error: ${err.message}`)
