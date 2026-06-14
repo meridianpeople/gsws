@@ -1,3 +1,4 @@
+import LegalNav from '@/components/legal/LegalNav'
 export default function TermsPage() {
   return (
     <div style={{ minHeight: '100vh', background: 'var(--page-bg)', padding: '48px 20px' }}>
@@ -81,6 +82,7 @@ export default function TermsPage() {
             Questions about these Terms can be sent to <a href="mailto:support@geig.co.uk" style={{ color: '#1a6ef5' }}>support@geig.co.uk</a>, or by post to GeiG, Tilbury Business Centre, Tilbury Fort, RM18 7ND, United Kingdom.
           </p>
         </div>
+        <LegalNav current="/terms" />
       </div>
     </div>
   )

@@ -1,3 +1,4 @@
+import LegalNav from '@/components/legal/LegalNav'
 import Link from 'next/link'
 
 export default function GdprPage() {
@@ -53,6 +54,7 @@ export default function GdprPage() {
             Email <a href="mailto:support@geig.co.uk" style={lnk}>support@geig.co.uk</a>, or write to GeiG, Tilbury Business Centre, Tilbury Fort, RM18 7ND, United Kingdom. If you remain unsatisfied with our response, you have the right to lodge a complaint with the UK Information Commissioner's Office (ICO) at ico.org.uk.
           </p>
         </div>
+        <LegalNav current="/legal/gdpr" />
       </div>
     </div>
   )

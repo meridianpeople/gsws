@@ -1,3 +1,4 @@
+import LegalNav from '@/components/legal/LegalNav'
 import Link from 'next/link'
 
 export default function SlaPage() {
@@ -38,6 +39,7 @@ export default function SlaPage() {
             Some services depend on third-party providers (20i, Contabo, Vast.ai). Outages originating with these providers are outside our direct control, but we monitor for them and will communicate known issues affecting your services where possible.
           </p>
         </div>
+        <LegalNav current="/legal/sla" />
       </div>
     </div>
   )

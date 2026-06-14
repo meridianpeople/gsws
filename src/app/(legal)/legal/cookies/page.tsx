@@ -1,3 +1,4 @@
+import LegalNav from '@/components/legal/LegalNav'
 import Link from 'next/link'
 
 export default function CookiesPage() {
@@ -41,6 +42,7 @@ export default function CookiesPage() {
             Because these cookies are essential for sign-in and core functionality, GSWS does not display a cookie consent banner — disabling them via your browser will prevent you from staying signed in. If you have any questions about how we use cookies, contact <a href="mailto:support@geig.co.uk" style={lnk}>support@geig.co.uk</a>.
           </p>
         </div>
+        <LegalNav current="/legal/cookies" />
       </div>
     </div>
   )

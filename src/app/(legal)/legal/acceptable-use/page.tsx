@@ -1,3 +1,4 @@
+import LegalNav from '@/components/legal/LegalNav'
 import Link from 'next/link'
 
 export default function AcceptableUsePage() {
@@ -48,6 +49,7 @@ export default function AcceptableUsePage() {
             If you believe content hosted on GSWS violates this policy, email <a href="mailto:support@geig.co.uk" style={lnk}>support@geig.co.uk</a> with details of the affected URL or service and the nature of the issue.
           </p>
         </div>
+        <LegalNav current="/legal/acceptable-use" />
       </div>
     </div>
   )

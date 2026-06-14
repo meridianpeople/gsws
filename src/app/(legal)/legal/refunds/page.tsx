@@ -1,3 +1,4 @@
+import LegalNav from '@/components/legal/LegalNav'
 import Link from 'next/link'
 
 export default function RefundsPage() {
@@ -44,6 +45,7 @@ export default function RefundsPage() {
             To request a refund or query a charge, email <a href="mailto:support@geig.co.uk" style={lnk}>support@geig.co.uk</a> with your account email and the relevant order or transaction reference. We aim to respond to refund requests within 5 working days.
           </p>
         </div>
+        <LegalNav current="/legal/refunds" />
       </div>
     </div>
   )

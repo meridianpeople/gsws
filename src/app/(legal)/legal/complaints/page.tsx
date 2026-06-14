@@ -1,3 +1,4 @@
+import LegalNav from '@/components/legal/LegalNav'
 import Link from 'next/link'
 
 export default function ComplaintsPage() {
@@ -38,6 +39,7 @@ export default function ComplaintsPage() {
             If your complaint relates to how we handle your personal data and remains unresolved after Step 2 above, you have the right to lodge a complaint with the UK Information Commissioner's Office (ICO) at ico.org.uk.
           </p>
         </div>
+        <LegalNav current="/legal/complaints" />
       </div>
     </div>
   )

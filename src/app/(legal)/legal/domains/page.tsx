@@ -1,3 +1,4 @@
+import LegalNav from '@/components/legal/LegalNav'
 import Link from 'next/link'
 
 export default function DomainsLegalPage() {
@@ -43,6 +44,7 @@ export default function DomainsLegalPage() {
             The following policy documents, maintained by ICANN and the relevant registries, apply to domain registrations alongside this page — see the <Link href="/legal" style={lnk}>Legal & Policies</Link> index for direct links to the UDRP, ICANN registrant materials, and TLD-specific registrant agreements.
           </p>
         </div>
+        <LegalNav current="/legal/domains" />
       </div>
     </div>
   )
