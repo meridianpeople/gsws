@@ -10,6 +10,7 @@
 
 import { auth } from './better-auth'
 import db from './db'
+import bcrypt from 'bcryptjs'
 import { headers } from 'next/headers'
 import type { NextRequest } from 'next/server'
 
@@ -32,9 +33,11 @@ export interface GswsSession {
   isImpersonating: boolean
   impersonatingEmail: string | null
   impersonationToken: string | null
+  apiKeyAuth: boolean
+  apiKeyScopes: string[] | null
 }
 
-function buildSession(gswsUser: any, baSessionId: string, baUserId: string): GswsSession | null {
+function buildSession(gswsUser: any, baSessionId: string, baUserId: string, apiKey?: { scopes: string[] }): GswsSession | null {
   if (!gswsUser || !gswsUser.is_active) return null
 
   // Credit balance — always from gsws_user_credits
@@ -79,11 +82,38 @@ function buildSession(gswsUser: any, baSessionId: string, baUserId: string): Gsw
     isImpersonating: false,
     impersonatingEmail: null,
     impersonationToken: null,
+    apiKeyAuth: !!apiKey,
+    apiKeyScopes: apiKey?.scopes ?? null,
   }
 }
 
 export async function getGswsSession(req?: NextRequest): Promise<GswsSession | null> {
   try {
+    // Layer 0: API key auth (X-Client-ID / X-Client-Secret headers)
+    if (req) {
+      const apiClientId = req.headers.get('x-client-id')
+      const apiClientSecret = req.headers.get('x-client-secret')
+      if (apiClientId && apiClientSecret) {
+        const cred = db.prepare(`
+          SELECT * FROM gsws_api_credentials WHERE client_id = ? AND is_active = 1
+        `).get(apiClientId) as any
+
+        if (cred) {
+          const valid = await bcrypt.compare(apiClientSecret, cred.client_secret_hash)
+          if (valid) {
+            const gswsUser = db.prepare('SELECT * FROM gsws_users WHERE id = ? AND is_active = 1').get(cred.user_id) as any
+            if (gswsUser) {
+              db.prepare(`UPDATE gsws_api_credentials SET last_used_at = datetime('now') WHERE id = ?`).run(cred.id)
+              const scopes = String(cred.scopes || 'read').split(',').map((s: string) => s.trim()).filter(Boolean)
+              return buildSession(gswsUser, 'apikey:' + cred.client_id, 'apikey:' + cred.user_id, { scopes })
+            }
+          }
+        }
+        // API key headers present but invalid — fail closed, do not fall through to cookie auth
+        return null
+      }
+    }
+
     // Check for impersonation cookie
     let impToken: string | undefined
     if (req) {
@@ -128,6 +158,8 @@ export async function getGswsSession(req?: NextRequest): Promise<GswsSession | n
             isImpersonating: true,
             impersonatingEmail: targetUser.email,
             impersonationToken: impToken,
+            apiKeyAuth: false,
+            apiKeyScopes: null,
           }
         }
       }

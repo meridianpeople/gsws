@@ -209,6 +209,12 @@ export function checkPermission(
   user: any,
   permission: 'canRead' | 'canWrite' | 'canBilling' | 'canManageTeam'
 ): boolean {
+  // API key auth: enforce credential scopes in addition to role-based checks below
+  if (user?.apiKeyAuth) {
+    const scopes: string[] = user.apiKeyScopes || []
+    const requiredScope = permission === 'canRead' ? 'read' : 'write'
+    if (!scopes.includes(requiredScope)) return false
+  }
   // Non-members (account owners) have full access
   if (!user?.isMember) return true
   const role = user.memberRole as keyof typeof ROLE_PERMISSIONS

@@ -57,8 +57,11 @@ export function middleware(req: NextRequest) {
   // Full cryptographic validation happens in getGswsSession() per route
   const baSession = req.cookies.get('__Secure-gsws_ba.session_token')?.value || req.cookies.get('gsws_ba.session_token')?.value
   const legacySession = req.cookies.get('gsws_session')?.value
+  const hasApiKeyHeaders = pathname.startsWith('/api/')
+    && !!req.headers.get('x-client-id')
+    && !!req.headers.get('x-client-secret')
 
-  if (!baSession && !legacySession) {
+  if (!baSession && !legacySession && !hasApiKeyHeaders) {
     if (pathname.startsWith('/api/')) {
       return NextResponse.json({ error: 'Not authenticated' }, { status: 401 })
     }
