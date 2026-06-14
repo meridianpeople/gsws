@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getGswsSession } from '@/lib/session'
 import crypto from 'crypto'
 
-const HMAC_SECRET = 'gsws2026TopupHMAC!GeiG'
+const HMAC_SECRET = process.env.TOPUP_HMAC_SECRET || 'gsws2026TopupHMAC!GeiG'
 const GEIG_URL = 'https://geig.co.uk'
 
 export async function POST(req: NextRequest) {

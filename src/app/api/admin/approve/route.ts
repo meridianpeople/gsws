@@ -33,7 +33,7 @@ export async function GET(req: NextRequest) {
     .update(`${token}|${approval.action}|${approval.target_user_id}|${approval.amount}`)
     .digest('hex')
 
-  if (sig !== expectedSig) {
+  if (sig.length !== expectedSig.length || !crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expectedSig))) {
     return new NextResponse('<h1>Invalid signature</h1>', { status: 403, headers: { 'content-type': 'text/html; charset=utf-8' } })
   }
 
