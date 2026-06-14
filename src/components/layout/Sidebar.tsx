@@ -24,7 +24,6 @@ const nav = [
     items: [
       { label: 'Domains', href: '/domains', icon: <Icon d="M12 2a10 10 0 100 20A10 10 0 0012 2zM2 12h20M12 2a15.3 15.3 0 010 20M12 2a15.3 15.3 0 000 20" /> },
       { label: 'Register Domain', href: '/domains/search', icon: <Icon d="M12 5v14M5 12h14" /> },
-      { label: 'DNS', href: '/dns', icon: <Icon d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" /> },
       { label: 'Renewals', href: '/renewals', icon: <Icon d="M23 4v6h-6M1 20v-6h6" d2="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 013.51 15" /> },
     ],
   },
@@ -35,6 +34,7 @@ const nav = [
       { label: 'WordPress', href: '/wordpress', icon: <Icon d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z" d2="M12 6v6l4 2" /> },
       { label: 'Windows Hosting', href: '/windows', icon: <Icon d="M3 5h8v8H3zM13 5h8v8h-8zM3 15h8v6H3zM13 15h8v6h-8z" /> },
       { label: 'Linux Hosting', href: '/packages?filter=linux', icon: <Icon d="M20 3H4a1 1 0 00-1 1v16a1 1 0 001 1h16a1 1 0 001-1V4a1 1 0 00-1-1z" d2="M8 10h8M8 14h4" /> },
+      { label: 'DNS', href: '/dns', icon: <Icon d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" /> },
       { label: 'Email', href: '/email', icon: <Icon d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" d2="M22 6l-10 7L2 6" /> },
       { label: 'Databases', href: '/databases', icon: <Icon d="M12 2C8.13 2 5 3.34 5 5v14c0 1.66 3.13 3 7 3s7-1.34 7-3V5c0-1.66-3.13-3-7-3z" d2="M5 5c0 1.66 3.13 3 7 3s7-1.34 7-3M5 12c0 1.66 3.13 3 7 3s7-1.34 7-3" /> },
       { label: 'Backups', href: '/backups', icon: <Icon d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4" d2="M7 10l5 5 5-5M12 15V3" /> },
