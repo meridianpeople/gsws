@@ -1,0 +1,34 @@
+'use client'
+import { useEffect, useMemo } from 'react'
+import Link from 'next/link'
+import { generateErrorRef } from '@/lib/error-ref'
+
+export default function DashboardError({ error, reset }: { error: Error & { digest?: string }, reset: () => void }) {
+  const ref = useMemo(() => generateErrorRef(), [])
+
+  useEffect(() => {
+    console.error(`[${ref}] Dashboard error:`, error)
+  }, [error, ref])
+
+  return (
+    <div style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px' }}>
+      <div style={{ maxWidth: '440px', width: '100%', background: 'var(--card-bg)', border: '1px solid var(--card-border)', borderRadius: '12px', padding: '32px', textAlign: 'center' }}>
+        <h1 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--text-primary)', marginBottom: '8px' }}>We couldn&apos;t load this page</h1>
+        <p style={{ fontSize: '13px', color: 'var(--text-secondary)', marginBottom: '16px', lineHeight: 1.6 }}>
+          Something went wrong while loading this content. You can try again, or head back to your dashboard. If the problem continues, contact support and quote the reference below.
+        </p>
+        <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '12px', color: 'var(--text-tertiary)', background: 'var(--card-bg-elevated)', border: '1px solid var(--card-border)', borderRadius: '6px', padding: '8px 12px', marginBottom: '20px' }}>
+          {ref}
+        </p>
+        <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+          <button onClick={() => reset()} style={{ height: '36px', padding: '0 20px', background: 'var(--card-bg-elevated)', color: 'var(--text-secondary)', border: '1px solid var(--card-border-hover)', borderRadius: '8px', fontSize: '13px', fontWeight: 600, cursor: 'pointer' }}>
+            Try again
+          </button>
+          <Link href="/dashboard" style={{ height: '36px', padding: '0 20px', display: 'inline-flex', alignItems: 'center', background: '#1a6ef5', color: '#fff', borderRadius: '8px', fontSize: '13px', fontWeight: 600, textDecoration: 'none' }}>
+            Go to dashboard
+          </Link>
+        </div>
+      </div>
+    </div>
+  )
+}
