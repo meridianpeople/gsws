@@ -136,11 +136,15 @@ export default function ForgotPasswordPage() {
           <div className="fp-footer" style={{ position: 'absolute', bottom: '32px', left: '48px', right: '48px' }}>
             <p style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '9px', color: '#6F7782', letterSpacing: '0.05em', marginBottom: '10px', textTransform: 'uppercase' }}>Secure Recovery · GeiG Infrastructure</p>
             <div style={{ display: 'flex', gap: '16px' }}>
-              {['Documentation', 'Privacy', 'Status'].map(l => (
-                <a key={l} href={`/${l.toLowerCase()}`} style={{ fontSize: '11px', color: '#A0A6AD', textDecoration: 'none', transition: 'color 0.15s' }}
+                <a href="/api-reference" target="_blank" rel="noopener noreferrer" style={{ fontSize: '11px', color: '#A0A6AD', textDecoration: 'none', transition: 'color 0.15s' }}
                   onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
-                  onMouseLeave={e => (e.currentTarget.style.color = '#A0A6AD')}>{l}</a>
-              ))}
+                  onMouseLeave={e => (e.currentTarget.style.color = '#A0A6AD')}>Documentation</a>
+                <a href="/privacy" style={{ fontSize: '11px', color: '#A0A6AD', textDecoration: 'none', transition: 'color 0.15s' }}
+                  onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
+                  onMouseLeave={e => (e.currentTarget.style.color = '#A0A6AD')}>Privacy</a>
+                <a href="/legal/sla" target="_blank" rel="noopener noreferrer" style={{ fontSize: '11px', color: '#A0A6AD', textDecoration: 'none', transition: 'color 0.15s' }}
+                  onMouseEnter={e => (e.currentTarget.style.color = '#fff')}
+                  onMouseLeave={e => (e.currentTarget.style.color = '#A0A6AD')}>Status</a>
             </div>
           </div>
         </aside>
